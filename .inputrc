@@ -1,0 +1,6 @@
+#!/bin/bash
+$include /etc/inputrc
+
+set bell-style none
+set colored-stats
+set visible-stats

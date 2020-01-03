@@ -1,0 +1,35 @@
+#!/bin/sh
+# uses:
+#   xgetres (xgetres, Xresources values)
+set -eu
+
+markup=${markup-}
+target=${BLOCK_INSTANCE-/home}
+
+extract() {
+  fields=${1-}; shift
+  df --output="$fields" "$@" "$target" | tail -n 1
+}
+
+color=${COLOR_ICON_DRIVE-$(xgetres i3.color6 || echo '#55ffff')}
+icon=${ICON_DRIVE-}
+if [ -z "$icon" ]; then
+  icon=
+  [ "$markup" = pango ] && icon="<b>$icon</b>"
+fi
+[ "$markup" = pango ] && icon="<span color='$color'>$icon</span>"
+
+if [ ! -e "$target" ] || ! df "$target" >/dev/null; then
+  echo "$icon $target ??"
+  exit
+fi
+
+root=$(extract target)
+percent=$(echo "100 * $(extract avail) / $(extract size)" | bc -s)
+avail=$(extract avail -B"${MEMORY_UNIT-GB}" | xargs printf '%s')
+
+echo "$icon $avail $root"
+echo "$icon $avail $root"
+if [ "$percent" -lt "${CRITICAL_THRESHOLD-5}" ]; then
+  echo "${COLOR_CRITICAL-$(xgetres i3.color1 || echo '#ff5555')}"
+fi

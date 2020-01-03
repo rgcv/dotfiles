@@ -1,0 +1,29 @@
+#
+# IMAPS+SMTPS config
+#
+
+set realname = $my_realname
+set hostname = $my_hostname
+
+# Receive options
+set imap_user = $my_imap_user
+set imap_pass = $my_imap_pass
+set folder    = imaps://$my_imap_host
+
+set spoolfile = +$my_inbox
+set postponed = +$my_drafts
+set record    = +$my_sent
+set trash     = +$my_trash
+
+# Send options
+set from      = $my_from
+set smtp_pass = $my_smtp_pass
+set smtp_url  = smtp://$my_smtp_user@$my_smtp_host:$my_smtp_port/
+
+set smtp_authenticators = $my_smtp_authenticators
+
+set ssl_force_tls = yes
+
+# Account hook
+account-hook $folder "set imap_user=$my_imap_user imap_pass=$my_imap_pass"
+

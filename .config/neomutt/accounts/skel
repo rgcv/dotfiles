@@ -1,0 +1,31 @@
+#
+# Mock imap+smtp account settings
+#
+
+set my_realname = "My Real Name"
+set my_hostname = mail.host.name
+
+# IMAP
+set my_imap_user = user
+set my_imap_pass = pass
+set my_imap_host = $my_hostname
+
+set my_inbox  = INBOX
+set my_drafts = Drafts
+set my_sent   = Sent
+set my_trash  = Trash
+
+
+# SMTP
+set my_from      = $my_imap_user
+set my_smtp_user = $my_imap_user
+set my_smtp_pass = $my_imap_pass
+set my_smtp_host = $my_imap_host
+set my_smtp_port = 587
+
+set my_smtp_authenticators = login
+
+# Go ahead
+source $my_config/imap+smtp
+unset record # if mail server already records sent email
+

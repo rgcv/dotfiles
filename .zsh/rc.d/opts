@@ -1,0 +1,52 @@
+#!/bin/zsh
+## Terminal options
+# no beeping
+unsetopt BEEP
+# Changing directories
+# if command is a directory, dive in
+setopt AUTO_CD
+
+# Completion
+# prevent internal alias substitution before attempting completion, i.e. treat
+# aliases as separate commands
+setopt COMPLETE_ALIASES
+# whenever a completion or correction is attempted, hash the entire path first.
+# despite first completion slowdown, avoids mistakes
+setopt HASH_LIST_ALL
+# lay out matches horizontally (row first vs column first)
+setopt LIST_ROWS_FIRST
+# add trailing identity mark to files
+setopt LIST_TYPES
+
+# Expansion and Globbing
+# treat #, ~, ^ as part of patterns in filename generation
+setopt EXTENDED_GLOB
+
+# History
+# allow multiple term sessions to all append to one zsh history file
+setopt APPEND_HISTORY
+# if the interal history needs to be trimmed to add the current command line,
+# lose the oldest duplicate first before losing a unique event
+setopt HIST_EXPIRE_DUPS_FIRST
+# use fnctl where available, can result in higher performance and avoid history
+# corruption
+setopt HIST_FCNTL_LOCK
+# don't display already found commands if duplicates exist
+setopt HIST_FIND_NO_DUPS
+# ignore duplicates of previous events
+setopt HIST_IGNORE_DUPS
+# ignore commands starting with a space
+setopt HIST_IGNORE_SPACE
+# don't wait for shell to exit, add commands as they're typed
+setopt INC_APPEND_HISTORY
+
+# Input/Output
+# try to correct the spelling of commands
+setopt CORRECT
+# allow comments in interactive shell
+setopt INTERACTIVE_COMMENTS
+
+# Prompting
+# enable parameter expansion, command substitution, and arithmetic expansion in
+# prompts
+setopt PROMPT_SUBST

@@ -1,0 +1,31 @@
+#!/bin/sh
+# requires:
+#   flameshot (flameshot, screenshot)
+# uses:
+#   canberra-gtk-play (libcanberra, sound)
+set -eu
+pictures=${XDG_PICTURES_DIR-$HOME/pictures}
+screenshots=$pictures/screenshots
+
+args=
+while [ -n "${1-}" ]; do
+  case $1 in
+    -s)
+      mkdir -p "$screenshots"
+      args="$args -p $screenshots"
+      ;;
+    *) args="$args $1" ;;
+  esac
+  shift
+done
+
+case "$args" in
+  *full*|*gui*|*screen*)
+    # shellcheck disable=SC2086
+    flameshot $args && canberra-gtk-play -i screen-capture
+    ;;
+  *)
+    echo "Wrong usage, no output" 2>&1
+    exit 1
+    ;;
+esac

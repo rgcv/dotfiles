@@ -1,0 +1,79 @@
+#                                   _   _
+#  _ __   ___  ___  _ __ ___  _   _| |_| |_
+# | '_ \ / _ \/ _ \| '_ ` _ \| | | | __| __|
+# | | | |  __/ (_) | | | | | | |_| | |_| |_
+# |_| |_|\___|\___/|_| |_| |_|\__,_|\__|\__|
+#
+
+# General settings
+set charset = utf-8
+
+set my_cache  = ~/.cache/neomutt
+set my_config = ~/.config/neomutt
+
+# Cache
+set message_cachedir = $my_cache
+set header_cache     = $message_cachedir
+
+# Viewing
+set mailcap_path = $my_config/mailcap
+alternative_order text/plain text/html
+auto_view text/html
+
+# Layout
+set sort=threads
+set sort_aux=reverse-last-date-received
+set index_format = "%4C | %Z [%{%b %d, %Y @ %R}] %-20.20F (%?l?%4l&%4c?) %s"
+
+# Replying
+set fast_reply = yes
+set include = yes
+
+# Bindings / Macros
+bind index,pager B sidebar-toggle-visible
+
+macro attach 'V' "<pipe-entry>cat > $my_cache/out.html && $BROWSER $my_cache/out.html<enter>"
+#macro index 'c' "<change-folder>?<change-dir><home>^K=<enter>"
+macro index,pager    \cb "<pipe-message> urlscan<Enter>" "call urlscan to extract URLs out of a message"
+macro attach,compose \cb "<pipe-message> urlscan<Enter>" "call urlscan to extract URLs out of a message"
+
+# Colors
+color hdrdefault blue black
+color quoted blue black
+color signature blue black
+color attachment red black
+color prompt brightmagenta black
+color message brightred black
+color error brightred black
+color indicator black red
+color status brightgreen blue
+color tree white black
+color normal white black
+color markers red black
+color search white black
+color tilde brightmagenta black
+color index blue black ~F
+color index red black "~N|~O"
+
+# color body brightwhite black '\*+[^*]+\*+'
+# color body brightwhite black '_+[^_]+_+'
+
+# IMAP
+# IST account
+set my_ist_account = $my_config/accounts/ist/config
+source $my_ist_account
+folder-hook $folder 'source $my_ist_account'
+
+# Outlook account
+set my_outlook_account = $my_config/accounts/outlook/config
+source $my_outlook_account
+folder-hook $folder 'source $my_outlook_account'
+
+set timeout = 15
+set mail_check = 90
+set imap_keepalive = 180
+set imap_idle
+unset mark_old
+
+macro index,pager <f2> '<sync-mailbox><enter-command>source $my_outlook_account<enter><change-folder>!<enter>'
+macro index,pager <f3> '<sync-mailbox><enter-command>source $my_ist_account<enter><change-folder>!<enter>'

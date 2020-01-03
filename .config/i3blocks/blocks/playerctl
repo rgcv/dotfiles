@@ -1,0 +1,93 @@
+#!/bin/sh
+set -eu
+
+trim() {
+  echo "$1" |
+    if [ ${#1} -gt "${2-10}" ]; then
+      awk '{print substr($0, 1, '"${2-10}"'-1)"…"}'
+    else cat; fi
+}
+
+escape() {
+  echo "$@" | if [ "${markup-}" = pango ]; then
+    sed \
+      -e 's/&/\&amp;/g'  \
+      -e 's/>/\&gt;/g'   \
+      -e 's/</\&lt;/g'   \
+      -e 's/"/\&quot;/g'
+  else cat; fi
+}
+
+json() {
+  printf '{"full_text":"%s","short_text":"%s","color":"%s"}\n' \
+    "${1-}" "${2-}" "${3-#ffffff}"
+}
+
+display() {
+  status=$1; shift
+  case $status in
+    Playing) prefix=${ICON_STATUS_PLAYING-} ;; #  
+    Paused)  prefix=${ICON_STATUS_PAUSED-} ;; #  
+    *)       json; return; # prefix=${ICON_STATUS_UNKNOWN-}; status=unknown ;;
+  esac
+
+  case $player in
+    spotify)
+      if [ "${markup-}" = pango ]; then
+        prefix="$prefix <span color='#81b71a'>"
+      else
+        prefix="$prefix "
+      fi
+      ;;
+    *) prefix="$prefix ${ICON_PLAYER-}" ;;
+  esac
+
+  if [ "$status" = unknown ]; then
+    full_text=$prefix
+    short_text=$prefix
+  else
+    prefix="$prefix "
+
+    full_text="$(trim "$1" "${ARTIST_MAX_FULL-17}") - $(trim "$2" "${SONG_MAX_FULL-17}")"
+    short_text=$(trim "$2" "${SONG_MAX_SHORT-11}")
+
+    suffix=
+    [ "${markup-}" = pango ] && [ "$player" = spotify ] && suffix="</span>"
+
+    full_text="$prefix$(escape "$full_text")$suffix"
+    short_text="$prefix$(escape "$short_text")$suffix"
+  fi
+
+  json "$full_text" "$short_text" "$(xgetres i3.foreground || echo '#ffffff')"
+}
+
+# following code adapted from
+# https://gitlab.com/gamma-neodots/neodots.i3/blob/base/LIB/i3blocks/playerctl.sh
+shutdown() {
+  # get process gid
+  pgid=$(ps -o pgid= $$ | sed -e 's/ //g')
+  # kill it in a new process group
+  setsid kill -- -"$pgid"
+  exit 0
+}
+trap shutdown INT TERM
+
+player=${BLOCK_INSTANCE-spotify}
+player_arg="--player=$player"
+
+while true; do
+  playerctl "$player_arg" --follow metadata \
+    --format "$(printf '{{status}}\t{{artist}}\t{{title}}')" |
+  while IFS=$(printf '\t') read -r how who what; do
+    display "$how" "$who" "$what"
+  done; sleep 15
+done &
+
+while read -r json; do
+  button=$(echo "$json" | jq '.button?')
+  case $button in
+    1) playerctl "$player_arg" play-pause ;;
+    2) playerctl "$player_arg" previous ;;
+    3) playerctl "$player_arg" next ;;
+  esac
+done

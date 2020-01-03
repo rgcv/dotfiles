@@ -1,0 +1,86 @@
+# i3status configuration file.
+# see "man i3status" for documentation.
+
+# It is important that this file is edited as UTF-8.
+# The following line should contain a sharp s:
+# ß
+# If the above line is not correctly displayed, fix your editor first!
+
+general {
+  colors = true
+  interval = 1
+  markup = pango
+}
+
+#order += "ipv6"
+order += "wireless _first_"
+order += "ethernet _first_"
+order += "path_exists VPN"
+order += "disk /"
+order += "disk /home"
+order += "battery all"
+order += "cpu_usage"
+order += "tztime ldate"
+order += "tztime ltime"
+order += "volume master"
+
+wireless _first_ {
+  format_up   = "  <b>%essid</b> %quality (%bitrate @ %frequency) "
+  format_down = ""
+}
+
+ethernet _first_ {
+  # if you use %speed, i3status requires root privileges
+  format_up   = "  %ip "
+  format_down = ""
+}
+
+disk "/" {
+  format = " %avail <span color='lightcyan'><b></b></span> / "
+  format_below_threshold = " %avail <b></b> / "
+  low_threshold = 10
+  threshold_type = percentage_free
+}
+
+disk "/home" {
+  format = " %avail <span color='lightcyan'><b></b></span> /home "
+  format_below_threshold = " %avail <b></b> /home "
+  low_threshold = 5
+  threshold_type = percentage_free
+}
+
+battery all {
+  format = " %status %percentage %remaining "
+
+  status_chr  = "<span color='lightgreen'></span>"
+  status_bat  = ""
+  status_unk  = "<span color='yellow'></span>"
+  status_full = "<span color='#33a8ff'></span>"
+
+  threshold_type = time
+  low_threshold = 30
+}
+
+cpu_usage {
+  format = " <span color='#33a8ff'></span> %usage "
+  format_above_threshold = "  %usage "
+  format_above_degraded_threshold = "  %usage "
+  degraded_threshold = 75
+  max_threshold = 90
+}
+
+volume master {
+  format       = "  "
+  format_muted = " <span color='grey'></span> "
+}
+
+tztime ldate {
+  format = " <span color='lightblue' weight='normal'></span> %time "
+  format_time = "%a, %b %d, %Y"
+}
+
+tztime ltime {
+  format = " <span color='lightblue'><b></b></span> %time "
+  format_time = "%H:%M:%S"
+}
+

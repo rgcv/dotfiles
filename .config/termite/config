@@ -1,0 +1,50 @@
+[options]
+# allow_bold = true
+# audible_bell = false
+# bold_is_bright = true
+# clickable_url = true
+# dynamic_title = true
+font = Roboto Mono, NotoSans Nerd Font, Monospace 11
+# fullscreen = true
+# icon_name = terminal
+# mouse_autohide = false
+# scroll_on_output = false
+# scroll_on_keystroke = true
+scrollback_lines = 10000
+# search_wrap = true
+# urgent_on_bell = true
+# hyperlinks = false
+
+[colors]
+# Base16 Material Darker
+# Author: Nate Peterson
+foreground          = #EEFFFF
+foreground_bold     = #EEFFFF
+cursor              = #EEFFFF
+cursor_foreground   = #212121
+background          = rgba(33, 33, 33, .9)
+
+color0  = #212121
+color1  = #F07178
+color2  = #C3E88D
+color3  = #FFCB6B
+color4  = #82AAFF
+color5  = #C792EA
+color6  = #89DDFF
+color7  = #EEFFFF
+color8  = #4A4A4A
+color9  = #F07178
+color10 = #C3E88D
+color11 = #FFCB6B
+color12 = #82AAFF
+color13 = #C792EA
+color14 = #89DDFF
+color15 = #FFFFFF
+
+# extra colors
+color16 = #F78C6C
+color17 = #FF5370
+color18 = #303030
+color19 = #353535
+color20 = #B2CCD6
+color21 = #EEFFFF

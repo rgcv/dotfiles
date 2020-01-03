@@ -1,0 +1,60 @@
+#!/bin/sh
+# uses:
+#   acpi (acpi, estimate remaining charge)
+#   xgetres (xgetres, Xresources values)
+set -eu
+
+battery=${BLOCK_INSTANCE-BAT1}
+path="/sys/class/power_supply/$battery"
+
+display() { printf '%s %s%%' "$1" "$2"; }
+displayln() { display "$@"; echo; }
+
+if [ ! -d "$path" ]; then
+  icon=${ICON_BATTERY-}
+  echo "$icon $battery ??"
+  exit
+fi
+
+read -r charge_now    < "$path/charge_now"
+read -r charge_full   < "$path/charge_full"
+read -r charge_status < "$path/status"
+
+charge=$(echo "100 * $charge_now / $charge_full" | bc -s)
+
+case "$charge_status" in
+  Charging)
+    icon=${ICON_CHARGING-}
+    color=${COLOR_CHARGING-$(xgetres i3.color3 || echo '#ffff55')}
+    ;;
+  Discharging)
+    icon=${ICON_DISCHARGING-}
+    color=${COLOR_DISCHARGING-$(xgetres i3.foreground || echo '#ffffff')}
+    ;;
+  Full|Unknown)
+    icon=${ICON_FULL-}
+    color=${COLOR_FULL-$(xgetres i3.color2 || echo '#55ff55')}
+    ;;
+  # Unknown|*)
+  #   icon=${ICON_UNKNOWN-}
+  #   color=${COLOR_UNKNOWN-$(xgetres i3.foreground || echo '#ffffff')}
+  #   ;;
+esac
+
+[ "${markup-}" = pango ] && icon="<span color='$color'>$icon</span>"
+
+# full_text
+display "$icon" "$charge"
+command -v acpi >/dev/null && case "$charge_status" in
+  Charging|Discharging) printf ' %s' "$(acpi -b | awk '{print $5}')" ;;
+esac
+echo
+
+# short_text
+displayln "$icon" "$charge"
+
+# color if under critical threshold
+if [ "$charge_status" = Discharging ] && [ "$charge" -lt "${CRITICAL_THRESHOLD-25}" ]; then
+  echo "${COLOR_FG_CRITICAL-$(xgetres i3.foreground || echo '#000000')}"
+  echo "${COLOR_BG_CRITICAL-$(xgetres i3.color1 || echo '#ff5555')}"
+fi

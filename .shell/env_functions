@@ -1,0 +1,23 @@
+#!/bin/sh
+# PATH-like environment variable manipulation functions
+__pathadd() {
+  [ -d "$2" ] || return
+  expanded=$(__inpath "$2" "$3")
+  [ -n "$expanded" ] && $1 "$2" "$3" "$expanded"
+}
+# shellcheck disable=SC2086
+__append()     { export $2="${3:+$3:}$1"; }
+# shellcheck disable=SC2086
+__prepend()    { export $2="$1${3:+:$3}"; }
+
+__expand() { eval "echo \$$1"; }
+__inpath() {
+  v=$(__expand "$2")
+  case ":$1:" in
+    *:"$v":*) ;;
+    *) echo "$v" ;;
+  esac; unset v
+}
+
+pathappend()  { __pathadd __append  "$1" "${2-PATH}"; }
+pathprepend() { __pathadd __prepend "$1" "${2-PATH}"; }

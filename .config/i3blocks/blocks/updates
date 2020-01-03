@@ -1,0 +1,81 @@
+#!/bin/sh
+# uses:
+#   dunstify (dunst, notification showing packages to update)
+#   xgetres (xgetres, Xresources values)
+set -eu
+
+grep -q up /sys/class/net/*/operstate || exit
+
+BLOCK_BUTTON=${BLOCK_BUTTON--1}
+BUTTON_CHECK=${BUTTON_CHECK-1}
+NOTIFICATION_ID=${NOTIFICATION_ID-800100}
+PACMAN=${PACMAN-pacman}
+
+ellipsize() {
+  len=${2-12}
+  echo "$1" | if [ ${#1} -gt "$len" ]; then
+    awk '{print substr($0, 0, '"$len"'-1)"…"}'
+  else cat; fi
+  unset len
+}
+prettify() {
+  color_old=${COLOR_VERSION_OLD-$(xgetres i3.color1 || echo '#ff5555')}
+  color_new=${COLOR_VERSION_NEW-$(xgetres i3.color2 || echo '#55ff55')}
+  c=0
+  while read -r pkg old _ new; do
+    if [ $c -gt "${NOTIFICATION_PKGS_MAX-20}" ]; then
+      printf '%12s\n' ". . ."
+      return
+    fi
+
+    old=$(ellipsize "$old" 10)
+    new=$(ellipsize "$new" 10)
+    if [ "${markup-}" = pango ]; then
+      old="<span color='$color_old'>$old</span>"
+      new="<span color='$color_new'>$new</span>"
+    fi
+    printf '%12s %s\t→ %s\n' "$(ellipsize "$pkg")" "$old" "$new"
+
+    c=$((c+1))
+  done <<EOF
+$@
+EOF
+}
+
+notify() {
+  command -v dunstify >/dev/null && dunstify \
+    --appname "${0##*/}" \
+    --icon software-update-available \
+    --replace "$NOTIFICATION_ID" \
+    "$1" "${2-}"
+}
+
+[ "$BLOCK_BUTTON" -eq "$BUTTON_CHECK" ] && notify "Checking for updates"
+pkgs=$({
+  checkupdates
+  case $PACMAN in
+    yaourt) $PACMAN -Qua ;;
+    yay)    $PACMAN -Qua --devel ;;
+  esac
+})
+
+count=$(echo "$pkgs" | wc -l)
+has_updates() { [ "$1" -gt 0 ]; }
+if [ "$BLOCK_BUTTON" -eq "$BUTTON_CHECK" ]; then
+  has_updates "$count" || { notify "No updates available" && exit; }
+fi
+numupds="$count update"
+[ "$count" -gt 1 ] && numupds=${numupds}s
+[ "$BLOCK_BUTTON" -eq "$BUTTON_CHECK" ] && notify "$numupds available" "$(prettify "$pkgs")"
+unset numupds
+
+icon=
+if [ "${markup-}" = pango ]; then
+  color=${ICON_COLOR-$(xgetres i3.color3 || echo "#ffff55")}
+  icon="<span color='$color'>$icon</span>"
+  count="<b>$count</b>"
+fi
+
+text="$icon $count"
+echo "$text"
+echo "$text"

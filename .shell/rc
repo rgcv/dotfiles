@@ -1,0 +1,241 @@
+#!/bin/sh
+# disable ctrl+s as stopping shell
+stty -ixon
+
+# HACK: set TERM here (because.. termite doesn't seem to like it being set on
+# login, idk)
+export TERM=xterm-256color
+
+## history
+HISTFILE=$HOME/.history
+HISTSIZE=10000
+
+# utilities
+# shellcheck disable=SC1090
+. "$HOME/.shell/env_functions"
+
+## dynamic env vars (not a part of graphical environment!)
+# android
+if [ -d "$HOME/software/android/sdk" ]; then
+  export ANDROID_HOME="$HOME/software/android/sdk"
+  export ANDROID_SDK_ROOT=$ANDROID_HOME
+  export ANDROID_AVD_HOME="$HOME/.android/avd"
+  pathappend "$ANDROID_HOME/tools"
+  pathappend "$ANDROID_HOME/tools/bin"
+  pathappend "$ANDROID_HOME/platform-tools"
+  pathappend "$ANDROID_HOME/emulator"
+fi
+
+# golang
+if command -v go >&-; then
+  export GOPATH="$HOME/.go"
+  pathappend "$(go env GOPATH)/bin"
+  pathappend "$(go env GOROOT)/bin"
+fi
+
+# java home
+command -v java >&- && export JAVA_HOME=/usr/lib/jvm/default
+
+# python user site
+command -v python >&- &&
+  pathappend "$(python -c 'import site; print(site.USER_SITE)')"
+
+# ruby gems
+command -v gem >&- && pathappend "$(ruby -e 'puts Gem.user_dir')/bin"
+
+# yarn
+if command -v yarn >&-; then
+  bin="$HOME/.yarn/bin"
+  sh -c "yarn config set bin $bin >&- 2>&- &"
+  pathappend "$bin"
+  unset bin
+fi
+
+## other variables
+# set the Less input preprocessor.
+for hl in lesspipe.sh lesspipe; do
+  if cmd=$(command -v $hl); then
+    export LESSOPEN="| $cmd %s 2>&-"
+    break
+  fi
+done; unset cmd hl
+
+## aliases
+# config accessibility
+config_alias() {
+  if ! alias "$2" >&- 2>&-; then
+    base=$1; a=$2; shift 2
+    for c in "$@"; do
+      if [ -w "$base/$c" ]; then
+        # shellcheck disable=SC2086,SC2139
+        alias $a="\$EDITOR $base/$c"
+        break
+      fi
+    done; unset c
+    unset base a
+  fi
+}
+home_config_alias() { config_alias "$HOME" "$@"; }
+xdg_config_alias()  { config_alias "${XDG_CONFIG_HOME:-$HOME/.config}" "$@"; }
+
+xdg_config_alias   batcf       bat/config
+xdg_config_alias   dunstrc     dunst/dunstrc
+xdg_config_alias   gitcf       git/config
+home_config_alias  gitcf       .gitconfig
+xdg_config_alias   fontcf      fontconfig/fonts.conf
+xdg_config_alias   i3bcf       i3blocks/config
+home_config_alias  i3bcf       .i3blocks.conf
+xdg_config_alias   i3cf        i3/config
+home_config_alias  i3cf        .i3/config
+home_config_alias  inputrc     .inputrc
+home_config_alias  juliarc     .julia/config/startup.jl
+xdg_config_alias   neomuttrc   neomutt/neomuttrc neomutt/muttrc mutt/neomuttrc mutt/muttrc
+home_config_alias  neomuttrc   .neomutt/neomuttrc .neomutt/muttrc .mutt/neomuttrc .mutt/muttrc .neomuttrc muttrc
+xdg_config_alias   nvimrc      nvim/init.vim
+xdg_config_alias   nvrc        nvim/init.vim
+xdg_config_alias   roficf      rofi/config
+home_config_alias  sshcf       .ssh/config
+xdg_config_alias   termitecf   termite/config
+home_config_alias  vimrc       .vimrc
+home_config_alias  vrc         .vimrc
+xdg_config_alias   zathurarc   zathura/zathurarc
+
+unset -f config_alias home_config_alias xdg_config_alias
+
+# shell
+shell_conf_alias() {
+  for f in env rc login logout xlogin; do
+    dir="$HOME/.$1"
+    # shellcheck disable=SC2086,SC2139
+    if [ -r "$dir/$f" ]; then
+      alias .${2-$1}$f=". $dir/$f"
+      [ -w "$dir/$f" ] && alias ${2-$1}$f="\$EDITOR $dir/$f"
+    fi
+  done; unset dir f
+}
+
+shell_conf_alias shell sh
+shell_conf_alias bash
+shell_conf_alias zsh
+
+unset -f shell_conf_alias
+
+alias cdtmp='cd $(mktemp -d)'
+
+alias chgrp="chgrp --preserve-root"
+alias chmod="chmod --preserve-root"
+alias chown="chown --preserve-root"
+
+alias cp="cp -i"
+alias mv="mv -i"
+alias rm="rm -i"
+
+alias diff="diff --color"
+alias dots='git --git-dir=$HOME/.dotfiles --work-tree=$HOME'
+alias g=git
+
+alias grep="grep --color=auto"
+alias egrep="egrep --color=auto"
+alias fgrep="fgrep --color=auto"
+
+alias   ls="ls --color=auto"
+alias    l="ls -lFh"    #size,show type,human readable
+alias   la="ls -lAFh"   #long list,show almost all,show type,human readable
+alias   lr="ls -tRFh"   #sorted by date,recursive,show type,human readable
+alias   lt="ls -ltFh"   #long list,sorted by date,show type,human readable
+alias   ll="ls -l"      #long list
+alias   l.="ls -dF .*"  #hidden files
+alias   lS="ls -1FSsh"  #dir sizes
+alias lart="ls -1Fcart" #all relative + types
+alias  lrt="ls -1Fcrt"  #relative + types
+
+command -v neomutt >&- && alias mutt=neomutt
+
+alias myip="curl -s https://ifconfig.me/ip"
+alias nnn="nnn -d"
+alias n=nnn
+alias open=xdg-open
+alias primusrun="PRIMUS_SYNC=1 vblank_mode=0 primusrun"
+alias rsync="rsync -azvhP" # archive compressed verbose human readable
+
+command -v htop >&- && alias top=htop
+
+alias tree="tree -C"
+
+if command -v nvim >&-; then
+  alias vim=nvim
+  alias  vi=nvim
+elif command -v vim >&-; then
+  alias  vi=vim
+fi
+alias nv=nvim
+alias  v=vi
+
+alias xload="xrdb -load  -I"'$HOME'" ~/.Xresources"
+alias xmerge="xrdb -merge -I"'$HOME'" ~/.Xresources"
+alias yt="youtube-dl -i4"
+alias yta="yt -x"
+
+# distro specific
+alias pacman="pacman --color auto"
+alias    yay="yay --color auto"
+
+## prompt
+# go bullet trains: https://github.com/jtyr/gbt
+case "$(tty)" in
+  /dev/tty*) ;;
+  *)
+    if command -v gbt >&-; then
+      export GBT__HOME=/usr/share/gbt
+      # shellcheck disable=SC1090
+      . "$GBT__HOME/sources/gbts/cmd/local.sh"
+      # skipping mysql, looks broken
+      for c in docker screen su sudo ssh vagrant; do
+        # shellcheck disable=SC2139
+        alias $c=gbt_$c
+      done; unset c
+      export GBT_CAR_TIME_BG=19
+      export GBT_CAR_DIR_BG=19
+    fi ;;
+esac
+
+## functions
+# shell
+reload() { exec "$SHELL" "$@"; }
+
+# xclip
+if command -v xclip >&-; then
+  copy() {
+    if [ ! -t 0 ]; then
+      tmp=$(mktemp)
+      # shellcheck disable=SC2064
+      trap "rm -rf $tmp" EXIT HUP INT TERM
+      touch "$tmp"
+    fi
+
+    input=${tmp-$1}
+    if command -v xdg-mime >&-; then
+      ft=$(xdg-mime query filetype "$input" 2>&-)
+    else
+      echo "Cannot infer MIME type for '$input', assuming plain text"
+    fi
+    xclip -t "${ft-text/plain}" -selection clipboard -i "$input"
+  }
+  paste() { xclip -selection clipboard -o "$1"; }
+fi
+
+# where were we?
+CWD="/dev/shm/$USER-cwd"
+__cd() {
+  \cd "$@" || return
+  pwd > "$CWD"
+}
+if [ -f "$CWD" ]; then
+  cd "$(cat "$CWD")" || true
+fi
+alias cd=__cd
+
+
+# added by travis gem
+# shellcheck disable=SC1090
+[ -f "$HOME/.travis/travis.sh" ] && . "$HOME/.travis/travis.sh"

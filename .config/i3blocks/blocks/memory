@@ -1,0 +1,52 @@
+#!/bin/sh
+# requires:
+#   awk (gawk, fetch mem values+compute if under given threshold)
+set -eu
+
+lo=${THRESHOLD_LOW-1}
+memory=${MEMORY-Mem}
+unit=${MEMORY_UNIT-giga}
+icon=${ICON_MEMORY-}
+
+case $memory in
+  Mem|Swap) ;;
+  *) echo "$icon $memory ??"; exit ;;
+esac
+
+case $unit in
+  bytes|kilo|mega|giga|tera|peta|kibi|mebi|gibi|tebi|pebi) ;;
+  *) echo "$icon $unit ??"; exit ;;
+esac
+case $unit in
+  b*) hunit=B ;;
+  k*) hunit=K ;;
+  m*) hunit=M ;;
+  g*) hunit=G ;;
+  t*) hunit=T ;;
+  p*) hunit=P ;;
+esac
+case $unit in *bi) hunit=${hunit}iB ;; esac
+
+extract() {
+  case $1 in
+    total) col=2 ;;
+    used)  col=3 ;;
+    free)  col=4 ;;
+    available) col=7 ;;
+    *) echo "$icon field $1 ??"; exit ;;
+  esac
+  shift
+  free --"$unit" "$@" | awk "/^$memory:/ {print \$$col}"
+}
+
+used=$(extract used)
+
+if [ "$(awk "BEGIN {print ${used%[A-Za-z]} < $lo}")" -eq 1 ]; then
+  [ "${markup-}" = pango ] && used="&lt;$lo" || used="<$lo"
+  used=$used$hunit
+else
+  used=$(extract used -h)
+fi
+
+echo "$icon $used / $(extract total -h)"
+echo "$icon $used"

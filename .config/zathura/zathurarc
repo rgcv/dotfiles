@@ -1,0 +1,3 @@
+include conf.d/base16-material-darker.conf
+set recolor true
+set recolor-keephue true

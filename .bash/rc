@@ -1,0 +1,13 @@
+#!/bin/bash
+# shellcheck disable=SC1090
+source "$HOME/.shell/rc"
+
+HISTCONTROL=ignoreboth
+
+## Terminal options
+# shell opts
+shopt -s autocd
+shopt -s extglob
+shopt -s histappend
+
+[ -n "$GBT__HOME" ] && PS1='$(gbt $?)'

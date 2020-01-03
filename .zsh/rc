@@ -1,0 +1,47 @@
+#!/bin/zsh
+# zmodload zsh/zprof
+source "$HOME/.shell/rc"
+
+SAVEHIST=$HISTSIZE
+source "$HOME/.zsh/rc.d/opts"
+source "$HOME/.zsh/rc.d/keys"
+
+# lookup style
+zstyle :compinstall filename '${ZDOTDIR:-$HOME}/.zshrc'
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+zstyle ':completion:*' menu select
+zstyle ':completion:*' rehash true
+zstyle ':completion:*:descriptions' format %U%B%d%b%u
+zstyle ':completion:*:warnings' format '%BNo matches for: %d%b'
+# completion module
+autoload -Uz compinit
+for comp in ~/.zcompdump(N.mh+24); do compinit; done
+compinit -C
+# load zsh/nearcolor if 24-bit colors aren't supported
+case $COLOR_TERM in
+  24bit|truecolor) ;;
+  *) [ "${terminfo[colors]}" -eq 16777216 ] || zmodload zsh/nearcolor
+esac
+
+# prompt module
+autoload -Uz promptinit && promptinit
+# Go Bullet Trains
+if [ -n "$GBT__HOME" ]; then
+  PROMPT='$(gbt $?)'
+  for prog (docker mysql screen ssh su sudo vagrant)
+    typeset -f _$prog >/dev/null && compdef _$prog gbt_$prog=$prog
+  unset prog
+fi
+
+# plugins
+for p (/usr/share/zsh/plugins/*) source "$p/${p##*/}.zsh"
+unset p
+
+# functions
+fp=/usr/share/zsh/site-functions
+[ -d $fp ] && fpath=($fp $fpath)
+unset fp
+
+handle_usr1() { trap handle_usr1 USR1; rehash; }
+trap handle_usr1 USR1
+# zprof

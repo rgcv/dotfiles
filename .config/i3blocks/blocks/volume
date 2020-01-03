@@ -1,0 +1,85 @@
+#!/bin/sh
+# requires:
+#   amixer (alsa-utils, sound management)
+# uses:
+#   xgetres (xgetres, Xresources values)
+#   pactl   (libpulse, subscribe mode)
+set -eu
+
+interval=${interval-}
+format=${format-}
+
+json() {
+  printf '{"full_text":"%s", "short_text":"%s", "color":"%s"}\n' "$1" "$2" "$3"
+}
+
+mixer=default
+amixer -qD pulse info >&- 2>&- && mixer=pulse
+
+scontrol=$(amixer -D $mixer scontrols |
+  sed -n "s/Simple mixer control '\([^']*\)',0/\1/p" | head -n 1)
+capability=$(amixer -D $mixer get "$scontrol" |
+  sed -n "s/ Capabilities:.*cvolume.*/Capture/p")
+
+display() {
+  data=$(amixer -MD $mixer sget "$scontrol" | grep '[0-9]*%' | head -n 1)
+  volume=$(echo "$data" | grep -o '[0-9]*%')
+  volume=${volume%\%}
+  muted=$(echo "$data" | grep -o '\[off\]' || true)
+
+  color=$(xgetres i3.foreground || echo "#ffffff")
+
+  if [ -n "$muted" ]; then
+    volume=0
+    icon=${ICON_MUTED-}
+  fi
+  if [ "$volume" -ne 0 ]; then
+    icon=${ICON_VOLUME-}
+  else
+    [ -z "$muted" ] && icon=${ICON_NO_SOUND- }
+    color=$(xgetres i3.color8 || echo "#555555")
+  fi
+
+  text=$(printf '%s %3d%%' "$icon" "$volume")
+
+  if [ "${format-}" = json ] || [ "${interval-}" = persist ]; then
+    json "$text" "$text" "$color"
+  else
+    echo "$text"
+    echo "$text"
+    echo "$color"
+  fi
+}
+
+handle_button() {
+  case ${BLOCK_BUTTON-$(echo "${1-}" | jq .button?)} in
+    2) echo toggle ;;
+    4) echo 5%+ unmute ;;
+    5) echo 5%- unmute ;;
+    *) echo noop ;;
+  esac | xargs amixer -qMD $mixer sset "$scontrol" "$capability"
+}
+
+if [ "$interval" != persist ] || [ $mixer != pulse ]; then
+  handle_button
+  display
+  exit
+fi
+
+shutdown() {
+  # get process gid
+  pgid=$(ps -o pgid= $$ | sed -e 's/ //g')
+  # kill it in a new process group
+  setsid kill -- -"$pgid"
+  exit 0
+}
+trap shutdown INT TERM
+
+display
+while :; do
+  pactl subscribe | grep --line-buffered change | while read -r _; do
+    display
+  done; sleep 5
+done &
+
+while read -r json; do handle_button "$json"; done

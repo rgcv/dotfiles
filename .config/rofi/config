@@ -1,0 +1,15 @@
+! "Enabled modi"
+! rofi.modi: window,run,ssh
+rofi.modi: combi,run
+! "Whether to load and show icons"
+rofi.show-icons: true
+! "Set the modi to combine in combi mode" Set from: Default
+rofi.combi-modi: drun,run
+! "Fullscreen"
+!rofi.fullscreen: true
+! "Background to use for fake transparency. (background or screenshot)" Set from: Default
+! rofi.fake-background:                screenshot
+! "The display name of this browser"
+rofi.display-drun: app
+
+!rofi.theme: /usr/share/rofi/themes/android_notification.rasi

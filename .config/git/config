@@ -1,0 +1,61 @@
+[user]
+  name = Rui Ventura
+  email = rventura.pt@outlook.com
+  signingKey = 0x813D1B4E13AAAC46
+
+[core]
+  autocrlf = input
+  eol = lf
+  pager = less
+
+[color]
+  ui = true
+[color "diff"]
+  frag = bold cyan
+  meta = bold
+  new = bold green
+  old = red
+  plain = dim
+
+[commit]
+  gpgsign = true
+
+[credential]
+  helper = cache --timeout=5400
+
+[push]
+  followTags = true
+
+[url "git@github.com"]
+  insteadOf = gh
+[url "git@bitbucket.org"]
+  insteadOf = bb
+[url "git@gitlab.com"]
+  insteadOf = gl
+[url "aur@aur.archlinux.org"]
+  insteadOf = aur
+
+[alias]
+  # shortcuts
+  br = branch
+  ci = commit
+  co = checkout
+  rb = rebase
+  s = status --short
+  st = status
+
+  # logging
+  changes = !git lg --name-status
+  clog = log --pretty=format:'%C(bold cyan)%h%Creset %<|(80,trunc)%s%+b'
+  last = log -1 HEAD
+  lg = log --decorate=short --pretty=format:'%C(bold cyan)%h%Creset %C(bold green)%cr:%Creset %s %C(bold black)~%aN%Creset %C(auto)%d'
+  lgg = !git lg --graph --topo-order
+  summary = !git lg --stat
+
+  # misc
+  gi = !"gi() { curl -sL \"https://gitignore.io/api/$*\"; }; gi"
+  retag = !"retag() { git tag -d \"$1\" && git tag \"$1\" && git push --tags; }; retag"
+  yolo = !git commit -am "$(curl -s http://whatthecommit.com/index.txt)"
+
+[includeIf "gitdir:ist181045/"]
+  path = .config/git/ist181045.gitconfig
