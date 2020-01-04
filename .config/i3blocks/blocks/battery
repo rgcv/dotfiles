@@ -4,20 +4,28 @@
 #   xgetres (xgetres, Xresources values)
 set -eu
 
-battery=${BLOCK_INSTANCE-BAT1}
-path="/sys/class/power_supply/$battery"
-
-display() { printf '%s %s%%' "$1" "$2"; }
-displayln() { display "$@"; echo; }
-
+battery=${BLOCK_INSTANCE-}
+if [ -n "$battery" ]; then
+  path="/sys/class/power_supply/$battery"
+else
+  for b in /sys/class/power_supply/B*; do
+    path=$b
+    break
+  done
+fi
 if [ ! -d "$path" ]; then
   icon=${ICON_BATTERY-}
   echo "$icon $battery ??"
   exit
 fi
 
-read -r charge_now    < "$path/charge_now"
-read -r charge_full   < "$path/charge_full"
+display() { printf '%s %s%%' "$1" "$2"; }
+displayln() { display "$@"; echo; }
+
+read -r charge_now    < "$path/charge_now" ||
+  read -r charge_now  < "$path/energy_now"
+read -r charge_full   < "$path/charge_full" ||
+  read -r charge_full < "$path/energy_full"
 read -r charge_status < "$path/status"
 
 charge=$(echo "100 * $charge_now / $charge_full" | bc -s)
