@@ -1,0 +1,20 @@
+#!/bin/sh
+set -eu
+
+markup=${markup-}
+
+if [ -z "${ICON-}" ]; then
+  icon=
+  [ "$markup" = pango ] && icon="<b>$icon</b>"
+else
+  icon=$ICON
+fi
+
+query() { setxkbmap -query | awk '/^'"$1"':/ {print toupper($2)}'; }
+
+layout=$(query layout)
+variant=$(query variant)
+
+text="$icon $layout"
+[ -n "$variant" ] && echo "$text ($variant)" || echo "$text"
+echo "$text"
