@@ -1,6 +1,7 @@
 #!/bin/sh
 # requires:
 #   any window compositor (picom, compton, xcompmgr, ...)
+#   xdotool (xdotool, window identification)
 #   transset-df (transset-df, setting transparency)
 set -eu
 
