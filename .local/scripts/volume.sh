@@ -2,7 +2,6 @@
 # requires:
 #   amixer (alsa-utils, volume management)
 # uses:
-#   canberra-gtk-play (libcanberra, sound)
 #   dunstify (dunst, notifications)
 set -eu
 
@@ -64,5 +63,3 @@ dunstify \
   --icon "$icon" \
   --replace 900100 \
   "$summary" "${body-}"
-
-canberra-gtk-play -i audio-volume-change || true
