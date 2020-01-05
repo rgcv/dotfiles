@@ -22,15 +22,10 @@ fi
 display() { printf '%s %s%%' "$1" "$2"; }
 displayln() { display "$@"; echo; }
 
-read -r charge_now    < "$path/charge_now" ||
-  read -r charge_now  < "$path/energy_now"
-read -r charge_full   < "$path/charge_full" ||
-  read -r charge_full < "$path/energy_full"
-read -r charge_status < "$path/status"
+read -r capacity < "$path/capacity"
+read -r status   < "$path/status"
 
-charge=$(echo "100 * $charge_now / $charge_full" | bc -s)
-
-case "$charge_status" in
+case "$status" in
   Charging)
     icon=${ICON_CHARGING-}
     color=${COLOR_CHARGING-$(xgetres i3.color3 || echo '#ffff55')}
@@ -52,17 +47,17 @@ esac
 [ "${markup-}" = pango ] && icon="<span color='$color'>$icon</span>"
 
 # full_text
-display "$icon" "$charge"
-command -v acpi >/dev/null && case "$charge_status" in
+display "$icon" "$capacity"
+command -v acpi >/dev/null && case "$status" in
   Charging|Discharging) printf ' %s' "$(acpi -b | awk '{print $5}')" ;;
 esac
 echo
 
 # short_text
-displayln "$icon" "$charge"
+displayln "$icon" "$capacity"
 
 # color if under critical threshold
-if [ "$charge_status" = Discharging ] && [ "$charge" -lt "${CRITICAL_THRESHOLD-25}" ]; then
+if [ "$status" = Discharging ] && [ "$capacity" -lt "${CRITICAL_THRESHOLD-25}" ]; then
   echo "${COLOR_FG_CRITICAL-$(xgetres i3.foreground || echo '#000000')}"
   echo "${COLOR_BG_CRITICAL-$(xgetres i3.color1 || echo '#ff5555')}"
 fi
