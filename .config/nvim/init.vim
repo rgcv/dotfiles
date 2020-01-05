@@ -79,6 +79,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'udalov/kotlin-vim'
 Plug 'vim-pandoc/vim-pandoc'
@@ -132,7 +133,7 @@ set colorcolumn=+1
 set expandtab " I like spaces, don't @ me
 set mouse=a " enable mouse support if we have it
 set number relativenumber
-set shiftwidth=2 softtabstop=2
+set shiftwidth=2
 set scrolloff=8 sidescrolloff=8
 set signcolumn=yes " always show gutter
 set smartindent
