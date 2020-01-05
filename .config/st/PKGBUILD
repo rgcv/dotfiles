@@ -10,12 +10,10 @@ makedepends=('ncurses')
 url="https://st.suckless.org"
 
 _patches=(
-    alpha.patch::https://st.suckless.org/patches/alpha/$pkgname-alpha-$pkgver.diff
-    anysize.patch::https://st.suckless.org/patches/anysize/$pkgname-anysize-$pkgver.diff
-    clipboard.patch::https://st.suckless.org/patches/clipboard/$pkgname-clipboard-$pkgver.diff
-    scrollback.patch::https://st.suckless.org/patches/scrollback/$pkgname-scrollback-$pkgver.diff
-    #scrollback-mouse.patch::https://st.suckless.org/patches/scrollback/$pkgname-scrollback-mouse-0.8.diff
-    #spoiler.patch::https://st.suckless.org/patches/spoiler/$pkgname-spoiler-0.7.diff
+    alpha-$pkgver.patch::https://st.suckless.org/patches/alpha/$pkgname-alpha-$pkgver.diff
+    anysize-$pkgver.patch::https://st.suckless.org/patches/anysize/$pkgname-anysize-$pkgver.diff
+    clipboard-$pkgver.patch::https://st.suckless.org/patches/clipboard/$pkgname-clipboard-$pkgver.diff
+    scrollback-$pkgver.patch::https://st.suckless.org/patches/scrollback/$pkgname-scrollback-$pkgver.diff
 )
 
 source=(
