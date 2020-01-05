@@ -13,9 +13,9 @@ __prepend()    { export $2="$1${3:+:$3}"; }
 __expand() { eval "echo \$$1"; }
 __inpath() {
   v=$(__expand "$2")
-  case ":$1:" in
-    *:"$v":*) ;;
-    *) echo "$v" ;;
+  case ":$v:" in
+    *:"$1":*) ;;
+    *) echo "$1" ;;
   esac; unset v
 }
 
