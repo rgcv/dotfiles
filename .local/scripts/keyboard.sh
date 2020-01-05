@@ -9,13 +9,13 @@ variant=$(query variant)
 [ -r "$HOME/.Xkbmap" ] && setxkbmap -config "$HOME/.Xkbmap"
 
 case "${1-}" in
-  pt|us|'us(euro)') setxkbmap "$1" ;;
+  pt|us|'us(intl)') setxkbmap "$1" ;;
   *)
     if [ "$layout" = pt ]; then
       setxkbmap us
     elif [ "$layout" = us ]; then
       if [ -z "$variant" ]; then
-        setxkbmap us euro
+        setxkbmap us intl
       else
         setxkbmap pt
       fi
