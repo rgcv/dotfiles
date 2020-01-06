@@ -185,7 +185,7 @@ alias    yay="yay --color auto"
 case "$(tty)" in
   /dev/tty*) ;;
   *)
-    if command -v gbt >&-; then
+    if command -v gbt >&- && [ -z "$SSH_CONNECTION" ]; then
       export GBT__HOME=/usr/share/gbt
       # shellcheck disable=SC1090
       . "$GBT__HOME/sources/gbts/cmd/local.sh"
