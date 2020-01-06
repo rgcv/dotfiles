@@ -26,6 +26,13 @@ if [ -d "$HOME/software/android/sdk" ]; then
   pathappend "$ANDROID_HOME/emulator"
 fi
 
+# gnupg
+if command -v gpg >&-; then
+  GPG_TTY=$(tty)
+  export GPG_TTY
+  gpg-connect-agent updatestartuptty /bye >/dev/null
+fi
+
 # golang
 if command -v go >&-; then
   export GOPATH="$HOME/.go"
