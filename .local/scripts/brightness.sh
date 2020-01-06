@@ -1,8 +1,8 @@
 #!/bin/sh
 # requires:
-#   light (light)
+#   light (light, screen brightness control)
 # uses:
-#   canberra-gtk-play (libcanberra, sound)
+#   bc (bc, rounding floats)
 #   dunstify (dunst, notifications)
 set -eu
 
@@ -20,11 +20,13 @@ EOF
 min() { [ "$1" -lt "$2" ] && echo "$1" || echo "$2"; }
 max() { [ "$1" -gt "$2" ] && echo "$1" || echo "$2"; }
 clamp() { min "$(max "$1" "$2")" "$3"; }
+round() { echo "($1+0.5)/1" | bc -s; }
 
+dispmin=$(round "$(light -P)")
 while getopts "m:M:s:" opt; do
   case "$opt" in
-    m) min=$(clamp "$OPTARG" "$(max "$(light -rP)" 1)" 100) ;;
-    M) max=$(clamp "$OPTARG" "$(max "$(light -rP)" 1)" 100) ;;
+    m) min=$(clamp "$OPTARG" "$(max "$dispmin" 1)" 100) ;;
+    M) max=$(clamp "$OPTARG" "$(max "$dispmin" 1)" 100) ;;
     s) if [ "$OPTARG" -ne 0 ]; then
          step=$OPTARG
          [ "$step" -lt 0 ] && step=$((-step))
@@ -36,14 +38,14 @@ while getopts "m:M:s:" opt; do
 done
 shift $((OPTIND - 1))
 
-current=$(light -r)
+current=$(round "$(light)")
 case "${1-}" in
   =) new=$(clamp "${2-$current}" "$min" "$max") ;;
   +) new=$(min "$((current + step))" "$max") ;;
   -) new=$(max "$((current - step))" "$min") ;;
   *) echo "$current"; exit ;;
 esac
-light -rS "$new"
+light -S "$new"
 
 icon=notification-display-brightness
 case $new in
