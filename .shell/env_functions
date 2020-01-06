@@ -15,7 +15,7 @@ __inpath() {
   v=$(__expand "$2")
   case ":$v:" in
     *:"$1":*) ;;
-    *) echo "$1" ;;
+    *) echo "$v" ;;
   esac; unset v
 }
 
