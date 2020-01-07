@@ -9,6 +9,9 @@ xset -b            `# disable bell` \
      r rate 350 30 `# auto-repeat delay + rate`
 # keyboard
 numlockx & # make sure to always enable numlock anyways (calc ops)
+setxkbmap \
+  -option 'caps:escape' `# bind caps to escape` \
+  -option 'numpad:mac'  `# numpad is always numeric`
 # xinput
 tpid=$(xinput list | grep -i touchpad | grep -o 'id=[0-9]*')
 if [ -n "$tpid" ]; then
