@@ -21,14 +21,14 @@ instance=/
 [free]
 instance=/home
 
-[battery]
-
 [memory]
 
 [cpu]
 format=json
 interval=persist
 UPDATE_INTERVAL=2
+
+[battery]
 
 [datetime]
 instance=date
