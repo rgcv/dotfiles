@@ -22,8 +22,7 @@ if !has('nvim') && v:version >= 800
 endif
 
 "" plugins
-let b:_plugged = '$HOME/.local/share/nvim/plugged'
-if empty(b:_plugged)
+if empty(glob('~/.local/share/nvim/plugged'))
   silent !curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs
         \ https://raw.github.com/junegunn/vim-plug/master/plug.vim
 endif
@@ -41,7 +40,7 @@ function! When(cond, ...)
   return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
 endfunction
 
-call plug#begin(b:_plugged)
+call plug#begin('~/.local/share/nvim/plugged')
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'chr4/nginx.vim'
@@ -84,7 +83,8 @@ Plug 'tpope/vim-surround'
 Plug 'udalov/kotlin-vim'
 Plug 'vim-pandoc/vim-pandoc'
   Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'visualfc/gocode', { 'rtp': 'nvim', 'do': '{b:_plugged}/gocode/nvim/symlink.sh' }
+Plug 'visualfc/gocode',
+      \ { 'rtp': 'nvim', 'do': '~/.local/share/nvim/plugged/gocode/nvim/symlink.sh' }
 call plug#end()
 
 " options
