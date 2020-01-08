@@ -2,5 +2,6 @@
 ## graphical environment
 # start x11 server (DISPLAY matches tty)
 if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
-  exec sx || exec startx -- ":0"
+  command -v sx     >&- && exec sx
+  command -v startx >&- && exec startx -- ":0"
 fi
