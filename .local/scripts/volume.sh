@@ -3,6 +3,8 @@
 #   amixer (alsa-utils, volume management)
 # uses:
 #   dunstify (dunst, notifications)
+#   canberra-gtk-play (libcanberra, play volume change sound
+#                      libcanberra-pulse, pulseaudio backend may be required)
 set -eu
 
 # audio mixer, sink control and capabilities
@@ -63,3 +65,5 @@ dunstify \
   --icon "$icon" \
   --replace 900100 \
   "$summary" "${body-}"
+
+canberra-gtk-play -i audio-volume-change
