@@ -170,6 +170,7 @@ alias n=nnn
 alias open=xdg-open
 alias primusrun="PRIMUS_SYNC=1 vblank_mode=0 primusrun"
 alias rsync="rsync -azvhP" # archive compressed verbose human readable
+alias sudo='sudo ' # alias expansion
 
 command -v htop >&- && alias top=htop
 
