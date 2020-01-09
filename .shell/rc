@@ -58,8 +58,9 @@ command -v gem >&- && pathappend "$(ruby -e 'puts Gem.user_dir')/bin"
 
 # yarn
 if command -v yarn >&-; then
-  bin="$HOME/.yarn/bin"
-  sh -c "yarn config set bin $bin >&- 2>&- &"
+  bin="$HOME/.local/bin"
+  mkdir -p "$bin"
+  sh -c "yarn config set bin '$bin' >&- 2>&- &"
   pathappend "$bin"
   unset bin
 fi
