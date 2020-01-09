@@ -1,56 +1,33 @@
 #!/bin/sh
 # based on /usr/share/doc/xss-lock/dim-screen.sh
+# requires:
+#   bc (bc, rounding float -> nearest int)
+#   light (light, changing screen brightness)
 
-## CONFIGURATION ##############################################################
+read -r online < /sys/class/power_supply/AC/online
 
-# Brightness will be lowered to this value.
-min_brightness=2
-
-# If you have a driver without RandR backlight property (e.g. radeon), set this
-# to use the sysfs interface and create a .conf file in /etc/tmpfiles.d/
-# containing the following line to make the sysfs file writable for group
-# "users":
-#
-#     m /sys/class/backlight/acpi_video0/brightness 0664 root users - -
-#
-#sysfs_path=/sys/class/backlight/acpi_video0/brightness
-sysfs_path=
-
-# Time to sleep (in seconds) between increments when using sysfs. If unset or
-# empty, fading is disabled.
+min_brightness=$((5 + online*15))
+fade_steps=2
 fade_step_time=0.02
 
-###############################################################################
-
-get_brightness() {
-  if [ -z $sysfs_path ]; then
-    light -r
-  else
-    cat $sysfs_path
-  fi
-}
-
-set_brightness() {
-  if [ -z $sysfs_path ]; then
-    light -rS "$1"
-  else
-    echo "$1" > $sysfs_path
-  fi
-}
+get_brightness() { echo "($(light)+0.5)/1" | bc -s; }
+set_brightness() { light -S "$1";    }
 
 fade_brightness() {
-  if [ -z $fade_step_time ]; then
-    set_brightness "$1"
-  else
+  if [ -n "$fade_step_time" ] && [ $fade_step_time != 0 ]; then
     start=$(get_brightness)
     [ "$start" -eq "$1" ] && return
     [ "$start" -lt "$1" ] && c=1 || c=-1
-    while [ "$start" -ne "$1" ]; do
-      start=$((start + c))
+    c=$((c * fade_steps))
+    start=$((start + c))
+    while { [ $c -gt 0 ] && [ "$start" -lt "$1" ]; } \
+       || { [ $c -lt 0 ] && [ "$start" -gt "$1" ]; }; do
       set_brightness "$start"
       sleep $fade_step_time
+      start=$((start + c))
     done; unset level
   fi
+  set_brightness "$1"
 }
 
 trap 'exit 0' TERM INT
