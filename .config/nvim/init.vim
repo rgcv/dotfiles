@@ -46,6 +46,7 @@ Plug 'airblade/vim-gitgutter'
 Plug 'chr4/nginx.vim'
 Plug 'chriskempson/base16-vim'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
 Plug 'itchyny/lightline.vim'
 Plug 'JuliaEditorSupport/julia-vim'
 Plug 'junegunn/fzf.vim'
@@ -84,7 +85,8 @@ Plug 'udalov/kotlin-vim'
 Plug 'vim-pandoc/vim-pandoc'
   Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'visualfc/gocode',
-      \ { 'rtp': 'nvim', 'do': '~/.local/share/nvim/plugged/gocode/nvim/symlink.sh' }
+      \ { 'rtp': (has('nivm') ? 'n' : '').'vim',
+      \   'do': '~/.local/share/nvim/plugged/gocode/nvim/symlink.sh' }
 call plug#end()
 
 " options
@@ -294,6 +296,8 @@ let g:lightline#neomake#prefix_ok = '✓ '
 let g:lightline#neomake#prefix_errors = '✗ '
 let g:lightline#neomake#prefix_infos = '¡ '
 let g:lightline#neomake#prefix_warnings = '!! '
+" markdown-preview.nvim
+nmap <leader>mp <Plug>MarkdownPreview
 " NERDTree
 nnoremap <c-e> :NERDTreeToggle<CR>
 " neomake
