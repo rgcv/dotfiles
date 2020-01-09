@@ -50,10 +50,12 @@ export QT_QPA_PLATFORMTHEME=gtk3
 export NNN_USER_EDITOR=1
 
 ## path configuration
-pathprepend "$HOME/.local/scripts"
-pathprepend "$HOME/.local/bin"
-pathprepend "$HOME/.local/lib" LD_LIBRARY_PATH
-pathprepend "$HOME/.local/include" CPATH
+local=$HOME/.local
+mkdir -p "$local/scripts" && pathprepend "$local/scripts"
+mkdir -p "$local/bin"     && pathprepend "$local/bin"
+mkdir -p "$local/lib"     && pathprepend "$local/lib" LD_LIBRARY_PATH
+mkdir -p "$local/include" && pathprepend "$local/include" CPATH
+unset local
 
 # launch X/Window Server
 # shellcheck disable=SC1090
