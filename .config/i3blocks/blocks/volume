@@ -9,10 +9,6 @@ set -eu
 interval=${interval-}
 format=${format-}
 
-json() {
-  printf '{"full_text":"%s", "short_text":"%s", "color":"%s"}\n' "$1" "$2" "$3"
-}
-
 mixer=default
 amixer -qD pulse info >&- 2>&- && mixer=pulse
 
@@ -20,6 +16,11 @@ scontrol=$(amixer -D $mixer scontrols |
   sed -n "s/Simple mixer control '\([^']*\)',0/\1/p" | head -n 1)
 capability=$(amixer -D $mixer get "$scontrol" |
   sed -n "s/ Capabilities:.*cvolume.*/Capture/p")
+
+
+json() {
+  printf '{"full_text":"%s", "short_text":"%s", "color":"%s"}\n' "$1" "$2" "$3"
+}
 
 display() {
   data=$(amixer -MD $mixer sget "$scontrol" | grep '[0-9]*%' | head -n 1)
