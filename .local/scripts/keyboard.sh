@@ -26,3 +26,5 @@ esac
 if [ -n "${2-}" ]; then
   setxkbmap -variant "$2"
 fi
+
+pkill -RTMIN+20 i3blocks
