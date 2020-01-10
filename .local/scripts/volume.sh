@@ -13,12 +13,13 @@ if amixer -D pulse info >&-; then
   mixer=pulse
 fi
 scontrol=$(amixer -D "$mixer" scontrols |
-  sed -n "s/Simple mixer control '\([^']*\)',0/\1/p" | head -1)
+  sed -n "s/Simple mixer control '\([^']*\)',0/\1/p" | head -n 1)
 capability=$(amixer -D "$mixer" get "$scontrol" |
   sed -n "s/ Capabilities:.*cvolume.*/Capture/p")
 
 # do some stuff
 amixer -qMD "$mixer" sset "$scontrol" "$capability" "$@"
+pgrep -x pactl && pkill -RTMIN+25 i3blocks
 
 # display the notification
 data=$(amixer -MD "$mixer" sget "$scontrol")
