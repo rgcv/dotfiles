@@ -39,9 +39,11 @@ instance=time
 interval=1
 
 [keyboard]
+signal=20
 interval=once
 
 [volume]
+signal=25
 format=json
 interval=once
 
