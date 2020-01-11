@@ -1,6 +1,4 @@
 #!/bin/sh
-# requires:
-#   iw (iw, iface link connection info)
 # uses:
 #   xgetres (xgetres, retrieve X resource values)
 set -eu
@@ -11,13 +9,22 @@ AF=${AF-inet6?}
 iface=${BLOCK_INSTANCE-$(ip route | awk '/^default/ {print $5; exit}')}
 # no default route
 [ -z "$iface" ] && exit
-# interface missing
-[ ! -d "/sys/class/net/$iface" ] && exit
 
-icon=
+case $iface in
+  e*) icon= ;;
+  w*) icon= ;;
+esac
 [ "$markup" = pango ] && icon="<b>$icon</b>"
 
-addr=$(ip addr show dev "$iface" | awk "/$AF/ {print \$2; exit}")
+# interface missing
+if [ ! -d "/sys/class/net/$iface" ]; then
+  echo "$icon"
+  echo "$icon"
+  xgetres i3.color9 || echo "#ff5555"
+  exit
+fi
+
+addr=$(ip addr show dev "$iface" | awk '/'"$AF"'/ {print $2; exit}')
 addr=${addr%/*}
 
 echo "$icon $addr"
