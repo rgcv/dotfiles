@@ -19,7 +19,7 @@ capability=$(amixer -D "$mixer" get "$scontrol" |
 
 # do some stuff
 amixer -qMD "$mixer" sset "$scontrol" "$capability" "$@"
-pgrep -x pactl && pkill -RTMIN+25 i3blocks
+pgrep -x pactl || pkill -RTMIN+25 i3blocks
 
 # display the notification
 data=$(amixer -MD "$mixer" sget "$scontrol")
