@@ -18,9 +18,11 @@ esac
 
 # interface missing
 if [ ! -d "/sys/class/net/$iface" ]; then
-  echo "$icon"
-  echo "$icon"
-  xgetres i3.color9 || echo "#ff5555"
+  if [ -n "$icon" ]; then
+    echo "$icon"
+    echo "$icon"
+    xgetres i3.color9 || echo "#ff5555"
+  fi
   exit
 fi
 
