@@ -1,4 +1,6 @@
 #!/bin/sh
+# requires:
+#   jq (jq, json parsing)
 set -eu
 
 trim() {
