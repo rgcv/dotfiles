@@ -6,7 +6,7 @@
 
 read -r online < /sys/class/power_supply/AC/online
 
-min_brightness=$((5 + online*15))
+min_brightness=$((5 + online*10))
 fade_steps=2
 fade_step_time=0.02
 
