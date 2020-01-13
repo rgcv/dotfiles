@@ -43,6 +43,7 @@ endfunction
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'airblade/vim-gitgutter'
+Plug 'ararslan/license-to-vim'
 Plug 'chr4/nginx.vim'
 Plug 'chriskempson/base16-vim'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -206,6 +207,9 @@ let g:echodoc#enable_at_startup = 1
 let g:echodoc#type = 'floating'
 " ftplugin
 let g:tex_flavor = 'latex'
+" license-to-vim
+let g:license_author = 'Rui Ventura'
+command! Mit License('mit')
 " lightline.vim
 let g:lightline = {
       \ 'colorscheme': 'base16_material_darker',
