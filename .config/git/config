@@ -54,7 +54,7 @@
 
   # misc
   gi = !"gi() { curl -sL \"https://gitignore.io/api/$*\"; }; gi"
-  retag = !"retag() { git tag -d \"$1\" && git tag \"$1\" && git push --tags; }; retag"
+  retag = !"retag() { git tag -d \"$1\" && git tag \"$1\" && git push -f --tags; }; retag"
   yolo = !git commit -am "$(curl -s http://whatthecommit.com/index.txt)"
 
 [includeIf "gitdir:ist181045/"]
