@@ -1,4 +1,6 @@
 #!/bin/sh
+# requires:
+#   ip (iproute2, determine default route + device addr)
 # uses:
 #   xgetres (xgetres, retrieve X resource values)
 set -eu
@@ -11,24 +13,26 @@ iface=${BLOCK_INSTANCE-$(ip route | awk '/^default/ {print $5; exit}')}
 [ -z "$iface" ] && exit
 
 case $iface in
-  e*) icon= ;;
-  w*) icon= ;;
+  en*|eth*) icon= ;;
+  wl*) icon= ;;
+  ww*) icon= ;;
 esac
 [ "$markup" = pango ] && icon="<b>$icon</b>"
 
 # interface missing
 if [ ! -d "/sys/class/net/$iface" ]; then
-  if [ -n "$icon" ]; then
-    echo "$icon"
-    echo "$icon"
-    xgetres i3.color9 || echo "#ff5555"
-  fi
+  echo "$icon $iface ??"
+  echo "$icon"
   exit
 fi
 
 addr=$(ip addr show dev "$iface" | awk '/'"$AF"'/ {print $2; exit}')
 addr=${addr%/*}
 
-echo "$icon $addr"
+[ -z "$addr" ] && echo "$icon addr ??" || echo "$icon $addr"
 echo "$icon"
-xgetres i3.color10 || echo "#55ff55"
+if [ -z "$addr" ]; then
+  xgetres i3.color1  || echo "#800000"
+else
+  xgetres i3.color10 || echo "#55ff55"
+fi
