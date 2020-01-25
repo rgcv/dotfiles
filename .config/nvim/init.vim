@@ -143,6 +143,21 @@ set nowrap
 
 colorscheme base16-material-darker
 
+" digraphs
+" alpha subscripts
+digraphs as 0x2090
+digraphs es 0x2091
+digraphs os 0x2092
+digraphs xs 0x2093
+digraphs hs 0x2095
+digraphs ks 0x2096
+digraphs ls 0x2097
+digraphs ms 0x2098
+digraphs ns 0x2099
+" digraphs ps 0x209A
+" digraphs ss 0x209B
+" digraphs ts 0x209C
+
 " mappings
 " \ (backward slash) is a bit far, use `,` (comma) as leader instead
 let mapleader = ','
