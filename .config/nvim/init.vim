@@ -194,7 +194,7 @@ function! CtrlPStatusFuncProg(str)
   return lightline#statusline(0)
 endfunction
 " deoplete
-let g:deoplete#enable_at_startup = has('+python3')
+let g:deoplete#enable_at_startup = 1
 call g:deoplete#custom#var('omni', 'input_patterns', {
       \ 'tex': g:vimtex#re#deoplete
       \ })
@@ -339,7 +339,7 @@ let g:pandoc#modules#disabled = ['folding']
 command! PU PlugUpdate | PlugUpgrade
 " vimtex
 let g:vimtex_compiler_latexmk = {
-      \ 'backend': 'nvim',
+      \ 'backend': (has('nvim') ? 'n' : '') . 'vim',
       \ 'background': 1,
       \ 'build_dir': '',
       \ 'callback': 1,
