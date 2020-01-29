@@ -80,6 +80,7 @@ Plug 'vim-pandoc/vim-pandoc'
 Plug 'visualfc/gocode',
       \ { 'rtp': (has('nivm') ? 'n' : '').'vim',
       \   'do': '~/.local/share/nvim/plugged/gocode/nvim/symlink.sh' }
+Plug 'wannesm/wmgraphviz.vim'
 call plug#end()
 
 " options
