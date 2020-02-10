@@ -1,17 +1,14 @@
 #!/bin/sh
 
 ## Xorg config
-xset -b            `# disable bell` \
-     s on          `# enable screensaver` \
-     s 180 60      `# dim after 3m, lock 1m after` \
-     +dpms         `# enable DPMS` \
-     dpms 300      `# standby after 5m` \
-     r rate 350 30 `# auto-repeat delay + rate`
+xset -b             `# disable bell` \
+     s on           `# enable screensaver` \
+     s 300 60       `# dim after 5m, lock 1m after` \
+     +dpms          `# enable DPMS` \
+     dpms 480 0 600 `# standby after 8m, off at 10m` \
+     r rate 350 30  `# auto-repeat delay + rate`
 # keyboard
 numlockx & # make sure to always enable numlock anyways (calc ops)
-setxkbmap \
-  -option 'caps:escape' `# bind caps to escape` \
-  -option 'numpad:mac'  `# numpad is always numeric`
 # xinput
 tpid=$(xinput list | grep -i touchpad | grep -o 'id=[0-9]*')
 if [ -n "$tpid" ]; then
