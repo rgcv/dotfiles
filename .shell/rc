@@ -49,6 +49,9 @@ fi
 # java home
 command -v java >&- && export JAVA_HOME=/usr/lib/jvm/default
 
+# julia
+export JULIA_NUM_THREADS=$(nproc)
+
 # python user site
 command -v python >&- &&
   pathappend "$(python -c 'import site; print(site.USER_SITE)')"
