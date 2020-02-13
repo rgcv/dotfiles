@@ -27,6 +27,6 @@ systemctl --user import-environment DISPLAY PATH
 # gnome-keyring unlock
 if [ -x /usr/bin/gnome-keyring-daemon ]; then
   dbus-update-activation-environment --systemd DISPLAY
-  eval "$(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)"
+  eval "$(/usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets)"
   export SSH_AUTH_SOCK
 fi
