@@ -1,7 +1,6 @@
 #!/bin/sh
 # PATH-like environment variable manipulation functions
 __pathadd() {
-  [ -d "$2" ] || return
   expanded=$(__inpath "$2" "$3")
   [ -n "$expanded" ] && $1 "$2" "$3" "$expanded"
 }
