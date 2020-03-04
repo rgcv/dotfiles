@@ -26,6 +26,9 @@ if [ -d "$HOME/software/android/sdk" ]; then
   pathappend "$ANDROID_HOME/emulator"
 fi
 
+# dotnet
+pathappend "$HOME/.dotnet/tools"
+
 # gnupg
 if command -v gpg >&-; then
   GPG_TTY=$(tty)
