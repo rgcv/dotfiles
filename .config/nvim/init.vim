@@ -78,7 +78,7 @@ Plug 'udalov/kotlin-vim'
 Plug 'vim-pandoc/vim-pandoc'
   Plug 'vim-pandoc/vim-pandoc-syntax'
 Plug 'visualfc/gocode',
-      \ { 'rtp': (has('nivm') ? 'n' : '').'vim',
+      \ { 'rtp': (has('nvim') ? 'n' : '').'vim',
       \   'do': '~/.local/share/nvim/plugged/gocode/nvim/symlink.sh' }
 Plug 'wannesm/wmgraphviz.vim'
 call plug#end()
