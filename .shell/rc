@@ -33,7 +33,7 @@ pathappend "$HOME/.dotnet/tools"
 if command -v gpg >&-; then
   GPG_TTY=$(tty)
   export GPG_TTY
-  gpg-connect-agent updatestartuptty /bye 2>/dev/null
+  gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
 fi
 # gnupg agent ssh emulation
 unset SSH_AGENT_PID
