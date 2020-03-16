@@ -33,7 +33,7 @@ pathappend "$HOME/.dotnet/tools"
 if command -v gpg >&-; then
   GPG_TTY=$(tty)
   export GPG_TTY
-  gpg-connect-agent updatestartuptty /bye >/dev/null
+  gpg-connect-agent updatestartuptty /bye 2>/dev/null
 fi
 # gnupg agent ssh emulation
 unset SSH_AGENT_PID
@@ -64,7 +64,7 @@ command -v gem >&- && pathappend "$(ruby -e 'puts Gem.user_dir')/bin"
 
 # yarn
 if command -v yarn >&-; then
-  bin="$HOME/.local/bin"
+  bin=$HOME/.local/bin
   mkdir -p "$bin"
   sh -c "yarn config set bin '$bin' >&- 2>&- &"
   pathappend "$bin"

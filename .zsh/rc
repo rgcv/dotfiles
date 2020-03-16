@@ -20,7 +20,7 @@ compinit -C
 # load zsh/nearcolor if 24-bit colors aren't supported
 case $COLOR_TERM in
   24bit|truecolor) ;;
-  *) [ "${terminfo[colors]}" -eq 16777216 ] || zmodload zsh/nearcolor
+  *) [ "${terminfo[colors]}" -eq 16777216 ] || zmodload zsh/nearcolor 2>/dev/null
 esac
 
 # prompt module
@@ -34,7 +34,7 @@ if [ -n "$GBT__HOME" ]; then
 fi
 
 # plugins
-for p (/usr/share/zsh/plugins/*) source "$p/${p##*/}.zsh"
+for p in /usr/share/zsh/plugins/*; do source "$p/${p##*/}.zsh"; done 2>/dev/null
 unset p
 
 # functions
