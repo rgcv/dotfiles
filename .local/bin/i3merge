@@ -38,9 +38,9 @@ tmpconf="$i3config.$$"
 BANNER
 
   # actual config: strips comments and unnecessary whitespace
-  cat 2>&- "$i3/conf.d"/*.conf | awk '$0 !~ /^\s*(#|$)/ {$1=$1;print};'
+  cat 2>&- "$i3/conf.d"/*.conf | awk '$0 !~ /^\s*(#|$)/ {$1=$1;print}'
 } > "$tmpconf"
-trap 'rm -rf $tmpconf' EXIT TERM INT
+trap 'rm -f $tmpconf' EXIT TERM INT
 
 if ! i3 -Cc "$tmpconf"; then
   i3-nagbar -m "Failed to validate resulting config"

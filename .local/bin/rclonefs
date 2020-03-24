@@ -1,0 +1,39 @@
+#!/bin/sh
+# from https://github.com/rclone/rclone/wiki/rclone-fstab-mount-helper-script
+# requires:
+#   rclone (rclone)
+set -eu
+command -v rclone >/dev/null || exit 1
+
+remote=$1
+mount=$2
+shift 2
+
+args=
+while getopts :o: opts; do
+  case $opts in
+    o)
+      OLDIFS=$IFS; IFS=,
+      for param in $OPTARG; do
+        case $param in
+          rw|ro|dev|suid|exec|auto|nodev|nosuid|noexec|noauto) continue ;;
+          x-systemd.*) continue ;;
+          *) args="$args --$param" ;;
+        esac
+      done
+      IFS=$OLDIFS
+      ;;
+    \?) echo 2>&1 "Invalid option: -$OPTARG" ;;
+  esac
+done
+
+args="$args $remote $mount"
+# shellcheck disable=SC2086
+PATH=$PATH rclone mount $args <&- >&- &
+sleep 1 # give it a sec before checking it is running ok
+pgrep -P$$ || exit
+
+# WARNING: this will loop forever if remote is empty!
+until [ "$(ls -l "$mount")" != 'total 0' ]; do
+  sleep 1
+done

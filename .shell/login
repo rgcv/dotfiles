@@ -53,7 +53,6 @@ export TERM=xterm-256color
 pathprepend "$npm_config_prefix"
 
 local=$HOME/.local
-mkdir -p "$local/scripts" && pathprepend "$local/scripts"
 mkdir -p "$local/bin"     && pathprepend "$local/bin"
 mkdir -p "$local/lib"     && pathprepend "$local/lib" LD_LIBRARY_PATH
 mkdir -p "$local/include" && pathprepend "$local/include" CPATH
