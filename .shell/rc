@@ -10,65 +10,20 @@ export TERM=xterm-256color
 HISTFILE=$HOME/.history
 HISTSIZE=10000
 
-# utilities
-# shellcheck disable=SC1090
-. "$HOME/.shell/env_functions"
-
-## dynamic env vars (not a part of graphical environment!)
-# android
-if [ -d "$HOME/software/android/sdk" ]; then
-  export ANDROID_HOME="$HOME/software/android/sdk"
-  export ANDROID_SDK_ROOT=$ANDROID_HOME
-  export ANDROID_AVD_HOME="$HOME/.android/avd"
-  pathappend "$ANDROID_HOME/tools"
-  pathappend "$ANDROID_HOME/tools/bin"
-  pathappend "$ANDROID_HOME/platform-tools"
-  pathappend "$ANDROID_HOME/emulator"
-fi
-
-# dotnet
-pathappend "$HOME/.dotnet/tools"
-
 # gnupg
 if command -v gpg >&-; then
   GPG_TTY=$(tty)
   export GPG_TTY
   gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
 fi
-# gnupg agent ssh emulation
-unset SSH_AGENT_PID
-if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-  SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
-  export SSH_AUTH_SOCK
+
+# ssh agent
+if ! pgrep -u "$USER" ssh-agent >/dev/null; then
+  ssh-agent > "$XDG_RUNTIME_DIR/ssh-agent.env"
 fi
-
-# golang
-if command -v go >&-; then
-  export GOPATH="$HOME/.go"
-  pathappend "$(go env GOPATH)/bin"
-  pathappend "$(go env GOROOT)/bin"
-fi
-
-# java home
-command -v java >&- && export JAVA_HOME=/usr/lib/jvm/default
-
-# julia
-export JULIA_NUM_THREADS=$(nproc)
-
-# python user site
-command -v python >&- &&
-  pathappend "$(python -c 'import site; print(site.USER_SITE)')"
-
-# ruby gems
-command -v gem >&- && pathappend "$(ruby -e 'puts Gem.user_dir')/bin"
-
-# yarn
-if command -v yarn >&-; then
-  bin=$HOME/.local/bin
-  mkdir -p "$bin"
-  sh -c "yarn config set bin '$bin' >&- 2>&- &"
-  pathappend "$bin"
-  unset bin
+if [ -z "$SSH_AUTH_SOCK" ]; then
+  # shellcheck disable=SC1090
+  . "$XDG_RUNTIME_DIR/ssh-agent.env" >/dev/null 2>&1
 fi
 
 ## other variables
@@ -183,8 +138,6 @@ alias primusrun="PRIMUS_SYNC=1 vblank_mode=0 primusrun"
 alias rsync="rsync -azvhP" # archive compressed verbose human readable
 alias sudo='sudo ' # alias expansion
 
-command -v htop >&- && alias top=htop
-
 alias tree="tree -C"
 
 if command -v nvim >&-; then
@@ -259,8 +212,3 @@ if [ -f "$CWD" ]; then
   cd "$(cat "$CWD")" || true
 fi
 alias cd=__cd
-
-
-# added by travis gem
-# shellcheck disable=SC1090
-[ -f "$HOME/.travis/travis.sh" ] && . "$HOME/.travis/travis.sh"
