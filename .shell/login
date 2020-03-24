@@ -1,16 +1,13 @@
 #!/bin/sh
-## environment setup
-# browser
+# environment setup
 export BROWSER=firefox
 
-# editor
 for v in nvim vim vi; do
   command -v $v >&- && export EDITOR=$v && break
 done; unset v
 export VISUAL=$EDITOR
 export SUDO_EDITOR=$EDITOR
 
-# locale
 DEFAULT_LANG=pt_PT.UTF-8
 export LANG=en_US.UTF-8
 export LC_ADDRESS=$DEFAULT_LANG
@@ -22,7 +19,9 @@ export LC_PAPER=$DEFAULT_LANG
 export LC_TELEPHONE=$DEFAULT_LANG
 unset LC_ALL DEFAULT_LANG
 
-# pager
+# shellcheck disable=SC2155
+export JULIA_NUM_THREADS=$(nproc)
+
 for p in less more cat; do
   command -v $p >&- && export PAGER=$p && break
 done; unset p
@@ -38,18 +37,21 @@ export LESS_TERMCAP_ue=$(printf '\033[0m')
 export LESS_TERMCAP_us=$(printf '\033[01;32m')
 }
 
-# terminal setup
+# shellcheck disable=SC2155
+export MAKEFLAGS=-j$(nproc)
+
+export NNN_USER_EDITOR=1
+export npm_config_prefix=~/.node_modules
+
+export QT_QPA_PLATFORMTHEME=gtk3
+
 export TERMINAL=termite
 export TERM=xterm-256color
 
-# theme
-export QT_QPA_PLATFORMTHEME=gtk3
 
-# others
-# nnn
-export NNN_USER_EDITOR=1
+# path configuration
+pathprepend "$npm_config_prefix"
 
-## path configuration
 local=$HOME/.local
 mkdir -p "$local/scripts" && pathprepend "$local/scripts"
 mkdir -p "$local/bin"     && pathprepend "$local/bin"
