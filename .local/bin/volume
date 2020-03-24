@@ -36,7 +36,7 @@ case $mute in
   *)
     volume=${volume%\%}
     summary="Volume: $volume%"
-    body=$(progress-string.sh 20 '■ ' '□ ' "$volume")
+    body=$(progress-string 20 '■ ' '□ ' "$volume")
 
     case "$volume" in
       0) # 0 (different from muted)

@@ -74,4 +74,4 @@ dunstify \
   --icon "$icon" \
   --replace 900101 \
   "Brightness: $new%" \
-  "$(progress-string.sh 20 '■ ' '□ ' "$new")" &
+  "$(progress-string 20 '■ ' '□ ' "$new")" &
