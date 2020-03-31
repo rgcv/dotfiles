@@ -11,7 +11,7 @@ HISTFILE=$HOME/.history
 HISTSIZE=10000
 
 # gnupg
-if command -v gpg >&-; then
+if command -v gpg-connect-agent >&-; then
   GPG_TTY=$(tty)
   export GPG_TTY
   gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
