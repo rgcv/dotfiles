@@ -1,9 +1,3 @@
-if !has('nvim')
-  set encoding=utf-8
-  filetype plugin indent on
-endif
-scriptencoding utf-8
-
 "   __   __        _
 "  / / __\ \__   _(_)_ __ ___
 " | | '_ \| \ \ / / | '_ ` _ \
@@ -11,14 +5,20 @@ scriptencoding utf-8
 " | |_| |_| | \_/ |_|_| |_| |_|
 "  \_\   /_/
 
+if !has('nvim')
+  set encoding=utf-8
+  filetype plugin indent on
+endif
+scriptencoding utf-8
+
 " https://gist.github.com/laggardkernel/9013f948345212563ede9c9ee56c6b42
 " Reuse nvim's rtp and packpath in vim
-if !has('nvim') && v:version >= 800
+if !has('nvim')
   set runtimepath-=~/.vim
     \ runtimepath^=~/.local/share/nvim/site runtimepath^=~/.vim
     \ runtimepath-=~/.vim/after
     \ runtimepath+=~/.local/share/nvim/site/after runtimepath+=~/.vim/after
-  let &packpath = &runtimepath
+  if exists('+packpath') | let &packpath = &runtimepath | endif
 endif
 
 "" plugins
@@ -27,9 +27,9 @@ if empty(glob('~/.local/share/nvim/plugged'))
         \ https://raw.github.com/junegunn/vim-plug/master/plug.vim
 endif
 
-function! When(cond, ...)
-  let opts = get(a:000, 0, {})
-  return a:cond ? opts : extend(opts, { 'on': [], 'for': [] })
+function! HasPatch(version, patch)
+  return v:version >  a:version ||
+       \ v:version == a:version && has('patch' . a:patch)
 endfunction
 
 call plug#begin('~/.local/share/nvim/plugged')
@@ -39,15 +39,14 @@ Plug 'ararslan/license-to-vim'
 Plug 'chr4/nginx.vim'
 Plug 'chriskempson/base16-vim'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install' }
+if has('nvim') || v:version >= 801
+  Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() } }
+endif
 Plug 'itchyny/lightline.vim'
 Plug 'JuliaEditorSupport/julia-vim'
-Plug 'junegunn/fzf.vim'
 Plug 'junegunn/vim-slash'
 Plug 'lepture/vim-jinja'
 Plug 'lervag/vimtex'
-Plug 'lilydjwg/colorizer'
-Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 Plug 'mattn/emmet-vim'
 Plug 'mike-hearn/base16-vim-lightline'
 Plug 'neomake/neomake'
@@ -55,19 +54,29 @@ Plug 'neomake/neomake'
 Plug 'Potatoesmaster/i3-vim-syntax'
 Plug 'pangloss/vim-javascript'
 Plug 'roxma/vim-paste-easy'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-  Plug 'roxma/nvim-yarp', When(!has('nvim'))
-  Plug 'roxma/vim-hug-neovim-rpc', When(!has('nvim'))
-  Plug 'deoplete-plugins/deoplete-clang'
-  Plug 'deoplete-plugins/deoplete-jedi'
-  Plug 'deoplete-plugins/deoplete-go', { 'do': 'make' }
-  Plug 'deoplete-plugins/deoplete-zsh'
-  Plug 'Shougo/neoinclude.vim'
-Plug 'Shougo/echodoc'
-Plug 'Shougo/neosnippet.vim'
-  Plug 'Shougo/neosnippet-snippets'
-Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
-  Plug 'Xuyuanp/nerdtree-git-plugin'
+if (has('nvim-0.3.0') || v:version >= 800) && has('python3') && has('timers')
+  " requires pynvim + msgpack (pip)
+  if has('nvim')
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  else
+    Plug 'Shougo/deoplete.nvim'
+      Plug 'roxma/nvim-yarp'
+      Plug 'roxma/vim-hug-neovim-rpc'
+  end
+    if !has('win32')
+      Plug 'deoplete-plugins/deoplete-clang'
+    endif
+    Plug 'deoplete-plugins/deoplete-jedi'
+    Plug 'deoplete-plugins/deoplete-zsh'
+    Plug 'Shougo/neoinclude.vim'
+endif
+if HasPatch(704, 774)
+  Plug 'Shougo/echodoc'
+endif
+if v:version >= 704
+  Plug 'Shougo/neosnippet.vim'
+    Plug 'Shougo/neosnippet-snippets'
+endif
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
   Plug 'tpope/vim-rhubarb'
@@ -75,11 +84,6 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'udalov/kotlin-vim'
-Plug 'vim-pandoc/vim-pandoc'
-  Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'visualfc/gocode',
-      \ { 'rtp': (has('nvim') ? 'n' : '').'vim',
-      \   'do': '~/.local/share/nvim/plugged/gocode/nvim/symlink.sh' }
 Plug 'wannesm/wmgraphviz.vim'
 call plug#end()
 
@@ -90,7 +94,7 @@ if !has('nvim')
   set autoread
   set background=dark
   set backspace=indent,eol,start
-  set belloff=all
+  " set belloff=all
   set complete-=i
   set cscopeverbose
   set display="lastline,msgsep"
@@ -99,13 +103,11 @@ if !has('nvim')
   set history=10000
   set hlsearch
   set incsearch
-  set langnoremap
+  " set langnoremap
   set laststatus=2
   set listchars="tab:> ,trail:-,nbsp:+"
-  set nrformats=bin,hex
   set ruler
   set sessionoptions-=options
-  set shortmess+=F shortmess-=S
   set showcmd
   set sidescroll=1
   set smarttab
@@ -117,8 +119,12 @@ if !has('nvim')
   set wildmenu
   set wildoptions="pum,tagfile"
 
-  set nofsync
-  set nolangremap
+  if exists('+fsync')
+    set nofsync
+  endif
+  if exists('+langremap')
+    set nolangremap
+  endif
   " vint: -ProhibitSetNoCompatible
   set nocompatible
   " vint: +ProhibitSetNoCompatible
@@ -131,10 +137,17 @@ set mouse=a " enable mouse support if we have it
 set number relativenumber
 set shiftwidth=2
 set scrolloff=8 sidescrolloff=8
-set signcolumn=yes " always show gutter
+if exists('+signcolumn')
+  set signcolumn=yes " always show gutter
+endif
 set smartindent
 set splitbelow splitright
-set termguicolors
+if exists('+termguicolors')
+  set termguicolors
+  colorscheme base16-material-darker
+else
+  colorscheme slate
+endif
 if !has('gui_running')
   set t_Co=256
 endif
@@ -142,22 +155,22 @@ endif
 set noshowmode " redundant with lightline/airline/powerline
 set nowrap
 
-colorscheme base16-material-darker
-
 " digraphs
 " alpha subscripts
-digraphs as 0x2090
-digraphs es 0x2091
-digraphs os 0x2092
-digraphs xs 0x2093
-digraphs hs 0x2095
-digraphs ks 0x2096
-digraphs ls 0x2097
-digraphs ms 0x2098
-digraphs ns 0x2099
-" digraphs ps 0x209A
-" digraphs ss 0x209B
-" digraphs ts 0x209C
+if has('digraphs')
+  digraphs as 0x2090
+  digraphs es 0x2091
+  digraphs os 0x2092
+  digraphs xs 0x2093
+  digraphs hs 0x2095
+  digraphs ks 0x2096
+  digraphs ls 0x2097
+  digraphs ms 0x2098
+  digraphs ns 0x2099
+  " digraphs ps 0x209A
+  " digraphs ss 0x209B
+  " digraphs ts 0x209C
+endif
 
 " mappings
 " \ (backward slash) is a bit far, use `,` (comma) as leader instead
@@ -196,7 +209,7 @@ function! CtrlPStatusFuncProg(str)
 endfunction
 " deoplete
 let g:deoplete#enable_at_startup = 1
-call g:deoplete#custom#var('omni', 'input_patterns', {
+silent! call g:deoplete#custom#var('omni', 'input_patterns', {
       \ 'tex': g:vimtex#re#deoplete
       \ })
 " deoplete-clang
@@ -215,12 +228,11 @@ let g:echodoc#enable_at_startup = 1
 let g:echodoc#type = 'floating'
 " ftplugin
 let g:tex_flavor = 'latex'
-" license-to-vim
-let g:license_author = 'Rui Ventura'
-command! Mit License('mit')
+" julia-vim
+let g:latex_to_unicode_auto = 1
 " lightline.vim
 let g:lightline = {
-      \ 'colorscheme': 'base16_material_darker',
+      \ 'colorscheme': exists('+termguicolors') ? 'base16_material_darker' : 'wombat',
       \ 'active': {
       \   'left': [
       \     ['mode', 'paste', 'spell'],
@@ -274,8 +286,6 @@ function! LightlineFilename()
   return
         \ &filetype ==# 'ctrlp' && has_key(g:lightline, 'ctrlp_item') ?
           \ g:lightline.ctrlp_item :
-        \ &filetype ==# 'tagbar' && has_key(g:lightline, 'fname') ?
-          \ g:lightline.fname :
         \ &filetype ==# 'vim-plug' ? '' :
         \ ''
           \ . (&modified ? '*' : '')
@@ -284,7 +294,7 @@ endfunction
 
 function! LightlineFiletype()
   return winwidth(0) <= 70 ? '' :
-        \ &filetype =~# 'ctrlp\|tagbar\|vim-plug' ? '' :
+        \ &filetype =~# 'ctrlp\|vim-plug' ? '' :
         \ &filetype !=# '' ? &filetype :
         \ 'no ft'
 endfunction
@@ -299,9 +309,9 @@ function! LightlineFugitive()
 endfunction
 
 function! LightlineMode()
-  return
-        \ &filetype =~# 'ctrlp\|help\|tagbar\|vim-plug' ? toupper(&filetype) :
-        \ winwidth(0) > 60 ? lightline#mode() : ''
+  return &filetype =~# 'ctrlp\|help\|vim-plug' ? toupper(&filetype) :
+       \ winwidth(0) > 60 ? lightline#mode() :
+       \ ''
 endfunction
 " lightline-neomake
 let g:lightline#neomake#prefix_ok = '✓ '
@@ -310,8 +320,6 @@ let g:lightline#neomake#prefix_infos = '¡ '
 let g:lightline#neomake#prefix_warnings = '!! '
 " markdown-preview.nvim
 nmap <leader>mp <Plug>MarkdownPreview
-" NERDTree
-nnoremap <c-e> :NERDTreeToggle<CR>
 " neomake
 silent! call neomake#configure#automake('nrwi', 750)
 " neosnippet
@@ -322,20 +330,9 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 if has('conceal')
   set conceallevel=2 concealcursor=niv
 endif
-" tagbar
-let g:tagbar_status_func = 'TagbarStatusFunc'
-
-function! TagbarStatusFunc(current, sort, fname, ...) abort
-  let g:lightline.fname = a:fname
-  return lightline#statusline(0)
-endfunction
-
-nmap <c-t> :TagbarToggle<CR>
 " vim-javascript
 let g:javascript_plugin_jsdoc = 1
 let g:javascript_plugin_ngdoc = 1
-" vim-pandoc
-let g:pandoc#modules#disabled = ['folding']
 " vim-plug
 command! PU PlugUpdate | PlugUpgrade
 " vimtex
