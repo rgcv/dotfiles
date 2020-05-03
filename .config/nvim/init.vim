@@ -314,7 +314,7 @@ function! LightlineMode()
        \ ''
 endfunction
 " lightline-neomake
-let g:lightline#neomake#prefix_ok = '✓ '
+let g:lightline#neomake#prefix_ok = '✓'
 let g:lightline#neomake#prefix_errors = '✗ '
 let g:lightline#neomake#prefix_infos = '¡ '
 let g:lightline#neomake#prefix_warnings = '!! '
