@@ -26,6 +26,9 @@
 [push]
   followTags = true
 
+[pull]
+  rebase = false
+
 [url "git@github.com"]
   insteadOf = gh
 [url "git@bitbucket.org"]
