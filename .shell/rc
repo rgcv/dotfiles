@@ -19,11 +19,11 @@ fi
 
 # ssh agent
 if ! pgrep -u "$USER" ssh-agent >/dev/null; then
-  ssh-agent > "$XDG_RUNTIME_DIR/ssh-agent.env"
+  ssh-agent > "${XDG_RUNTIME_DIR-/tmp}/$USER.ssh-agent.env"
 fi
 if [ -z "$SSH_AUTH_SOCK" ]; then
   # shellcheck disable=SC1090
-  . "$XDG_RUNTIME_DIR/ssh-agent.env" >/dev/null 2>&1
+  . "${XDG_RUNTIME_DIR-/tmp}/$USER.ssh-agent.env" >/dev/null 2>&1
 fi
 
 ## other variables
