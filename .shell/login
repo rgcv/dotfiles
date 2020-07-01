@@ -3,7 +3,7 @@
 export BROWSER=firefox
 
 for v in nvim vim vi; do
-  command -v $v >&- && export EDITOR=$v && break
+  command -v $v >/dev/null && export EDITOR=$v && break
 done; unset v
 export VISUAL=$EDITOR
 export SUDO_EDITOR=$EDITOR
@@ -23,7 +23,7 @@ unset LC_ALL DEFAULT_LANG
 export JULIA_NUM_THREADS=$(nproc)
 
 for p in less more cat; do
-  command -v $p >&- && export PAGER=$p && break
+  command -v $p >/dev/null && export PAGER=$p && break
 done; unset p
 export LESS="-g -i -M -R -S -w -z-4"
 # shellcheck disable=SC2155

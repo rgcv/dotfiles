@@ -11,7 +11,7 @@ HISTFILE=$HOME/.history
 HISTSIZE=10000
 
 # gnupg
-if command -v gpg-connect-agent >&-; then
+if command -v gpg-connect-agent >/dev/null; then
   GPG_TTY=$(tty)
   export GPG_TTY
   gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
@@ -128,7 +128,7 @@ alias   lS="ls -1FSsh"  #dir sizes
 alias lart="ls -1Fcart" #all relative + types
 alias  lrt="ls -1Fcrt"  #relative + types
 
-command -v neomutt >&- && alias mutt=neomutt
+command -v neomutt >/dev/null && alias mutt=neomutt
 
 alias myip="curl -s https://ifconfig.me/ip"
 alias nnn="nnn -d"
@@ -140,10 +140,10 @@ alias sudo='sudo ' # alias expansion
 
 alias tree="tree -C"
 
-if command -v nvim >&-; then
+if command -v nvim >/dev/null; then
   alias vim=nvim
   alias  vi=nvim
-elif command -v vim >&-; then
+elif command -v vim >/dev/null; then
   alias  vi=vim
 fi
 alias nv=nvim
@@ -163,7 +163,7 @@ alias    yay="yay --color auto"
 case "$(tty)" in
   /dev/tty*) ;;
   *)
-    if command -v gbt >&- && [ -z "$SSH_CONNECTION" ]; then
+    if command -v gbt >/dev/null && [ -z "$SSH_CONNECTION" ]; then
       export GBT__HOME=/usr/share/gbt
       # shellcheck disable=SC1090
       . "$GBT__HOME/sources/gbts/cmd/local.sh"
@@ -182,7 +182,7 @@ esac
 reload() { exec "$SHELL" "$@"; }
 
 # xclip
-if command -v xclip >&-; then
+if command -v xclip >/dev/null; then
   copy() {
     if [ ! -t 0 ]; then
       tmp=$(mktemp)
@@ -192,7 +192,7 @@ if command -v xclip >&-; then
     fi
 
     input=${tmp-$1}
-    if command -v xdg-mime >&-; then
+    if command -v xdg-mime >/dev/null; then
       ft=$(xdg-mime query filetype "$input" 2>&-)
     else
       echo "Cannot infer MIME type for '$input', assuming plain text"
