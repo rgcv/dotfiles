@@ -1,12 +1,12 @@
 #!/bin/sh
 
 ## Xorg config
-xset -b             `# disable bell` \
-     s on           `# enable screensaver` \
-     s 300 60       `# dim after 5m, lock 1m after` \
-     +dpms          `# enable DPMS` \
-     dpms 480 0 600 `# standby after 8m, off at 10m` \
-     r rate 350 30  `# auto-repeat delay + rate`
+xset -b             # disable bell
+xset s on           # enable screensaver
+xset s 300 60       # dim after 5m, lock 1m after
+xset +dpms          # enable DPMS
+xset dpms 480 0 600 # standby after 8m, off at 10m
+xset r rate 350 30  # auto-repeat delay + rate
 # keyboard
 numlockx & # make sure to always enable numlock anyways (calc ops)
 # xinput
