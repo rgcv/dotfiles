@@ -18,13 +18,16 @@ if command -v gpg-connect-agent >/dev/null; then
 fi
 
 # ssh agent
+SSH_ENV=ssh-agent.env
+[ -z "$XDG_RUNTIME_DIR" ] && SSH_ENV=$USER.$SSH_ENV
 if ! pgrep -u "$USER" ssh-agent >/dev/null; then
-  ssh-agent > "${XDG_RUNTIME_DIR-/tmp}/$USER.ssh-agent.env"
+  ssh-agent > "${XDG_RUNTIME_DIR-/tmp}/$SSH_ENV"
 fi
 if [ -z "$SSH_AUTH_SOCK" ]; then
   # shellcheck disable=SC1090
-  . "${XDG_RUNTIME_DIR-/tmp}/$USER.ssh-agent.env" >/dev/null 2>&1
+  . "${XDG_RUNTIME_DIR-/tmp}/$SSH_ENV" >/dev/null 2>&1
 fi
+unset SSH_ENV
 
 ## other variables
 # set the Less input preprocessor.
