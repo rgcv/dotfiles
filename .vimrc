@@ -1,1 +1,1 @@
-/home/rgcv/.vim/vimrc
+.vim/vimrc
