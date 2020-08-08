@@ -8,7 +8,7 @@
 
 pkgname=dmenu
 pkgver=4.9
-pkgrel=1
+pkgrel=100
 pkgdesc='Generic menu for X'
 url='https://tools.suckless.org/dmenu/'
 arch=('x86_64')
@@ -54,7 +54,7 @@ build() {
 package() {
   cd "$srcdir/$pkgname-$pkgver"
   make \
-    PREFIX=/usr \
+    PREFIX=/usr/local \
     DESTDIR="$pkgdir" \
     install
   install -Dm 644 LICENSE -t "$pkgdir/usr/share/licenses/$pkgname"
