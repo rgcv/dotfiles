@@ -4,7 +4,7 @@
 #   xgetres (xgetres, Xresources values)
 set -eu
 
-grep -q up /sys/class/net/*/operstate || exit
+while ! grep -q up /sys/class/net/*/operstate; do sleep 5; done
 
 BLOCK_BUTTON=${BLOCK_BUTTON--1}
 BUTTON_CHECK=${BUTTON_CHECK-1}
