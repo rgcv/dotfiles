@@ -41,7 +41,7 @@ done; unset cmd hl
 ## aliases
 # config accessibility
 config_alias() {
-  if ! alias "$2" >&- 2>&-; then
+  if ! alias "$2" >/dev/null 2>&1; then
     base=$1; a=$2; shift 2
     for c in "$@"; do
       if [ -w "$base/$c" ]; then
