@@ -77,6 +77,8 @@ xdg_config_alias   nvimrc      nvim/init.vim
 xdg_config_alias   nvrc        nvim/init.vim
 xdg_config_alias   roficf      rofi/config
 home_config_alias  sshcf       .ssh/config
+xdg_config_alias   swaycf      sway/config
+home_config_alias  swaycf      .sway/config
 xdg_config_alias   termitecf   termite/config
 home_config_alias  vimrc       .vimrc
 home_config_alias  vrc         .vimrc
