@@ -11,7 +11,7 @@ extract() {
   df --output="$fields" "$@" "$target" | tail -n 1
 }
 
-color=${COLOR_ICON_DRIVE-$(xgetres i3.color6 || echo '#55ffff')}
+color=${COLOR_ICON_DRIVE-$(xgetres i3.color6 2>/dev/null || echo '#55ffff')}
 icon=${ICON_DRIVE-}
 if [ -z "$icon" ]; then
   icon=

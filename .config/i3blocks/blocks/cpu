@@ -11,7 +11,7 @@ total() { awk '/^cpu  / {for(i=s=0;i<NF;) s+=$++i; print s}' < /proc/stat; }
 display() {
   text=$(printf '%s %2d%%' "${ICON-}" "$1")
   printf '{"full_text":"%s","short_text":"%s","color":"%s"}\n' \
-    "$text" "$text" "$(xgetres i3.foreground || echo '#ffffff')"
+    "$text" "$text" "$(xgetres i3.foreground 2>/dev/null || echo '#ffffff')"
 }
 
 old_used=$(used)

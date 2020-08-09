@@ -32,7 +32,7 @@ addr=${addr%/*}
 [ -z "$addr" ] && echo "$icon addr ??" || echo "$icon $addr"
 echo "$icon"
 if [ -z "$addr" ]; then
-  xgetres i3.color1  || echo "#800000"
+  xgetres i3.color1  2>/dev/null || echo "#800000"
 else
-  xgetres i3.color10 || echo "#55ff55"
+  xgetres i3.color10 2>/dev/null || echo "#55ff55"
 fi

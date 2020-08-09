@@ -19,8 +19,8 @@ ellipsize() {
   unset len
 }
 prettify() {
-  color_old=${COLOR_VERSION_OLD-$(xgetres i3.color1 || echo '#ff5555')}
-  color_new=${COLOR_VERSION_NEW-$(xgetres i3.color2 || echo '#55ff55')}
+  color_old=${COLOR_VERSION_OLD-$(xgetres i3.color1 2>/dev/null || echo '#ff5555')}
+  color_new=${COLOR_VERSION_NEW-$(xgetres i3.color2 2>/dev/null || echo '#55ff55')}
   c=0
   while read -r pkg old _ new; do
     if [ $c -gt "${NOTIFICATION_PKGS_MAX-20}" ]; then
@@ -71,7 +71,7 @@ unset numupds
 
 icon=
 if [ "${markup-}" = pango ]; then
-  color=${ICON_COLOR-$(xgetres i3.color3 || echo "#ffff55")}
+  color=${ICON_COLOR-$(xgetres i3.color3 2>/dev/null || echo "#ffff55")}
   icon="<span color='$color'>$icon</span>"
   count="<b>$count</b>"
 fi
