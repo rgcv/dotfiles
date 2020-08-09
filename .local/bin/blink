@@ -1,11 +1,31 @@
 #!/bin/sh
 # requires:
-#   any window compositor (picom, compton, xcompmgr, ...)
-#   xdotool (xdotool, window identification)
-#   transset-df (transset-df, setting transparency)
+#  sway:
+#    jq (jq, parse tree for window id)
+#  i3:
+#    any window compositor (picom, compton, xcompmgr, ...)
+#    xdotool (xdotool, window identification)
+#    transset-df (transset-df, setting transparency)
 set -eu
 
-window=$(xdotool getactivewindow)
+getwindow() {
+  if [ -n "$sway_pid" ]; then
+    swaymsg -t get_tree | jq -r '..|select(.focused?)|.id // "__focused__"'
+  else
+    xdotool getactivewindow
+  fi
+}
+
+setopacity() {
+  if [ -n "$sway_pid" ]; then
+    swaymsg -q "[con_id=$window] opacity ${1-1}"
+  else
+    transset-df -i "$window" "${1-1}"
+  fi
+}
+
+sway_pid=$(pgrep -x sway)
+window=$(getwindow)
 delay=0.2
 opacity=0.75
 times=2
@@ -27,10 +47,10 @@ while getopts "d:o:t:" opt; do
   esac
 done; shift $((OPTIND - 1))
 
-for _ in $(seq 1 "$times"); do
+for _ in $(awk -v stop="$times" 'BEGIN {for(i=1;i<=stop;++i) print i}'); do
   sleep "$delay"
-  transset-df -i "$window" "$opacity"
+  setopacity "$opacity"
   sleep "$delay"
-  transset-df -i "$window" 1
+  setopacity 1
 done
 
