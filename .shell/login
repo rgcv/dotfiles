@@ -58,6 +58,10 @@ mkdir -p "$local/lib"     && pathprepend "$local/lib" LD_LIBRARY_PATH
 mkdir -p "$local/include" && pathprepend "$local/include" CPATH
 unset local
 
-# launch X/Window Server
-# shellcheck disable=SC1090
-. "$HOME/.shell/xlogin"
+## graphical environment
+if [ -z "$DISPLAY" ]; then
+  case ${XDG_VTNR--1} in
+    1) command -v sway   >/dev/null && exec DISPLAY=:1 sway ;;
+    2) command -v startx >/dev/null && exec startx -- ":1"  ;;
+  esac
+fi
