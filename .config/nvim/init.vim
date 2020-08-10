@@ -365,6 +365,7 @@ augroup init#configs
 
   autocmd BufWritePost ~/.config/dunst/dunstrc
         \ silent !systemctl --user restart dunst
+  autocmd BufWritePost ~/.config/mako/config silent !makoctl reload
   autocmd BufWritePost ~/.config/termite/config  silent !pkill -USR1 termite
   autocmd BufWritePost ~/.config/i3blocks/config silent !i3-msg restart
 augroup END
