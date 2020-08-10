@@ -9,7 +9,7 @@
 set -eu
 
 getwindow() {
-  if [ -n "$sway_pid" ]; then
+  if [ -n "${SWAYSOCK-}" ]; then
     swaymsg -t get_tree | jq -r '..|select(.focused?)|.id // "__focused__"'
   else
     xdotool getactivewindow
@@ -17,14 +17,13 @@ getwindow() {
 }
 
 setopacity() {
-  if [ -n "$sway_pid" ]; then
+  if [ -n "${SWAYSOCK-}" ]; then
     swaymsg -q "[con_id=$window] opacity ${1-1}"
   else
     transset-df -i "$window" "${1-1}"
   fi
 }
 
-sway_pid=$(pgrep -x sway)
 window=$(getwindow)
 delay=0.2
 opacity=0.75
