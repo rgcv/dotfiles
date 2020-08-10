@@ -1,0 +1,28 @@
+#                  _
+#                 | |
+#  _ __ ___   __ _| | _____
+# | '_ ` _ \ / _` | |/ / _ \
+# | | | | | | (_| |   < (_) |
+# |_| |_| |_|\__,_|_|\_\___/
+
+background-color=#4A4A4AE9
+text-color=#EEFFFFE9
+width=400
+height=200
+margin=0
+padding=8
+border-size=0
+max-icon-size=48
+default-timeout=20000
+
+[urgency=low]
+background-color=#212121
+text-color=#BDBDBD
+default-timeout=10000
+
+[urgency=high]
+background-color=#F07178
+text-color=#EEFFFF
+default-timeout=0
+
+# vim:ft=conf
