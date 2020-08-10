@@ -58,18 +58,19 @@ xdg_config_alias()  { config_alias "${XDG_CONFIG_HOME:-$HOME/.config}" "$@"; }
 
 xdg_config_alias   batcf       bat/config
 xdg_config_alias   dunstrc     dunst/dunstrc
+xdg_config_alias   fontcf      fontconfig/fonts.conf
 xdg_config_alias   gitcf       git/config
 home_config_alias  gitcf       .gitconfig
-xdg_config_alias   fontcf      fontconfig/fonts.conf
 xdg_config_alias   i3bcf       i3blocks/config
 home_config_alias  i3bcf       .i3blocks.conf
 xdg_config_alias   i3cf        i3/config
 home_config_alias  i3cf        .i3/config
 home_config_alias  inputrc     .inputrc
 home_config_alias  juliarc     .julia/config/startup.jl
+xdg_config_alias   makocf      mako/config
 xdg_config_alias   muttrc      neomutt/neomuttrc neomutt/muttrc mutt/neomuttrc mutt/muttrc
-xdg_config_alias   neomuttrc   neomutt/neomuttrc neomutt/muttrc mutt/neomuttrc mutt/muttrc
 home_config_alias  muttrc      .neomutt/neomuttrc .neomutt/muttrc .mutt/neomuttrc .mutt/muttrc .neomuttrc muttrc
+xdg_config_alias   neomuttrc   neomutt/neomuttrc neomutt/muttrc mutt/neomuttrc mutt/muttrc
 home_config_alias  neomuttrc   .neomutt/neomuttrc .neomutt/muttrc .mutt/neomuttrc .mutt/muttrc .neomuttrc muttrc
 xdg_config_alias   newsboatrc  newsboat/config
 home_config_alias  newsboatrc  .newsboat/config
