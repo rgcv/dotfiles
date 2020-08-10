@@ -1,0 +1,47 @@
+#!/bin/sh
+# requires:
+#   brightnessctl (brightnessctl, changing screen brightness)
+
+target=1
+step=2
+delay=0.02
+
+max() { [ "$1" -gt "$2" ] && echo "$1" || echo "$2"; }
+get_brightness() { brightnessctl -mc backlight|awk -F, '{print $4}'|tr -d %; }
+set_brightness() { brightnessctl -qc backlight s "$1%";    }
+
+usage() {
+  cat <<EOF
+Usage: ${0##*/} [-h] [-d <delay>=$delay] [-s <step>=$step] [-t <target>=$target]
+EOF
+  exit "${1-0}"
+}
+
+while getopts "hd:s:t:" opt; do
+  case $opt in
+    h) usage 0 ;;
+    d) delay=$OPTARG ;;
+    s) if [ "$OPTARG" -ne 0 ]; then
+         step=$OPTARG
+         [ "$step" -lt 0 ] && step=$((-step))
+       fi
+       ;;
+    t) target=$(max "$OPTARG" 1) ;;
+    ?) usage 2 ;;
+    *) usage 1 ;;
+  esac
+done
+shift $((OPTIND - 1))
+
+current=$(get_brightness)
+[ "$current" -eq "$target" ] && exit
+[ "$current" -lt "$target" ] && sign=1 || sign=-1
+delta=$((sign * step))
+
+while { [ $delta -gt 0 ] && [ "$current" -lt "$target" ]; } \
+   || { [ $delta -lt 0 ] && [ "$current" -gt "$target" ]; }; do
+  set_brightness "$current"
+  sleep "$delay"
+  current=$((current + delta))
+done
+set_brightness "$target"
