@@ -1,6 +1,26 @@
 #!/bin/sh
 set -eu
 
+query() {
+  if [ -n "${SWAYSOCK-}" ]; then
+    ln=$(swaymsg -t get_inputs |\
+      jq -r 'map(..|select(.xkb_layout_names?))|first|.xkb_active_layout_name')
+    case $ln in
+      "English (US, intl"*) l=US;  v=INTL ;;
+      "English (US)"      ) l=US;  v=     ;;
+      "Japanese"          ) l=あ;  v=     ;;
+                         *) l=$ln; v=     ;;
+    esac
+    case $1 in
+      layout)  echo "$l" ;;
+      variant) echo "$v" ;;
+    esac
+    unset ln l v
+  else
+    setxkbmap -query | awk '/^'"$1"':/ {print toupper($2)}';
+  fi
+}
+
 markup=${markup-}
 
 if [ -z "${ICON-}" ]; then
@@ -9,8 +29,6 @@ if [ -z "${ICON-}" ]; then
 else
   icon=$ICON
 fi
-
-query() { setxkbmap -query | awk '/^'"$1"':/ {print toupper($2)}'; }
 
 layout=$(query layout)
 variant=$(query variant)
