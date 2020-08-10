@@ -67,11 +67,12 @@ xdg_config_alias   i3cf        i3/config
 home_config_alias  i3cf        .i3/config
 home_config_alias  inputrc     .inputrc
 home_config_alias  juliarc     .julia/config/startup.jl
+xdg_config_alias   kanshicf    kanshi/config
 xdg_config_alias   makocf      mako/config
 xdg_config_alias   muttrc      neomutt/neomuttrc neomutt/muttrc mutt/neomuttrc mutt/muttrc
 home_config_alias  muttrc      .neomutt/neomuttrc .neomutt/muttrc .mutt/neomuttrc .mutt/muttrc .neomuttrc muttrc
-xdg_config_alias   neomuttrc   neomutt/neomuttrc neomutt/muttrc mutt/neomuttrc mutt/muttrc
-home_config_alias  neomuttrc   .neomutt/neomuttrc .neomutt/muttrc .mutt/neomuttrc .mutt/muttrc .neomuttrc muttrc
+xdg_config_alias   neomuttrc   neomutt/neomuttrc neomutt/muttrc
+home_config_alias  neomuttrc   .neomutt/neomuttrc .neomutt/muttrc
 xdg_config_alias   newsboatrc  newsboat/config
 home_config_alias  newsboatrc  .newsboat/config
 xdg_config_alias   nvimrc      nvim/init.vim
