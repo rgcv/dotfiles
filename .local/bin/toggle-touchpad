@@ -1,26 +1,50 @@
 #!/bin/sh
 # requires:
-#   xinput (xorg-xinput, property setting)
-# uses:
-#   canberra-gtk-play (libcanberra, sound)
-#   dunstify (dunst, notifications)
+#   i3:
+#     xinput (xorg-xinput, property setting)
+#   sway:
+#     swaymsg (sway, touchpad information)
+#     jq (jq, parse json)
 set -eu
 
+app_name=${0##*/}
 file=${XDG_CACHE_HOME-$HOME/.cache}/touchpad-status
-setting="Device Enabled"
-
-tpid=$(xinput list | grep -i touchpad | grep -o 'id=[0-9]*')
-tpid=${tpid#id=}
-[ -n "$tpid" ] || exit
+nid_file=/tmp/.$app_name.prev.nid
+if [ -f "$nid_file" ]; then
+  nid=$(cat "$nid_file")
+else
+  nid=-1
+  echo "$nid" > "$nid_file"
+fi
 
 if [ -f "$file" ]; then
   read -r status < "$file"
 else
   mkdir -p "${file%/*}"
-  status=$(xinput list-props "$tpid" | awk -F: '$0 ~ /'"$setting"'/ {print $2}')
+  if [ -n "${SWAYSOCK-}" ]; then
+    evs=$(swaymsg -t get_inputs |
+      jq -r 'first(.[], select(.type=="touchpad")).libinput.send_events')
+    [ "$evs" = disabled ] && status=0 || status=1
+  else
+    setting="Device Enabled"
+    tpid=$(xinput list | grep -i touchpad | grep -o 'id=[0-9]*')
+    tpid=${tpid#id=}
+    [ -n "$tpid" ] || exit
+    status=$(xinput list-props "$tpid" | awk -F: '$0 ~ /'"$setting"'/ {print $2}')
+  fi
 fi
 
 new=$((status^1))
+
+if [ -n "${SWAYSOCK-}" ]; then
+  [ $new -eq 0 ] && cmd=disabled || cmd=enabled
+  swaymsg "input 'type:touchpad' events $cmd"
+else
+  xinput set-prop "$tpid" "$setting" $new
+fi
+
+echo $new > "$file"
+
 if [ $new -eq 0 ]; then
   urgency=low
   icon=notification-touchpad-disabled-symbolic
@@ -31,12 +55,11 @@ else
   summary="Touchpad Enabled"
 fi
 
-if xinput set-prop "$tpid" "$setting" $new && echo $new > "$file"; then
-  dunstify \
-    --appname "${0##*/}" \
-    --urgency "$urgency" \
-    --timeout 3000 \
-    --icon "$icon" \
-    --replace 900102 \
-    "$summary" &
-fi
+notify-send \
+  --app-name "$app_name" \
+  --urgency "$urgency" \
+  --expire-time 3000 \
+  --icon "$icon" \
+  --replace "$nid" \
+  --replace-file "$nid_file" \
+  "$summary" &
