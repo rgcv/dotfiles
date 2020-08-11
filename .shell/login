@@ -19,8 +19,12 @@ export LC_PAPER="$DEFAULT_LANG"
 export LC_TELEPHONE="$DEFAULT_LANG"
 unset LC_ALL DEFAULT_LANG
 
+NPROC=$(nproc || grep -c 'processor' < /proc/cpuinfo)
+NPROC=${NPROC=1}
+export NPROC
+
 # shellcheck disable=SC2155
-export JULIA_NUM_THREADS=$(nproc)
+export JULIA_NUM_THREADS=$(( NPROC+2 ))
 
 for p in less more cat; do
   command -v $p >/dev/null && export PAGER=$p && break
@@ -38,7 +42,7 @@ export LESS_TERMCAP_us=$(printf '\033[01;32m')
 }
 
 # shellcheck disable=SC2155
-export MAKEFLAGS=-j$(nproc)
+export MAKEFLAGS=-j$(( NPROC+2 ))
 
 export NNN_USER_EDITOR=1
 export npm_config_prefix=~/.node_modules
