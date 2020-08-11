@@ -58,7 +58,7 @@ xdg_config_alias()  { config_alias "${XDG_CONFIG_HOME:-$HOME/.config}" "$@"; }
 
 xdg_config_alias   batcf       bat/config
 xdg_config_alias   dunstrc     dunst/dunstrc
-xgd_config_alias   fcitx       fcitx5/config
+xdg_config_alias   fcitx       fcitx5/config
 xdg_config_alias   fontcf      fontconfig/fonts.conf
 xdg_config_alias   gitcf       git/config
 home_config_alias  gitcf       .gitconfig
