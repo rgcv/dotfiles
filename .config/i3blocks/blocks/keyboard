@@ -4,7 +4,7 @@ set -eu
 query() {
   if [ -n "${SWAYSOCK-}" ]; then
     ln=$(swaymsg -t get_inputs |\
-      jq -r 'map(..|select(.xkb_layout_names?))|first|.xkb_active_layout_name')
+      jq -r 'map(select(.type=="keyboard"))|first|.xkb_active_layout_name')
     case $ln in
       "English (US, intl"*) l=US;  v=INTL ;;
       "English (US)"      ) l=US;  v=     ;;
