@@ -1,0 +1,12 @@
+#!/bin/sh
+[ -n "$WAYLAND_DISPLAY" ] && exit
+CONFIG_HOME=${XDG_CONFIG_HOME-$HOME/.config}
+
+set -a
+# shellcheck disable=SC1090
+[ -r "$CONFIG_HOME/sway/env" ] && . "$CONFIG_HOME/sway/env"
+set +a
+
+[ -x /usr/local/bin/sway ] && exec /usr/local/bin/sway
+[ -x /usr/bin/sway ] && exec /usr/bin/sway
+[ -x /bin/sway ] && exec /bin/sway

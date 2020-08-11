@@ -61,12 +61,7 @@ unset local
 ## graphical environment
 if [ -z "$DISPLAY" ]; then
   case ${XDG_VTNR--1} in
-    1)
-      if [ -z "$WAYLAND_DISPLAY" ]; then
-        export QT_QPA_PLATFORM=wayland-egl
-        export MOZ_ENABLE_WAYLAND=1
-        exec sway
-      fi ;;
+    1) exec sway ;;
     2) exec startx -- ":1" ;;
   esac
 fi
