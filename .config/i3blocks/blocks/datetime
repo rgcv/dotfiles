@@ -1,13 +1,11 @@
 #!/bin/sh
-# uses:
-#   xgetres (xgetres, Xresources values)
 set -eu
 
 case ${BLOCK_INSTANCE-} in
   date)
     full_format=${DATE_FORMAT_FULL-%a, %b %d, %Y}
     short_format=${DATE_FORMAT_SHORT-%Y-%m-%d}
-    color=${COLOR_ICON_DATE-$(xgetres i3.color6 || echo '#55ffff')}
+    color=${COLOR_ICON_DATE-${color6-#55ffff}}
     icon=${ICON_DATE-}
     if [ -z "$icon" ]; then
       icon=
@@ -17,7 +15,7 @@ case ${BLOCK_INSTANCE-} in
   time)
     full_format=${TIME_FORMAT_FULL-%H:%M:%S}
     short_format=${TIME_FORMAT_SHORT-$full_format}
-    color=${COLOR_ICON_TIME-$(xgetres i3.color6 || echo '#55ffff')}
+    color=${COLOR_ICON_TIME-${color6-#55ffff}}
     icon=${ICON_TIME-}
     if [ -z "$icon" ]; then
       icon=

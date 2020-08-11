@@ -41,7 +41,7 @@ done; unset cmd hl
 ## aliases
 # config accessibility
 config_alias() {
-  if ! alias "$2" >&- 2>&-; then
+  if ! alias "$2" >/dev/null 2>&1; then
     base=$1; a=$2; shift 2
     for c in "$@"; do
       if [ -w "$base/$c" ]; then
@@ -58,25 +58,30 @@ xdg_config_alias()  { config_alias "${XDG_CONFIG_HOME:-$HOME/.config}" "$@"; }
 
 xdg_config_alias   batcf       bat/config
 xdg_config_alias   dunstrc     dunst/dunstrc
+xdg_config_alias   fcitx       fcitx5/config
+xdg_config_alias   fontcf      fontconfig/fonts.conf
 xdg_config_alias   gitcf       git/config
 home_config_alias  gitcf       .gitconfig
-xdg_config_alias   fontcf      fontconfig/fonts.conf
 xdg_config_alias   i3bcf       i3blocks/config
 home_config_alias  i3bcf       .i3blocks.conf
 xdg_config_alias   i3cf        i3/config
 home_config_alias  i3cf        .i3/config
 home_config_alias  inputrc     .inputrc
 home_config_alias  juliarc     .julia/config/startup.jl
+xdg_config_alias   kanshicf    kanshi/config
+xdg_config_alias   makocf      mako/config
 xdg_config_alias   muttrc      neomutt/neomuttrc neomutt/muttrc mutt/neomuttrc mutt/muttrc
-xdg_config_alias   neomuttrc   neomutt/neomuttrc neomutt/muttrc mutt/neomuttrc mutt/muttrc
 home_config_alias  muttrc      .neomutt/neomuttrc .neomutt/muttrc .mutt/neomuttrc .mutt/muttrc .neomuttrc muttrc
-home_config_alias  neomuttrc   .neomutt/neomuttrc .neomutt/muttrc .mutt/neomuttrc .mutt/muttrc .neomuttrc muttrc
+xdg_config_alias   neomuttrc   neomutt/neomuttrc neomutt/muttrc
+home_config_alias  neomuttrc   .neomutt/neomuttrc .neomutt/muttrc
 xdg_config_alias   newsboatrc  newsboat/config
 home_config_alias  newsboatrc  .newsboat/config
 xdg_config_alias   nvimrc      nvim/init.vim
 xdg_config_alias   nvrc        nvim/init.vim
 xdg_config_alias   roficf      rofi/config
 home_config_alias  sshcf       .ssh/config
+xdg_config_alias   swaycf      sway/config
+home_config_alias  swaycf      .sway/config
 xdg_config_alias   termitecf   termite/config
 home_config_alias  vimrc       .vimrc
 home_config_alias  vrc         .vimrc
@@ -186,7 +191,7 @@ reload() { exec "$SHELL" "$@"; }
 
 # xclip
 if command -v xclip >/dev/null; then
-  copy() {
+  xcopy() {
     if [ ! -t 0 ]; then
       tmp=$(mktemp)
       # shellcheck disable=SC2064
@@ -206,7 +211,7 @@ if command -v xclip >/dev/null; then
     fi
     xclip -t "$ft" -selection clipboard -i "$input"
   }
-  paste() { xclip -selection clipboard -o "$1" ; }
+  xpaste() { xclip -selection clipboard -o "$1" ; }
 fi
 
 # where were we?

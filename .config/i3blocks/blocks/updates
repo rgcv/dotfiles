@@ -1,15 +1,20 @@
 #!/bin/sh
-# uses:
-#   dunstify (dunst, notification showing packages to update)
-#   xgetres (xgetres, Xresources values)
 set -eu
 
-grep -q up /sys/class/net/*/operstate || exit
+while ! grep -q up /sys/class/net/*/operstate; do sleep 5; done
 
 BLOCK_BUTTON=${BLOCK_BUTTON--1}
 BUTTON_CHECK=${BUTTON_CHECK-1}
-NOTIFICATION_ID=${NOTIFICATION_ID-800100}
 PACMAN=${PACMAN-pacman}
+
+app_name=${0##*/}
+nid_file=/tmp/.$app_name.i3b.nid
+if [ -e "$nid_file" ]; then
+  nid=$(cat "$nid_file")
+else
+  nid=-1
+  echo "$nid" > "$nid_file"
+fi
 
 ellipsize() {
   len=${2-12}
@@ -19,8 +24,8 @@ ellipsize() {
   unset len
 }
 prettify() {
-  color_old=${COLOR_VERSION_OLD-$(xgetres i3.color1 || echo '#ff5555')}
-  color_new=${COLOR_VERSION_NEW-$(xgetres i3.color2 || echo '#55ff55')}
+  color_old=${COLOR_VERSION_OLD-${color1-#ff5555}}
+  color_new=${COLOR_VERSION_NEW-${color2-#55ff55}}
   c=0
   while read -r pkg old _ new; do
     if [ $c -gt "${NOTIFICATION_PKGS_MAX-20}" ]; then
@@ -43,10 +48,12 @@ EOF
 }
 
 notify() {
-  command -v dunstify >/dev/null && dunstify \
-    --appname "${0##*/}" \
+  notify-send \
+    --app-name "$app_name" \
     --icon software-update-available \
-    --replace "$NOTIFICATION_ID" \
+    --expire-time 10000 \
+    --replace "$nid" \
+    --replace-file "$nid_file" \
     "$1" "${2-}"
 }
 
@@ -71,7 +78,7 @@ unset numupds
 
 icon=
 if [ "${markup-}" = pango ]; then
-  color=${ICON_COLOR-$(xgetres i3.color3 || echo "#ffff55")}
+  color=${ICON_COLOR-${color3-#ffff55}}
   icon="<span color='$color'>$icon</span>"
   count="<b>$count</b>"
 fi

@@ -2,14 +2,22 @@
 # requires:
 #   amixer (alsa-utils, volume management)
 # uses:
-#   dunstify (dunst, notifications)
 #   canberra-gtk-play (libcanberra, play volume change sound
 #                      libcanberra-pulse, pulseaudio backend may be required)
 set -eu
 
+app_name=${0##*/}
+nid_file=/tmp/.$app_name.bin.nid
+if [ -f "$nid_file" ]; then
+  nid=$(cat "$nid_file")
+else
+  nid=-1
+  echo "$nid" > "$nid_file"
+fi
+
 # audio mixer, sink control and capabilities
 mixer=default
-if amixer -D pulse info >&-; then
+if amixer -D pulse info >/dev/null; then
   mixer=pulse
 fi
 scontrol=$(amixer -D "$mixer" scontrols |
@@ -59,12 +67,13 @@ case $mute in
     ;;
 esac
 
-dunstify \
-  --appname "${0##*/}" \
+notify-send \
+  --app-name "$app_name" \
   --urgency "$urgency" \
-  --timeout 3000 \
+  --expire-time 3000 \
   --icon "$icon" \
-  --replace 900100 \
+  --replace "$nid" \
+  --replace-file "$nid_file" \
   "$summary" "${body-}"
 
 canberra-gtk-play -i audio-volume-change

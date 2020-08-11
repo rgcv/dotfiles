@@ -49,8 +49,8 @@ Plug 'lepture/vim-jinja'
 Plug 'lervag/vimtex'
 Plug 'mattn/emmet-vim'
 Plug 'mike-hearn/base16-vim-lightline'
-Plug 'neomake/neomake'
-  Plug 'sinetoami/lightline-neomake'
+Plug 'neomake/neomake' |
+\ Plug 'sinetoami/lightline-neomake'
 Plug 'Potatoesmaster/i3-vim-syntax'
 Plug 'pangloss/vim-javascript'
 Plug 'roxma/vim-paste-easy'
@@ -59,9 +59,9 @@ if (has('nvim-0.3.0') || v:version >= 800) && has('python3') && has('timers')
   if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
   else
-    Plug 'Shougo/deoplete.nvim'
-      Plug 'roxma/nvim-yarp'
-      Plug 'roxma/vim-hug-neovim-rpc'
+    Plug 'Shougo/deoplete.nvim' |
+    \ Plug 'roxma/nvim-yarp' |
+    \ Plug 'roxma/vim-hug-neovim-rpc'
   end
     if !has('win32')
       Plug 'deoplete-plugins/deoplete-clang'
@@ -74,12 +74,12 @@ if HasPatch(704, 774)
   Plug 'Shougo/echodoc'
 endif
 if v:version >= 704
-  Plug 'Shougo/neosnippet.vim'
-    Plug 'Shougo/neosnippet-snippets'
+  Plug 'Shougo/neosnippet.vim' |
+  \ Plug 'Shougo/neosnippet-snippets'
 endif
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-fugitive'
-  Plug 'tpope/vim-rhubarb'
+Plug 'tpope/vim-fugitive' |
+\ Plug 'tpope/vim-rhubarb'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
@@ -365,6 +365,7 @@ augroup init#configs
 
   autocmd BufWritePost ~/.config/dunst/dunstrc
         \ silent !systemctl --user restart dunst
+  autocmd BufWritePost ~/.config/mako/config silent !makoctl reload
   autocmd BufWritePost ~/.config/termite/config  silent !pkill -USR1 termite
   autocmd BufWritePost ~/.config/i3blocks/config silent !i3-msg restart
 augroup END

@@ -60,7 +60,7 @@ display() {
     short_text="$prefix$(escape "$short_text")$suffix"
   fi
 
-  json "$full_text" "$short_text" "$(xgetres i3.foreground || echo '#ffffff')"
+  json "$full_text" "$short_text" "${foreground-#ffffff}"
 }
 
 # following code adapted from

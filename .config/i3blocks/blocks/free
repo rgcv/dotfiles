@@ -1,6 +1,4 @@
 #!/bin/sh
-# uses:
-#   xgetres (xgetres, Xresources values)
 set -eu
 
 markup=${markup-}
@@ -11,7 +9,7 @@ extract() {
   df --output="$fields" "$@" "$target" | tail -n 1
 }
 
-color=${COLOR_ICON_DRIVE-$(xgetres i3.color6 || echo '#55ffff')}
+color=${COLOR_ICON_DRIVE-${color6-#55ffff}}
 icon=${ICON_DRIVE-}
 if [ -z "$icon" ]; then
   icon=
@@ -31,5 +29,5 @@ avail=$(extract avail -B"${MEMORY_UNIT-GB}" | xargs printf '%s')
 echo "$icon $avail $root"
 echo "$icon $avail $root"
 if [ "$percent" -lt "${CRITICAL_THRESHOLD-5}" ]; then
-  echo "${COLOR_CRITICAL-$(xgetres i3.color1 || echo '#ff5555')}"
+  echo "${COLOR_CRITICAL-${color1-#ff5555}}"
 fi

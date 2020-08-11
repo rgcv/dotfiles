@@ -2,8 +2,6 @@
 # requires:
 #   awk (gawk, parse+process cpu info)
 #   bc (bc, calculate cpu usage percentage)
-# uses:
-#   xgetres (xgetres, Xresources values)
 set -eu
 
 used()  { awk '/^cpu  / {print $1+$2+$3+$6+$7+$8+$9+$10}'    < /proc/stat; }
@@ -11,7 +9,7 @@ total() { awk '/^cpu  / {for(i=s=0;i<NF;) s+=$++i; print s}' < /proc/stat; }
 display() {
   text=$(printf '%s %2d%%' "${ICON-}" "$1")
   printf '{"full_text":"%s","short_text":"%s","color":"%s"}\n' \
-    "$text" "$text" "$(xgetres i3.foreground || echo '#ffffff')"
+    "$text" "$text" "${foreground-#ffffff}"
 }
 
 old_used=$(used)

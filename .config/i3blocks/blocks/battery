@@ -1,7 +1,6 @@
 #!/bin/sh
 # uses:
 #   acpi (acpi, estimate remaining charge)
-#   xgetres (xgetres, Xresources values)
 set -eu
 
 battery=${BLOCK_INSTANCE-}
@@ -28,19 +27,19 @@ read -r status   < "$path/status"
 case "$status" in
   Charging)
     icon=${ICON_CHARGING-}
-    color=${COLOR_CHARGING-$(xgetres i3.color3 || echo '#ffff55')}
+    color=${COLOR_CHARGING-${color3-#ffff55}}
     ;;
   Discharging)
     icon=${ICON_DISCHARGING-}
-    color=${COLOR_DISCHARGING-$(xgetres i3.foreground || echo '#ffffff')}
+    color=${COLOR_DISCHARGING-${foreground-#ffffff}}
     ;;
   Full|Unknown)
     icon=${ICON_FULL-}
-    color=${COLOR_FULL-$(xgetres i3.color2 || echo '#55ff55')}
+    color=${COLOR_FULL-${color2-#55ff55}}
     ;;
   # Unknown|*)
   #   icon=${ICON_UNKNOWN-}
-  #   color=${COLOR_UNKNOWN-$(xgetres i3.foreground || echo '#ffffff')}
+  #   color=${COLOR_UNKNOWN-${foreground-#ffffff}}
   #   ;;
 esac
 
@@ -58,6 +57,6 @@ displayln "$icon" "$capacity"
 
 # color if under critical threshold
 if [ "$status" = Discharging ] && [ "$capacity" -lt "${CRITICAL_THRESHOLD-25}" ]; then
-  echo "${COLOR_FG_CRITICAL-$(xgetres i3.foreground || echo '#000000')}"
-  echo "${COLOR_BG_CRITICAL-$(xgetres i3.color1 || echo '#ff5555')}"
+  echo "${COLOR_FG_CRITICAL-${foreground-#000000}}"
+  echo "${COLOR_BG_CRITICAL-${color1-#ff5555}}"
 fi

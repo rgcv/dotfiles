@@ -8,6 +8,10 @@ done; unset v
 export VISUAL=$EDITOR
 export SUDO_EDITOR=$EDITOR
 
+export INPUT_METHOD=fcitx5
+export GTK_IM_MODULE=fcitx5
+export QT_IM_MODULE=fcitx5
+
 DEFAULT_LANG=pt_PT.UTF-8
 export LANG=en_US.UTF-8
 export LC_ADDRESS="$DEFAULT_LANG"
@@ -19,8 +23,12 @@ export LC_PAPER="$DEFAULT_LANG"
 export LC_TELEPHONE="$DEFAULT_LANG"
 unset LC_ALL DEFAULT_LANG
 
+NPROC=$(nproc || grep -c 'processor' < /proc/cpuinfo)
+NPROC=${NPROC=1}
+export NPROC
+
 # shellcheck disable=SC2155
-export JULIA_NUM_THREADS=$(nproc)
+export JULIA_NUM_THREADS=$(( NPROC+2 ))
 
 for p in less more cat; do
   command -v $p >/dev/null && export PAGER=$p && break
@@ -38,7 +46,7 @@ export LESS_TERMCAP_us=$(printf '\033[01;32m')
 }
 
 # shellcheck disable=SC2155
-export MAKEFLAGS=-j$(nproc)
+export MAKEFLAGS=-j$(( NPROC+2 ))
 
 export NNN_USER_EDITOR=1
 export npm_config_prefix=~/.node_modules
@@ -58,6 +66,10 @@ mkdir -p "$local/lib"     && pathprepend "$local/lib" LD_LIBRARY_PATH
 mkdir -p "$local/include" && pathprepend "$local/include" CPATH
 unset local
 
-# launch X/Window Server
-# shellcheck disable=SC1090
-. "$HOME/.shell/xlogin"
+## graphical environment
+if [ -z "$DISPLAY" ]; then
+  case ${XDG_VTNR--1} in
+    1) exec with-env sway ;;
+    2) exec startx -- ":1" ;;
+  esac
+fi

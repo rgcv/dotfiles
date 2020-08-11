@@ -1,11 +1,13 @@
 #!/bin/sh
 # requires:
-#   dmenu (dmenu, option selection)
-#   i3-msg (i3, exiting i3)
-#   wmctrl (wmctrl, closing windows)
+#   bemenu (bemenu, option selection)
+#   i3:
+#     i3-msg (i3, exiting i3)
+#   sway:
+#     swaymsg (sway, exiting sway)
 set -eu
 
-choice=$(dmenu -i -p System <<EOF | awk '{print tolower($0)}'
+choice=$(bemenu -i -p System <<EOF | awk '{print tolower($0)}'
 Logout
 Suspend
 Restart
@@ -15,21 +17,18 @@ EOF
 )
 
 [ -n "$choice" ] || exit
-confirm=$(printf 'no\nyes' | dmenu -p "Are you sure you want to $choice?")
+confirm=$(printf 'no\nyes' | bemenu -p "Are you sure you want to $choice?")
 [ "$confirm" = yes ] || exit
 
-case $choice in
-  logout|restart|shutdown)
-    wmctrl -l | awk '{print $1}' |
-      while read -r wid; do
-        wmctrl -i -c "$wid"
-      done
-
-    sync # flush cached writes
-esac
+sync
 
 case $choice in
-  logout)   i3-msg exit         ;;
+  logout)
+    if [ -n "${SWAYLOCK-}" ]; then
+      swaymsg exit
+    else
+      i3-msg exit
+    fi ;;
   restart)  systemctl reboot    ;;
   shutdown) systemctl poweroff  ;;
   *)        systemctl "$choice" ;;
