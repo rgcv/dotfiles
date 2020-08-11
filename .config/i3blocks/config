@@ -54,4 +54,4 @@ separator_block_width=5
 command=echo
 interval=once
 
-# vim:ft=dosini
+# vim:ft=config
