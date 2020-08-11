@@ -1,8 +1,0 @@
-{
-  output eDP-1 mode 1920x1080
-}
-
-{
-  output eDP-1 position 0,200
-  output "Hewlett Packard HP L1908w 3CQ81812CZ" position 1920,0
-}
