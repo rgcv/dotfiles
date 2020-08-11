@@ -5,9 +5,11 @@ signal=10
 interval=5
 separator_block_width=21
 
-[playerctl]
-format=json
-interval=persist
+color1=#852080
+
+# [playerctl]
+# format=json
+# interval=persist
 
 [updates]
 interval=3600
@@ -54,4 +56,4 @@ separator_block_width=5
 command=echo
 interval=once
 
-# vim:ft=config
+# vim:ft=dosini
