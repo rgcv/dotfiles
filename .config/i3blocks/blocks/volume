@@ -2,7 +2,6 @@
 # requires:
 #   amixer (alsa-utils, sound management)
 # uses:
-#   xgetres (xgetres, Xresources values)
 #   pactl   (libpulse, subscribe mode)
 set -eu
 
@@ -28,7 +27,7 @@ display() {
   volume=${volume%\%}
   muted=$(echo "$data" | grep -o '\[off\]' || true)
 
-  color=$(xgetres i3.foreground 2>/dev/null || echo "#ffffff")
+  color=${foreground-#ffffff}
 
   if [ -n "$muted" ]; then
     volume=0
@@ -38,7 +37,7 @@ display() {
     icon=${ICON_VOLUME-}
   else
     [ -z "$muted" ] && icon=${ICON_NO_SOUND- }
-    color=$(xgetres i3.color8 2>/dev/null || echo "#555555")
+    color=${color8-#555555}
   fi
 
   text=$(printf '%s %3d%%' "$icon" "$volume")

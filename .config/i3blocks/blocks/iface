@@ -1,8 +1,6 @@
 #!/bin/sh
 # requires:
 #   ip (iproute2, determine default route + device addr)
-# uses:
-#   xgetres (xgetres, retrieve X resource values)
 set -eu
 
 markup=${markup-}
@@ -32,7 +30,7 @@ addr=${addr%/*}
 [ -z "$addr" ] && echo "$icon addr ??" || echo "$icon $addr"
 echo "$icon"
 if [ -z "$addr" ]; then
-  xgetres i3.color1  2>/dev/null || echo "#800000"
+  echo "${color1-#800000}"
 else
-  xgetres i3.color10 2>/dev/null || echo "#55ff55"
+  echo "${color10-#55ff55}"
 fi
