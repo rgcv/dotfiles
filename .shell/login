@@ -8,6 +8,10 @@ done; unset v
 export VISUAL=$EDITOR
 export SUDO_EDITOR=$EDITOR
 
+export INPUT_METHOD=fcitx5
+export GTK_IM_MODULE=fcitx5
+export QT_IM_MODULE=fcitx5
+
 DEFAULT_LANG=pt_PT.UTF-8
 export LANG=en_US.UTF-8
 export LC_ADDRESS="$DEFAULT_LANG"
