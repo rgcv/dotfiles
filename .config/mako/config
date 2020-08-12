@@ -12,6 +12,7 @@ height=200
 margin=0
 padding=8
 border-size=0
+progress-color=#89CDFF7F
 max-icon-size=48
 default-timeout=20000
 
