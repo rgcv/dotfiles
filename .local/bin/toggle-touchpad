@@ -10,12 +10,6 @@ set -eu
 app_name=${0##*/}
 file=${XDG_CACHE_HOME-$HOME/.cache}/touchpad-status
 nid_file=/tmp/.$app_name.prev.nid
-if [ -f "$nid_file" ]; then
-  nid=$(cat "$nid_file")
-else
-  nid=-1
-  echo "$nid" > "$nid_file"
-fi
 
 if [ -f "$file" ]; then
   read -r status < "$file"
@@ -55,11 +49,10 @@ else
   summary="Touchpad Enabled"
 fi
 
-notify-send \
+notify-send.sh \
   --app-name "$app_name" \
   --urgency "$urgency" \
   --expire-time 3000 \
   --icon "$icon" \
-  --replace "$nid" \
   --replace-file "$nid_file" \
   "$summary" &
