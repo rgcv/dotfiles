@@ -60,7 +60,7 @@ Application Options:
   -f, --force-expire                Forcefully closes the notification when the
                                     notification has expired.
   -a, --app-name=APP_NAME           Specifies the app name for the icon.
-  -i, --icon=APP_ICON[,APP_ICON...]         Specifies an icon filename or stock icon to
+  -i, --icon=ICON[,ICON...]         Specifies an icon filename or stock icon to
                                     display.
   -c, --category=TYPE[,TYPE...]     Specifies the notification category.
   -h, --hint=TYPE:NAME:VALUE        Specifies basic extra data to pass.  Valid
