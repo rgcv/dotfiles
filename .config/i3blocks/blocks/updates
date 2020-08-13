@@ -9,12 +9,6 @@ PACMAN=${PACMAN-pacman}
 
 app_name=${0##*/}
 nid_file=/tmp/.$app_name.i3b.nid
-if [ -e "$nid_file" ]; then
-  nid=$(cat "$nid_file")
-else
-  nid=-1
-  echo "$nid" > "$nid_file"
-fi
 
 ellipsize() {
   len=${2-12}
@@ -48,11 +42,10 @@ EOF
 }
 
 notify() {
-  notify-send \
+  notify-send.sh \
     --app-name "$app_name" \
     --icon software-update-available \
     --expire-time 10000 \
-    --replace "$nid" \
     --replace-file "$nid_file" \
     "$1" "${2-}"
 }
