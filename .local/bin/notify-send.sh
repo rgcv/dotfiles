@@ -104,7 +104,6 @@ format_hint() {
   hint=$1
   typ=${hint%%:*}; hint=${hint#*:}
   echo "\"${hint%%:*}\": <$typ ${hint#*:}>"
-  unset hint typ
 }
 
 join() {
@@ -116,10 +115,9 @@ join() {
     [ $c -gt 0 ] && res="$res, "
     res="$res$($map "$el")"
     c=$((c + 1))
-  done; unset c el
+  done
 
   echo "$res"
-  unset delim map result
 }
 
 maybe_run_action_handler() {
@@ -183,15 +181,12 @@ handle_hint() {
     val="\"${val%\"}\""
   fi
   hints="$hints $typ:$name:$val"
-
-  unset hint typ name cmd
 }
 
 make_action_key() {
   key=$(echo "$1" | tr -dc _A-Z-a-z-0-9)
   rnd=$(printf "%s" "$(od -A n -N 4 -t u /dev/urandom)")
   echo "$key${rnd#*[0-9]}"
-  unset key rnd
 }
 
 handle_action() {
@@ -205,8 +200,6 @@ handle_action() {
   key=$(make_action_key "$name")
   action_commands="$action_commands $key $cmd"
   actions="$actions $key:$name"
-
-  unset action name cmd key
 }
 
 handle_named_action() {
@@ -216,8 +209,6 @@ handle_named_action() {
 
   action_commands="$action_commands $2 $2"
   [ "$1" = close ] || actions="$actions $1:$2"
-
-  unset key cmd
 }
 
 handle_replace_file() {
