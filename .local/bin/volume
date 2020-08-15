@@ -32,6 +32,7 @@ volume=${volume%\%}
 
 case $mute in
   '[off]')
+    volume=0
     summary="Volume: Muted"
     urgency=low
     icon=$icon-muted
