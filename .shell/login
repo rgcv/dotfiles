@@ -1,39 +1,33 @@
 #!/bin/sh
 # environment setup
+INPUT_METHOD=fcitx5
+NPROC=$(nproc || grep -c 'processor' < /proc/cpuinfo)
+NPROC=${NPROC-2}
+
 export BROWSER=firefox
 
 for v in nvim vim vi; do
   command -v $v >/dev/null && export EDITOR=$v && break
 done; unset v
-export VISUAL=$EDITOR
-export SUDO_EDITOR=$EDITOR
 
-export INPUT_METHOD=fcitx5
-export GTK_IM_MODULE=fcitx5
-export QT_IM_MODULE=fcitx5
+export GTK_IM_MODULE=$INPUT_METHOD
 
-DEFAULT_LANG=pt_PT.UTF-8
-export LANG=en_US.UTF-8
-export LC_ADDRESS="$DEFAULT_LANG"
-export LC_COLLATE="$DEFAULT_LANG"
-export LC_IDENTIFICATION="$DEFAULT_LANG"
-export LC_MONETARY="$DEFAULT_LANG"
-export LC_MEASUREMENT="$DEFAULT_LANG"
-export LC_PAPER="$DEFAULT_LANG"
-export LC_TELEPHONE="$DEFAULT_LANG"
-unset LC_ALL DEFAULT_LANG
+export INPUT_METHOD
 
-NPROC=$(nproc || grep -c 'processor' < /proc/cpuinfo)
-NPROC=${NPROC=1}
-export NPROC
-
-# shellcheck disable=SC2155
 export JULIA_NUM_THREADS=$(( NPROC+2 ))
 
-for p in less more cat; do
-  command -v $p >/dev/null && export PAGER=$p && break
-done; unset p
-export LESS="-g -i -M -R -S -w -z-4"
+lang=pt_PT.UTF-8
+export LANG=en_US.UTF-8
+export LC_ADDRESS=$lang
+export LC_COLLATE=$lang
+export LC_IDENTIFICATION=$lang
+export LC_MONETARY=$lang
+export LC_MEASUREMENT=$lang
+export LC_PAPER=$lang
+export LC_TELEPHONE=$lang
+unset LC_ALL lang
+
+export LESS="-igwMRS -z -4"
 # shellcheck disable=SC2155
 {
 export LESS_TERMCAP_mb=$(printf '\033[01;31m')
@@ -45,22 +39,27 @@ export LESS_TERMCAP_ue=$(printf '\033[0m')
 export LESS_TERMCAP_us=$(printf '\033[01;32m')
 }
 
-# shellcheck disable=SC2155
 export MAKEFLAGS=-j$(( NPROC+2 ))
 
 export NNN_USER_EDITOR=1
-export npm_config_prefix=~/.node_modules
+export NPROC
 
+for p in less more cat; do
+  command -v $p >/dev/null && export PAGER=$p && break
+done; unset p
+
+export QT_IM_MODULE=$INPUT_METHOD
 export QT_QPA_PLATFORMTHEME=gtk3
 
-export TERMINAL=termite
 export TERM=xterm-256color
+export TERMINAL=termite
+
+export VISUAL=$EDITOR
 
 
 # path configuration
-pathprepend "$npm_config_prefix"
-
 local=$HOME/.local
+
 mkdir -p "$local/bin"     && pathprepend "$local/bin"
 mkdir -p "$local/lib"     && pathprepend "$local/lib" LD_LIBRARY_PATH
 mkdir -p "$local/include" && pathprepend "$local/include" CPATH
