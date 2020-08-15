@@ -21,7 +21,7 @@ fi
 SSH_ENV=ssh-agent.env
 [ -z "$XDG_RUNTIME_DIR" ] && SSH_ENV=$USER.$SSH_ENV
 if ! pgrep -u "$USER" ssh-agent >/dev/null; then
-  ssh-agent > "${XDG_RUNTIME_DIR-/tmp}/$SSH_ENV" 2>/dev/null
+  ssh-agent 2>/dev/null >"${XDG_RUNTIME_DIR-/tmp}/$SSH_ENV"
 fi
 if [ -z "$SSH_AUTH_SOCK" ]; then
   # shellcheck disable=SC1090
