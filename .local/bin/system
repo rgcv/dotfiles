@@ -7,7 +7,7 @@
 #     swaymsg (sway, exiting sway)
 set -eu
 
-choice=$(bemenu -i -p System <<EOF | awk '{print tolower($0)}'
+choice=$(with-env bemenu -i -p System <<EOF | tr '[:upper:]' '[:lower:]'
 Logout
 Suspend
 Restart
@@ -17,8 +17,10 @@ EOF
 )
 
 [ -n "$choice" ] || exit
-confirm=$(printf 'no\nyes' | bemenu -p "Are you sure you want to $choice?")
-[ "$confirm" = yes ] || exit
+case $(printf 'no\nyes' | with-env bemenu -p "Are you sure you want to $choice?") in
+  y*) ;;
+   *) exit ;;
+esac
 
 sync
 
