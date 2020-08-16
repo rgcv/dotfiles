@@ -5,6 +5,7 @@ while ! grep -q up /sys/class/net/*/operstate; do sleep 5; done
 
 BLOCK_BUTTON=${BLOCK_BUTTON--1}
 BUTTON_CHECK=${BUTTON_CHECK-1}
+NOTIFICATION_PKGS_MAX=${NOTIFICATION_PKGS_MAX-20}
 PACMAN=${PACMAN-pacman}
 
 app_name=${0##*/}
@@ -12,21 +13,18 @@ nid_file=/tmp/.$app_name.i3b.nid
 
 ellipsize() {
   len=${2-12}
-  echo "$1" | if [ ${#1} -gt "$len" ]; then
-    awk '{print substr($0, 0, '"$len"'-1)"…"}'
-  else cat; fi
-  unset len
+  if [ ${#1} -gt "$len" ]; then
+    printf "%.*s…\n" "$((len-1))" "$1"
+  else
+    echo "$1"
+  fi
 }
 prettify() {
   color_old=${COLOR_VERSION_OLD-${color1-#ff5555}}
   color_new=${COLOR_VERSION_NEW-${color2-#55ff55}}
   c=0
-  while read -r pkg old _ new; do
-    if [ $c -gt "${NOTIFICATION_PKGS_MAX-20}" ]; then
-      printf '%12s\n' ". . ."
-      return
-    fi
-
+  max=$NOTIFICATION_PKGS_MAX
+  while [ $c -le "$max" ] && read -r pkg old _ new; do
     old=$(ellipsize "$old" 10)
     new=$(ellipsize "$new" 10)
     if [ "${markup-}" = pango ]; then
@@ -35,7 +33,7 @@ prettify() {
     fi
     printf '%12s %s\t→ %s\n' "$(ellipsize "$pkg")" "$old" "$new"
 
-    c=$((c+1))
+    c=$((c + 1))
   done <<EOF
 $@
 EOF
@@ -66,8 +64,13 @@ if [ "$BLOCK_BUTTON" -eq "$BUTTON_CHECK" ]; then
 fi
 numupds="$count update"
 [ "$count" -gt 1 ] && numupds=${numupds}s
-[ "$BLOCK_BUTTON" -eq "$BUTTON_CHECK" ] && notify "$numupds available" "$(prettify "$pkgs")"
-unset numupds
+if [ "$BLOCK_BUTTON" -eq "$BUTTON_CHECK" ]; then
+  if [ "$count" -gt "$NOTIFICATION_PKGS_MAX" ]; then
+    summary=" ($((count - NOTIFICATION_PKGS_MAX)) hidden)"
+  fi
+  summary="$numupds available${summary-}"
+  notify "$summary" "$(prettify "$pkgs")"
+fi
 
 icon=
 if [ "${markup-}" = pango ]; then
@@ -76,6 +79,5 @@ if [ "${markup-}" = pango ]; then
   count="<b>$count</b>"
 fi
 
-text="$icon $count"
-echo "$text"
-echo "$text"
+echo "$icon $count"
+echo "$icon $count"
