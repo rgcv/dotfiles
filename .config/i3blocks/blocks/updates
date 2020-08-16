@@ -42,7 +42,7 @@ EOF
 notify() {
   notify-send.sh \
     --app-name "$app_name" \
-    --icon software-update-available \
+    --icon package \
     --expire-time 10000 \
     --replace-file "$nid_file" \
     "$1" "${2-}"
