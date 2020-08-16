@@ -14,6 +14,7 @@ padding=8
 border-size=0
 progress-color=#89CDFF7F
 max-icon-size=48
+icon-path=/usr/share/icons/Papirus-Dark
 default-timeout=20000
 
 [urgency=low]
