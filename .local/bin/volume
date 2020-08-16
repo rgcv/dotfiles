@@ -76,22 +76,28 @@ volume=${volume%\%}
 muted=$(echo "$data" | grep Mute:)
 muted=${muted#*: }
 
-$output && label="Output volume" || label="Input volume"
-icon=notification-volume
+icon=notification
+if $output; then
+  label="Output volume"
+  icon=$icon-audio-volume
+else
+  label="Input sensitivity"
+  icon=$icon-microphone-sensitivity
+fi
 
 case $muted in
   yes)
     volume=0
-    summary="$label: Muted"
+    summary="$label: muted"
     urgency=low
     icon=$icon-muted
     ;;
   *)
     summary="$label: $volume%"
     case $volume in
-      0) # 0 (different from muted)
+      0)
         urgency=low
-        icon=$icon-off
+        icon=$icon-muted
         ;;
       [1-9]|[1-3][0-9]) # 0 - 39
         urgency=low
@@ -119,4 +125,4 @@ notify-send.sh \
   --replace-file "$nid_file" \
   "$summary" "$description"
 
-[ "$volume" -eq 0 ] || canberra-gtk-play -i audio-volume-change &
+[ "$volume" -eq 0 ] || ! $output || canberra-gtk-play -i audio-volume-change &
