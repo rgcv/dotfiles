@@ -41,7 +41,6 @@ export LESS_TERMCAP_us=$(printf '\033[01;32m')
 
 export MAKEFLAGS=-j$(( NPROC+2 ))
 
-export NNN_USER_EDITOR=1
 export NPROC
 
 for p in less more cat; do

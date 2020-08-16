@@ -137,7 +137,7 @@ alias lart="ls -1Fcart" #all relative + types
 alias  lrt="ls -1Fcrt"  #relative + types
 
 alias myip="curl -s https://ifconfig.me/ip"
-alias nnn="nnn -d"
+alias nnn="nnn -d -e"
 alias n=nnn
 alias open=xdg-open
 alias primusrun="PRIMUS_SYNC=1 vblank_mode=0 primusrun"
