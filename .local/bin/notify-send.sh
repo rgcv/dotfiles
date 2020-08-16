@@ -185,8 +185,8 @@ handle_hint() {
 
 make_action_key() {
   key=$(echo "$1" | tr -dc _A-Z-a-z-0-9)
-  rnd=$(printf "%s" "$(od -A n -N 4 -t u /dev/urandom)")
-  echo "$key${rnd#*[0-9]}"
+  rnd=$(od -A n -N 4 -t u /dev/urandom)
+  echo "$key${rnd#"${rnd%%[^ ]*}"}"
 }
 
 handle_action() {
