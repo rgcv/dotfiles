@@ -1,6 +1,7 @@
 #!/bin/sh
 # requires:
-#   amixer (alsa-utils, volume management)
+#   pactl (libpulse, set sink/source volume)
+#   pacmd (pulseaudio, query sink/source status)
 # uses:
 #   canberra-gtk-play (libcanberra, play volume change sound
 #                      libcanberra-pulse, pulseaudio backend may be required)
@@ -9,36 +10,84 @@ set -eu
 app_name=${0##*/}
 nid_file=/tmp/.$app_name.bin.nid
 
-# audio mixer, sink control and capabilities
-mixer=default
-if amixer -D pulse info >/dev/null; then
-  mixer=pulse
+usage() {
+  err=${1-0}
+  [ "$err" -ne 0 ] && exec >&2
+  cat<<EOF
+Usage: $app_name [options] [-|+]<value>[%]
+  -h, --help    Show this.
+
+  -i, --input   Apply changes to input audio device.
+  -i, --output  Apply changes to output audio device.
+
+  -m, --mute    Mute device.
+  -u, --unmute  Unmute device.
+  -t, --toggle  Toggle device mute state.
+EOF
+  exit "$err"
+}
+
+# input parsing and validation
+[ $# -gt 0 ] || usage 1
+
+output=true
+while [ $# -gt 0 ]; do
+  case $1 in
+    -h|--help) usage ;;
+
+    --input)  output=false ;;
+    --output) output=true  ;;
+
+    -m|--mute)   mute=true   ;;
+    -u|--unmute) mute=false  ;;
+    -t|--toggle) mute=toggle ;;
+
+    *) break ;;
+  esac
+  shift
+done
+
+$output && target=sink || target=source
+TARGET=$(echo $target | tr '[:lower:]' '[:upper:]')
+
+if [ $# -gt 0 ]; then
+  t=${1#[-+]}
+  case ${t%\%} in
+    *[![:digit:]]*|'') usage 1 ;;
+  esac
+
+  pactl set-$target-volume "@DEFAULT_$TARGET@" "$1"
 fi
-scontrol=$(amixer -D "$mixer" scontrols |
-  sed -n "s/Simple mixer control '\([^']*\)',0/\1/p" | head -n 1)
-capability=$(amixer -D "$mixer" get "$scontrol" |
-  sed -n "s/ Capabilities:.*cvolume.*/Capture/p")
+[ -n "${mute-}" ] && pactl set-$target-mute "@DEFAULT_$TARGET@" $mute
 
-# do some stuff
-amixer -qMD "$mixer" sset "$scontrol" "$capability" "$@"
-pgrep -x pactl || pkill -RTMIN+25 i3blocks
 
-# display the notification
-data=$(amixer -MD "$mixer" sget "$scontrol")
-volume=$(echo "$data" | grep -o '[0-9]*%' | head -n 1)
+# query values for notification
+index=$(pacmd list-${target}s | grep -A0 '\* index:')
+index=${index#*: }
+
+data=$(pactl list ${target}s | grep -A9 "S${target#s} #$index")
+
+description=$(echo "$data" | grep Description:)
+description=${description#*: }
+
+volume=$(echo "$data" | grep Volume: | grep -o '[[:digit:]]*%' | head -n 1)
 volume=${volume%\%}
-  mute=$(echo "$data" | grep -o '\[off\]' | head -n 1)
-  icon=notification-audio-volume
 
-case $mute in
-  '[off]')
+muted=$(echo "$data" | grep Mute:)
+muted=${muted#*: }
+
+$output && label="Output volume" || label="Input volume"
+icon=notification-volume
+
+case $muted in
+  yes)
     volume=0
-    summary="Volume: Muted"
+    summary="$label: Muted"
     urgency=low
     icon=$icon-muted
     ;;
   *)
-    summary="Volume: $volume%"
+    summary="$label: $volume%"
     case $volume in
       0) # 0 (different from muted)
         urgency=low
@@ -60,6 +109,7 @@ case $mute in
     ;;
 esac
 
+pgrep -x pactl || pkill -RTMIN+25 i3blocks
 notify-send.sh \
   --app-name "$app_name" \
   --urgency "$urgency" \
@@ -67,6 +117,6 @@ notify-send.sh \
   --icon "$icon" \
   --hint int:value:"$volume" \
   --replace-file "$nid_file" \
-  "$summary" "${body-}"
+  "$summary" "$description"
 
-canberra-gtk-play -i audio-volume-change
+[ "$volume" -eq 0 ] || canberra-gtk-play -i audio-volume-change &
