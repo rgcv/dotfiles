@@ -1,6 +1,7 @@
 #!/bin/sh
 
-[ -n "$WSL_DISTRO_NAME" ] && exec ~/.local/bin/pinentry-wsl-ps1.sh "$@"
-[ -e /usr/lib/libgcr-base-3.so.1 ]  && exec pinentry-gnome3 "$@"
-[ -e /usr/lib/libgtk-x11-2.0.so.0 ] && exec pinentry-gtk-2  "$@"
+[ -n "$WSL_DISTRO_NAME" ] &&
+  exec "$(cd "$(dirname "$0")" && pwd -P)/pinentry-wsl-ps1.sh" "$@"
+command -v pinentry-gnome3 >/dev/null && exec pinentry-gnome3 "$@"
+command -v pinentry-gtk-2  >/dev/null && exec pinentry-gtk-2  "$@"
 exec pinentry-curses "$@"
