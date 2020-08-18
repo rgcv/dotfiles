@@ -8,7 +8,7 @@
 set -eu
 
 app_name=${0##*/}
-nid_file=/tmp/.$app_name.bin.nid
+nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
 
 usage() {
   err=${1-0}
@@ -115,7 +115,7 @@ case $muted in
     ;;
 esac
 
-pgrep -x pactl || pkill -RTMIN+25 i3blocks
+pgrep -xu "$USER" pactl || pkill -RTMIN+25 i3blocks
 notify-send.sh \
   --app-name "$app_name" \
   --urgency "$urgency" \
