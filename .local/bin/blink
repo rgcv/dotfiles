@@ -31,8 +31,7 @@ times=2
 
 usage() {
   cat <<USAGE
-Usage: ${0##*/} [-d <delay=$delay>] [-o <opacity=$opacity]
-    [-t <times=$times>]
+Usage: ${0##*/} [-d <delay>] [-o <opacity>] [-t <times>]
 USAGE
   exit "${1-0}"
 }
@@ -46,10 +45,9 @@ while getopts "d:o:t:" opt; do
   esac
 done; shift $((OPTIND - 1))
 
-for _ in $(awk -v stop="$times" 'BEGIN {for(i=1;i<=stop;++i) print i}'); do
+while times=$((times - 1)); [ "$times" -ge 0 ]; do
   sleep "$delay"
   setopacity "$opacity"
   sleep "$delay"
   setopacity 1
 done
-
