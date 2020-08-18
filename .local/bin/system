@@ -26,12 +26,7 @@ esac
 sync
 
 case $choice in
-  logout)
-    if [ -n "${SWAYLOCK-}" ]; then
-      swaymsg exit
-    else
-      i3-msg exit
-    fi ;;
+  logout) loginctl terminate-user "$USER" ;;
   restart)  systemctl reboot    ;;
   shutdown) systemctl poweroff  ;;
   *)        systemctl "$choice" ;;
