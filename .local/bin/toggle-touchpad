@@ -32,7 +32,7 @@ new=$((status^1))
 
 if [ -n "${SWAYSOCK-}" ]; then
   [ $new -eq 0 ] && cmd=disabled || cmd=enabled
-  swaymsg "input 'type:touchpad' events $cmd"
+  swaymsg -q "input 'type:touchpad' events $cmd"
 else
   xinput set-prop "$tpid" "$setting" $new
 fi
