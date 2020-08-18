@@ -4,8 +4,8 @@
 set -eu
 
 app_name=${0##*/}
-lock_name=/tmp/.$app_name.lock
-nid_file=/tmp/.$app_name.bin.nid
+lock_name=${XDG_RUNTIME_DIR-/tmp}/.$app_name.lock
+nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
 
 min=5
 max=100
@@ -40,7 +40,7 @@ shift $((OPTIND - 1))
 
 [ -f "$lock_name" ] && exit
 # shellcheck disable=SC2064
-touch "$lock_name" && trap "rm -f $lock_name" EXIT TERM INT
+touch "$lock_name" && trap "rm -f $lock_name" TERM INT
 
 current=$(brightnessctl -mc backlight|awk -F, '{print $4}'|tr -d %)
 case "${1-}" in
