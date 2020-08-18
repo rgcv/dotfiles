@@ -67,7 +67,7 @@ unset local
 ## graphical environment
 if [ -z "$DISPLAY" ]; then
   case ${XDG_VTNR--1} in
-    1) exec with-env sway ;;
+    1) exec with-env sway 2>/dev/null ;;
     2) exec startx -- ":1" ;;
   esac
 fi
