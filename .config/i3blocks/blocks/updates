@@ -9,16 +9,18 @@ NOTIFICATION_PKGS_MAX=${NOTIFICATION_PKGS_MAX-20}
 PACMAN=${PACMAN-pacman}
 
 app_name=${0##*/}
-nid_file=/tmp/.$app_name.i3b.nid
+nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.i3b.nid
+
 
 ellipsize() {
   len=${2-12}
   if [ ${#1} -gt "$len" ]; then
-    printf "%.*s…\n" "$((len-1))" "$1"
+    printf "%.*s…\n" "$((len - 1))" "$1"
   else
     echo "$1"
   fi
 }
+
 prettify() {
   color_old=${COLOR_VERSION_OLD-${color1-#ff5555}}
   color_new=${COLOR_VERSION_NEW-${color2-#55ff55}}
@@ -42,42 +44,67 @@ EOF
 notify() {
   notify-send.sh \
     --app-name "$app_name" \
-    --icon package \
+    --icon update-manager \
     --expire-time 10000 \
     --replace-file "$nid_file" \
-    "$1" "${2-}"
+    "$@"
 }
 
-[ "$BLOCK_BUTTON" -eq "$BUTTON_CHECK" ] && notify "Checking for updates"
+display() {
+  icon=${ICON-}
+  count=$1
+  text=
+  if [ "${markup-}" = pango ]; then
+    if [ "$count" -ne 0 ]; then
+      if [ "$count" -lt 0 ]; then
+        color=${ICON_COLOR_FAILED-${color9-#ff5555}}
+      else
+        color=${ICON_COLOR_OUTDATED-${color11-#ffff55}}
+      fi
+    else
+      color=${ICON_COLOR_UPDATED-${color10-#55ff55}}
+    fi
+    icon="<span color='$color'>$icon</span>"
+  fi
+  [ "$count" -gt 0 ] && text=" $count"
+  [ "${markup-}" = pango ] && text="<b>$text</b>"
+
+  echo "$icon$text"
+  echo "$icon$text"
+}
+
+[ "$BLOCK_BUTTON" -eq "$BUTTON_CHECK" ] && check=true || check=false
+
+$check && notify "Checking for updates"
+handle_error() {
+  $check && notify --icon dialog-error \
+    "Something went wrong" \
+    "Couldn't check if updates were available"
+  display -1
+  exit 0
+}
+trap handle_error USR1
 pkgs=$({
-  checkupdates
+  if ! checkupdates && [ $? -eq 2 ]; then
+    kill -USR1 $$
+    exit
+  fi
   case $PACMAN in
     yaourt) $PACMAN -Qua ;;
     yay)    $PACMAN -Qua --devel ;;
   esac
 })
 
-count=$(echo "$pkgs" | wc -l)
-has_updates() { [ "$1" -gt 0 ]; }
-if [ "$BLOCK_BUTTON" -eq "$BUTTON_CHECK" ]; then
-  has_updates "$count" || { notify "No updates available" && exit; }
-fi
-numupds="$count update"
-[ "$count" -gt 1 ] && numupds=${numupds}s
-if [ "$BLOCK_BUTTON" -eq "$BUTTON_CHECK" ]; then
+count=$(printf "%s" "$pkgs" | wc -l)
+if [ "$count" -eq 0 ]; then
+  $check && notify --icon checkmark --expire-time 3000 "System up-to-date"
+elif $check; then
+  numupds="$count update"
+  [ "$count" -eq 1 ] || numupds=${numupds}s
   if [ "$count" -gt "$NOTIFICATION_PKGS_MAX" ]; then
-    summary=" ($((count - NOTIFICATION_PKGS_MAX)) hidden)"
+    hidden=" ($((count - NOTIFICATION_PKGS_MAX)) hidden)"
   fi
-  summary="$numupds available${summary-}"
-  notify "$summary" "$(prettify "$pkgs")"
+  notify --icon package "$numupds available${hidden-}" "$(prettify "$pkgs")"
 fi
 
-icon=
-if [ "${markup-}" = pango ]; then
-  color=${ICON_COLOR-${color3-#ffff55}}
-  icon="<span color='$color'>$icon</span>"
-  count="<b>$count</b>"
-fi
-
-echo "$icon $count"
-echo "$icon $count"
+display "$count"
