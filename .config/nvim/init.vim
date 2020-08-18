@@ -63,12 +63,12 @@ if (has('nvim-0.3.0') || v:version >= 800) && has('python3') && has('timers')
     \ Plug 'roxma/nvim-yarp' |
     \ Plug 'roxma/vim-hug-neovim-rpc'
   end
-    if !has('win32')
-      Plug 'deoplete-plugins/deoplete-clang'
-    endif
-    Plug 'deoplete-plugins/deoplete-jedi'
-    Plug 'deoplete-plugins/deoplete-zsh'
-    Plug 'Shougo/neoinclude.vim'
+  if !has('win32')
+    Plug 'deoplete-plugins/deoplete-clang'
+  endif
+  Plug 'deoplete-plugins/deoplete-jedi'
+  Plug 'deoplete-plugins/deoplete-zsh'
+  Plug 'Shougo/neoinclude.vim'
 endif
 if HasPatch(704, 774)
   Plug 'Shougo/echodoc'
