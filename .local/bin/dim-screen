@@ -1,5 +1,5 @@
 #!/bin/sh
-# based on /usr/share/doc/xss-lock/dim-screen.sh
+# previously based on /usr/share/doc/xss-lock/dim-screen.sh
 # requires:
 #   brightnessctl (brightnessctl, getting screen brightness)
 
@@ -7,7 +7,7 @@ min_brightness=1
 fade_steps=2
 fade_interval=0.02
 
-get_brightness() { brightnessctl -mc backlight|awk -F, '{print $4}'|tr -d %; }
+get_brightness() { brightnessctl -mc backlight | cut -d , -f 4 | tr -d %; }
 
 trap 'exit 0' TERM INT
 # shellcheck disable=SC2064
