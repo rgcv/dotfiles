@@ -17,8 +17,8 @@ bgcolor=${bgcolor#\#} # trim potential leading #
 
 has_sleep_lock() { [ -e "/dev/fd/${XSS_SLEEP_LOCK_FD--1}" ]; }
 pre_lock() {
-  pkill -xu "$USER" -USR1 dunst
-  if has_sleep_lock; then playerctl pause || true; fi
+  dunstctl set-paused true
+  has_sleep_lock && playerctl pause || true
 }
 
 lock() {
@@ -41,9 +41,7 @@ EOF
   i3lock $opts "$@"
 }
 
-post_lock() {
-  pkill -xu "$USER" -USR2 dunst
-}
+post_lock() { dunstctl set-paused false; }
 
 pre_lock
 if has_sleep_lock; then
