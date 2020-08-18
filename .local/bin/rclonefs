@@ -1,5 +1,5 @@
 #!/bin/sh
-# from https://github.com/rclone/rclone/wiki/rclone-fstab-mount-helper-script
+# from https://github.com/rclone/rclone/wiki/rclone-mount-helper-script
 # requires:
 #   rclone (rclone)
 set -eu
