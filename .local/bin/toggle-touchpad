@@ -55,4 +55,4 @@ notify-send.sh \
   --expire-time 3000 \
   --icon "$icon" \
   --replace-file "$nid_file" \
-  "$summary" &
+  "$summary"

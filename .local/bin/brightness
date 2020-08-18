@@ -79,4 +79,4 @@ notify-send.sh \
   --expire-time 3000 \
   --replace-file "$nid_file" \
   --hint int:value:"$new" \
-  "Brightness: $new%"&
+  "Brightness: $new%"
