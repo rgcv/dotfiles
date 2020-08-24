@@ -1,10 +1,6 @@
 #!/bin/sh
 # requires:
 #   bemenu (bemenu, option selection)
-#   i3:
-#     i3-msg (i3, exiting i3)
-#   sway:
-#     swaymsg (sway, exiting sway)
 set -eu
 
 menu="with-env bemenu"
@@ -26,7 +22,7 @@ esac
 sync
 
 case $choice in
-  logout) loginctl terminate-user "$USER" ;;
+  logout)   loginctl  terminate-user "$USER" ;;
   restart)  systemctl reboot    ;;
   shutdown) systemctl poweroff  ;;
   *)        systemctl "$choice" ;;
