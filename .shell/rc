@@ -72,6 +72,7 @@ xdg_config_alias   kanshicf    kanshi/config
 xdg_config_alias   makocf      mako/config
 xdg_config_alias   muttrc      mutt/muttrc
 home_config_alias  muttrc      .mutt/muttrc .muttrc
+xdg_config_alias   mpvcf       mpv/mpv.conf
 xdg_config_alias   neomuttrc   neomutt/neomuttrc
 home_config_alias  neomuttrc   .neomutt/neomuttrc
 xdg_config_alias   newsboatrc  newsboat/config
