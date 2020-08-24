@@ -48,7 +48,7 @@ case "${1-}" in
   -) new=$(max "$((current - step))" "$min") ;;
   *) echo "$current"; exit ;;
 esac
-brightnessctl -sqc backlight s "$new%"
+brightnessctl -qc backlight s "$new%"
 rm -f "$lock_name"
 
 icon=notification-display-brightness
