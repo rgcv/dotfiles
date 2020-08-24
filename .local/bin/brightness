@@ -39,8 +39,7 @@ done
 shift $((OPTIND - 1))
 
 [ -f "$lock_name" ] && exit
-# shellcheck disable=SC2064
-touch "$lock_name" && trap "rm -f $lock_name" TERM INT
+touch "$lock_name" && trap 'rm -f $lock_name' TERM INT
 
 current=$(brightnessctl -mc backlight|awk -F, '{print $4}'|tr -d %)
 case "${1-}" in
@@ -49,7 +48,7 @@ case "${1-}" in
   -) new=$(max "$((current - step))" "$min") ;;
   *) echo "$current"; exit ;;
 esac
-brightnessctl -qc backlight s "$new%"
+brightnessctl -sqc backlight s "$new%"
 rm -f "$lock_name"
 
 icon=notification-display-brightness
