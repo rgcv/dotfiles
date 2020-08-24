@@ -11,6 +11,8 @@ PACMAN=${PACMAN-pacman}
 app_name=${0##*/}
 nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.i3b.nid
 
+true() { return 0; }
+false() { return 1; }
 
 ellipsize() {
   len=${2-12}
@@ -96,6 +98,7 @@ pkgs=$({
 })
 
 count=$(printf "%s" "$pkgs" | wc -l)
+[ -z "$pkgs" ] || count=$((count + 1))
 if [ "$count" -eq 0 ]; then
   $check && notify --icon checkmark --expire-time 3000 "System up-to-date"
 elif $check; then
