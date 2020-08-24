@@ -57,15 +57,11 @@ display() {
   count=$1
   text=
   if [ "${markup-}" = pango ]; then
-    if [ "$count" -ne 0 ]; then
-      if [ "$count" -lt 0 ]; then
-        color=${ICON_COLOR_FAILED-${color9-#ff5555}}
-      else
-        color=${ICON_COLOR_OUTDATED-${color11-#ffff55}}
-      fi
-    else
-      color=${ICON_COLOR_UPDATED-${color10-#55ff55}}
-    fi
+    case $count in
+       0) color=${ICON_COLOR_UPDATED-${color10-#55ff55}} ;;
+      -*) color=${ICON_COLOR_FAILED-${color9-#ff5555}} ;;
+       *) color=${ICON_COLOR_OUTDATED-${color11-#ffff55}} ;;
+     esac
     icon="<span color='$color'>$icon</span>"
   fi
   [ "$count" -gt 0 ] && text=" $count"
