@@ -11,10 +11,15 @@ key[End]=${terminfo[kend]}
 key[Insert]=${terminfo[kich1]}
 key[Backspace]=${terminfo[kbs]}
 key[Delete]=${terminfo[kdch1]}
+key[Alt-Delete]=${terminfo[kDC3]}
 key[Up]=${terminfo[kcuu1]}
 key[Down]=${terminfo[kcud1]}
 key[Left]=${terminfo[kcub1]}
+key[Alt-Left]=${terminfo[kLFT3]}
+key[Control-Left]=${terminfo[kLFT5]}
 key[Right]=${terminfo[kcuf1]}
+key[Alt-Right]=${terminfo[kRIT3]}
+key[Control-Right]=${terminfo[kRIT5]}
 key[PageUp]=${terminfo[kpp]}
 key[PageDown]=${terminfo[knp]}
 key[ShiftTab]=${terminfo[kcbt]}
@@ -23,83 +28,30 @@ key[ShiftTab]=${terminfo[kcbt]}
 autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
-[ -n "${key[Home]}"      ] && bindkey -- "${key[Home]}"      beginning-of-line
-[ -n "${key[End]}"       ] && bindkey -- "${key[End]}"       end-of-line
-[ -n "${key[Insert]}"    ] && bindkey -- "${key[Insert]}"    overwrite-mode
-[ -n "${key[Backspace]}" ] && bindkey -- "${key[Backspace]}" backward-delete-char
-[ -n "${key[Delete]}"    ] && bindkey -- "${key[Delete]}"    delete-char
-[ -n "${key[Up]}"        ] && bindkey -- "${key[Up]}"        up-line-or-beginning-search
-[ -n "${key[Down]}"      ] && bindkey -- "${key[Down]}"      down-line-or-beginning-search
-[ -n "${key[Left]}"      ] && bindkey -- "${key[Left]}"      backward-char
-[ -n "${key[Right]}"     ] && bindkey -- "${key[Right]}"     forward-char
-[ -n "${key[PageUp]}"    ] && bindkey -- "${key[PageUp]}"    beginning-of-buffer-or-history
-[ -n "${key[PageDown]}"  ] && bindkey -- "${key[PageDown]}"  end-of-buffer-or-history
-[ -n "${key[ShiftTab]}"  ] && bindkey -- "${key[ShiftTab]}"  reverse-menu-complete
+[ -n "${key[Home]}"           ] && bindkey -- "${key[Home]}"           beginning-of-line
+[ -n "${key[End]}"            ] && bindkey -- "${key[End]}"            end-of-line
+[ -n "${key[Insert]}"         ] && bindkey -- "${key[Insert]}"         overwrite-mode
+[ -n "${key[Backspace]}"      ] && bindkey -- "${key[Backspace]}"      backward-delete-char
+[ -n "${key[Delete]}"         ] && bindkey -- "${key[Delete]}"         delete-char
+[ -n "${key[Alt-Delete]}"     ] && bindkey -- "${key[Alt-Delete]}"     kill-word
+[ -n "${key[Up]}"             ] && bindkey -- "${key[Up]}"             up-line-or-beginning-search
+[ -n "${key[Down]}"           ] && bindkey -- "${key[Down]}"           down-line-or-beginning-search
+[ -n "${key[Left]}"           ] && bindkey -- "${key[Left]}"           backward-char
+[ -n "${key[Alt-Left]}"       ] && bindkey -- "${key[Alt-Left]}"       vi-backward-word
+[ -n "${key[Control-Left]}"   ] && bindkey -- "${key[Control-Left]}"   vi-backward-blank-word
+[ -n "${key[Right]}"          ] && bindkey -- "${key[Right]}"          forward-char
+[ -n "${key[Alt-Right]}"      ] && bindkey -- "${key[Alt-Right]}"      vi-forward-word
+[ -n "${key[Control-Right]}"  ] && bindkey -- "${key[Control-Right]}"  vi-forward-blank-word
+[ -n "${key[PageUp]}"         ] && bindkey -- "${key[PageUp]}"         beginning-of-buffer-or-history
+[ -n "${key[PageDown]}"       ] && bindkey -- "${key[PageDown]}"       end-of-buffer-or-history
+[ -n "${key[ShiftTab]}"       ] && bindkey -- "${key[ShiftTab]}"       reverse-menu-complete
 
 # Finally, make sure the terminal is in application mode, when zle is
-# active. Only then are the values from $terminfo valid.
+# active.  Only then are the values from $terminfo valid.
 if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
-  function zle-line-init {
-    echoti smkx
-  }
-  function zle-line-finish {
-    echoti rmkx
-  }
-  zle -N zle-line-init
-  zle -N zle-line-finish
+  autoload -Uz add-zle-hook-widget
+  function zle_application_mode_init   { echoti smkx }
+  function zle_application_mode_finish { echoti rmkx }
+  add-zle-hook-widget -Uz zle-line-init   zle_application_mode_init
+  add-zle-hook-widget -Uz zle-line-finish zle_application_mode_finish
 fi
-
-
-# # See https://github.com/ThiefMaster/zsh-config/blob/26c4b71/zshrc.d/keybinds.zsh
-# _delete-char-or-region() {
-#   [ "$REGION_ACTIVE" -eq 1 ] && zle kill-region || zle delete-char
-# }
-# zle -N _delete-char-or-region
-
-# # Extended word movements/actions
-# autoload -Uz select-word-style
-
-# function _zle-with-style() {
-#   setopt localoptions
-#   unsetopt warn_create_global
-#   local style
-#   [ -n "$3" ] && WORDCHARS=${WORDCHARS//[$3]}
-#   [[ $BUFFER =~ '^\s+$' ]] && style=shell || style=$2
-#   select-word-style $style
-#   zle $1
-#   [ -n "$3" ] && WORDCHARS="${WORDCHARS}${3}"
-#   select-word-style normal
-# }
-
-# __backward-word() { _zle-with-style backward-word bash '-_/.' }
-# __forward-word()  { _zle-with-style forward-word  bash '-_/.' }
-# __backward-arg()  { _zle-with-style backward-word shell }
-# __forward-arg()   { _zle-with-style forward-word  shell }
-
-# __backward-kill-arg()  { _zle-with-style backward-kill-word shell }
-# __forward-kill-arg()   { _zle-with-style kill-word          shell }
-# __backward-kill-word() { _zle-with-style backward-kill-word normal '-_/.' }
-# __backward-kill-path() { _zle-with-style backward-kill-word normal }
-
-# zle -N __backward-word
-# zle -N __forward-word
-# zle -N __backward-arg
-# zle -N __forward-arg
-# zle -N __backward-kill-arg
-# zle -N __forward-kill-arg
-# zle -N __backward-kill-word
-# zle -N __backward-kill-path
-
-# bindkey '\C-[OD'  __backward-word  # ctrl+left
-# bindkey "\e[1;5D" __backward-word  # ctrl+left
-# bindkey '\C-[OC'  __forward-word   # ctrl+right
-# bindkey "\e[1;5C" __forward-word   # ctrl+right
-# bindkey '\e\e[D'  __backward-arg   # alt+left
-# bindkey '\e[1;3D' __backward-arg   # alt+left
-# bindkey '\e[1;3C' __forward-arg    # alt+right
-# bindkey '\e\e[C'  __forward-arg    # alt+right
-# bindkey '\e\C-?'  __backward-kill-word  # alt+backspace
-# bindkey '\C-w'    __backward-kill-word  # ctrl+w
-# bindkey '^[[3;3~' __forward-kill-arg    # alt+del
-# bindkey '^H'      __backward-kill-arg   # ctrl+backspace
-# bindkey '\C-f'    __backward-kill-path  # ctrl+f
