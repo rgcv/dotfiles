@@ -12,7 +12,7 @@ app_name=${0##*/}
 nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.i3b.nid
 
 true() { return 0; }
-false() { return 1; }
+false() { ! true; }
 
 ellipsize() {
   len=${2-12}
