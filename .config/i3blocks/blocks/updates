@@ -83,7 +83,8 @@ handle_error() {
 }
 trap handle_error USR1
 pkgs=$({
-  if ! checkupdates && [ $? -eq 2 ]; then
+  checkupdates || err=$?
+  if [ ${err-0} -eq 1 ]; then
     kill -USR1 $$
     exit
   fi
