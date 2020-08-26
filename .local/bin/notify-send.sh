@@ -47,7 +47,7 @@ usage() {
   [ "$err" -eq 0 ] || exec >&2
   cat <<EOF
 Usage:
-  $SELF [OPTION...] <summary> [body] - create a notification
+  $SELF [OPTION…] <SUMMARY> [BODY] - create a notification
 
 Help Options:
   -?|--help                         Show this usage message.
