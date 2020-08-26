@@ -37,11 +37,11 @@ zle -N down-line-or-beginning-search
 [ -n "${key[Up]}"             ] && bindkey -- "${key[Up]}"             up-line-or-beginning-search
 [ -n "${key[Down]}"           ] && bindkey -- "${key[Down]}"           down-line-or-beginning-search
 [ -n "${key[Left]}"           ] && bindkey -- "${key[Left]}"           backward-char
-[ -n "${key[Alt-Left]}"       ] && bindkey -- "${key[Alt-Left]}"       vi-backward-word
-[ -n "${key[Control-Left]}"   ] && bindkey -- "${key[Control-Left]}"   vi-backward-blank-word
+[ -n "${key[Alt-Left]}"       ] && bindkey -- "${key[Alt-Left]}"       vi-backward-blank-word
+[ -n "${key[Control-Left]}"   ] && bindkey -- "${key[Control-Left]}"   vi-backward-word
 [ -n "${key[Right]}"          ] && bindkey -- "${key[Right]}"          forward-char
-[ -n "${key[Alt-Right]}"      ] && bindkey -- "${key[Alt-Right]}"      vi-forward-word
-[ -n "${key[Control-Right]}"  ] && bindkey -- "${key[Control-Right]}"  vi-forward-blank-word
+[ -n "${key[Alt-Right]}"      ] && bindkey -- "${key[Alt-Right]}"      vi-forward-blank-word
+[ -n "${key[Control-Right]}"  ] && bindkey -- "${key[Control-Right]}"  vi-forward-word
 [ -n "${key[PageUp]}"         ] && bindkey -- "${key[PageUp]}"         beginning-of-buffer-or-history
 [ -n "${key[PageDown]}"       ] && bindkey -- "${key[PageDown]}"       end-of-buffer-or-history
 [ -n "${key[ShiftTab]}"       ] && bindkey -- "${key[ShiftTab]}"       reverse-menu-complete
