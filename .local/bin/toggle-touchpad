@@ -41,11 +41,11 @@ echo $new > "$file"
 
 if [ $new -eq 0 ]; then
   urgency=low
-  icon=notification-touchpad-disabled-symbolic
+  icon=input-touchpad-off
   summary="Touchpad Disabled"
 else
   urgency=normal
-  icon=notification-input-touchpad-symbolic
+  icon=input-touchpad-on
   summary="Touchpad Enabled"
 fi
 
