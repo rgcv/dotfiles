@@ -15,6 +15,7 @@ set -e
 ##
 ## See `man 1 grimshot` or `grimshot usage` for further details.
 
+SELF=${0##*/}
 get_target_directory() {
   [ -f "${XDG_CONFIG_HOME-$HOME/.config}/user-dirs.dirs" ] &&
      . "${XDG_CONFIG_HOME-$HOME/.config}/user-dirs.dirs"
@@ -43,9 +44,9 @@ case $ACTION in
   save|copy|check) ;;
   *) cat<<USAGE
 Usage:
-  grimshot [--notify] (copy|save) [active|screen|output|area|window] [FILE]
-  grimshot check
-  grimshot usage
+  $SELF [--notify] (copy|save) [active|screen|output|area|window] [FILE]
+  $SELF check
+  $SELF usage
 
 Commands:
   copy: Copy the screenshot data into the clipboard.
@@ -63,7 +64,7 @@ USAGE
   exit ;;
 esac
 
-notify() { notify-send -t 3000 -a grimshot "$@"; }
+notify() { notify-send -t 3000 -a "$SELF" "$@"; }
 notify_ok() {
   $NOTIFY || return
 
