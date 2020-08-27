@@ -52,5 +52,3 @@ notify-send.sh \
   --replace-file "$nid_file" \
   --hint "int:value:$new" \
   "Brightness: $new%"
-
-until [ -f "$nid_file" ]; do sleep 0.2; done
