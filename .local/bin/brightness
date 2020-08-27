@@ -4,11 +4,11 @@
 set -e
 
 app_name=${0##*/}
-lock_file=${XDG_RUNTIME_DIR:-/tmp}/.$app_name.lock
-nid_file=${XDG_RUNTIME_DIR:-/tmp}/.$app_name.bin.nid
+lock_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.lock
+nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
 
 usage() {
-  echo "Usage: $app_name [-h] [+|-]<val>%"
+  echo "Usage: $app_name [-h] [+|-]<val>[%]"
   exit "${1-0}"
 }
 
@@ -23,9 +23,8 @@ touch "$lock_file" && trap 'rm -f "$lock_file"' EXIT TERM INT
 [ $# -gt 0 ] || usage 1
 [ "$1" = "-h" ] && usage
 
-pval=${1#[-+]}
-val=${pval%\%}
-[ "$val" != "$pval" ] || usage 1
+val=${1#[-+]}
+val=${val%\%}
 case $val in *[![:digit:]]*|"") usage 1 ;; esac
 
 current=$(brightnessctl -mc backlight | cut -d , -f 4)
