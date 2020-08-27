@@ -220,6 +220,6 @@ __cd() {
   pwd > "$CWD"
 }
 if [ -f "$CWD" ]; then
-  cd "$(cat "$CWD")" || true
+  cd "$(cat "$CWD")" 2>/dev/null || :
 fi
 alias cd=__cd
