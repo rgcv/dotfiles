@@ -11,6 +11,7 @@ zstyle :compinstall filename '${ZDOTDIR:-$HOME}/.zshrc'
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' rehash true
+zstyle ':completion::complete:*' gain-privileges 1
 zstyle ':completion:*:descriptions' format %U%B%d%b%u
 zstyle ':completion:*:warnings' format '%BNo matches for: %d%b'
 # completion module
