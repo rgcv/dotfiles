@@ -6,10 +6,10 @@
 #    any window compositor (picom, compton, xcompmgr, ...)
 #    xdotool (xdotool, window identification)
 #    transset-df (transset-df, setting transparency)
-set -eu
+set -e
 
 getwindow() {
-  if [ -n "${SWAYSOCK-}" ]; then
+  if [ -n "$SWAYSOCK" ]; then
     swaymsg -t get_tree | jq -r '..|select(.focused?)|.id // "__focused__"'
   else
     xdotool getactivewindow
@@ -17,7 +17,7 @@ getwindow() {
 }
 
 setopacity() {
-  if [ -n "${SWAYSOCK-}" ]; then
+  if [ -n "$SWAYSOCK" ]; then
     swaymsg -q "[con_id=$window] opacity ${1-1}"
   else
     transset-df -i "$window" "${1-1}"
@@ -41,7 +41,7 @@ while getopts "d:o:t:" opt; do
     d) delay=$OPTARG   ;;
     o) opacity=$OPTARG ;;
     t) times=$OPTARG   ;;
-    ?) usage 1 ;;
+    *) usage 1 ;;
   esac
 done; shift $((OPTIND - 1))
 

@@ -2,14 +2,13 @@
 # from https://github.com/rclone/rclone/wiki/rclone-mount-helper-script
 # requires:
 #   rclone (rclone)
-set -eu
+set -e
 command -v rclone >/dev/null || exit 1
 
 remote=$1
 mount=$2
 shift 2
 
-args=
 while getopts :o: opts; do
   case $opts in
     o)

@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eu
+set -e
 
 query() { setxkbmap -query | awk '/^'"$1"':/ {print $2}'; }
 
@@ -8,7 +8,7 @@ variant=$(query variant)
 
 [ -r "$HOME/.Xkbmap" ] && setxkbmap -config "$HOME/.Xkbmap"
 
-case "${1-}" in
+case $1 in
   pt|us|'us(intl)') setxkbmap "$1" ;;
   *)
     if [ "$layout" = pt ]; then
@@ -23,8 +23,6 @@ case "${1-}" in
     ;;
 esac
 
-if [ -n "${2-}" ]; then
-  setxkbmap -variant "$2"
-fi
+[ -z "$2" ] || setxkbmap -variant "$2"
 
 pkill -RTMIN+20 i3blocks

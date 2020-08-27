@@ -1,5 +1,5 @@
 #!/bin/sh
-set -eu
+set -e
 
 i3=${XDG_CONFIG_HOME-$HOME/.config}/i3
 [ ! -d "$i3" ] && [ -d "$HOME/.i3" ] && i3=$HOME/.i3

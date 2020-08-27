@@ -4,7 +4,7 @@
 #   dmenu (obviously)
 #   dmenu_path (comes with dmenu)
 # end a command with ; to run in a terminal
-set -eu
+set -e
 
 terminal="${TERMINAL-termite} -e"
 cachedir="${XDG_CACHE_HOME-$HOME/.cache}/dmenu"

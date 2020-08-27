@@ -5,17 +5,17 @@
 #   sway:
 #     swaymsg (sway, touchpad information)
 #     jq (jq, parse json)
-set -eu
+set -e
 
 app_name=${0##*/}
 file=${XDG_CACHE_HOME-$HOME/.cache}/touchpad-status
-nid_file=/tmp/.$app_name.prev.nid
+nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
 
 if [ -f "$file" ]; then
   read -r status < "$file"
 else
   mkdir -p "${file%/*}"
-  if [ -n "${SWAYSOCK-}" ]; then
+  if [ -n "$SWAYSOCK" ]; then
     evs=$(swaymsg -t get_inputs |
       jq -r 'first(.[], select(.type=="touchpad")).libinput.send_events')
     [ "$evs" = disabled ] && status=0 || status=1
@@ -30,7 +30,7 @@ fi
 
 new=$((status^1))
 
-if [ -n "${SWAYSOCK-}" ]; then
+if [ -n "$SWAYSOCK" ]; then
   [ $new -eq 0 ] && cmd=disabled || cmd=enabled
   swaymsg -q "input 'type:touchpad' events $cmd"
 else
@@ -51,8 +51,8 @@ fi
 
 notify-send.sh \
   --app-name "$app_name" \
-  --urgency "$urgency" \
+  --urgency $urgency \
   --expire-time 3000 \
-  --icon "$icon" \
+  --icon $icon \
   --replace-file "$nid_file" \
   "$summary"

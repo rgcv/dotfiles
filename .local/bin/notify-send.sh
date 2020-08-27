@@ -20,7 +20,7 @@
 # Desktop Notifications Specification
 # https://developer.gnome.org/notification-spec/
 
-set -eu
+set -e
 
 SELF=${0##*/}
 VERSION=1.1
@@ -53,8 +53,8 @@ Help Options:
   -?|--help                         Show this usage message.
 
 Application Options:
-  -u, --urgency=LEVEL               Specifies the urgency level (0 low, 1
-                                    normal, 2 critical).
+  -u, --urgency=LEVEL               Specifies the urgency level (low, normal,
+                                    critical).
   -t, --expire-time=TIME            Specifies the timeout in milliseconds at
                                     which to expire the notification.
   -f, --force-expire                Forcefully closes the notification when the
@@ -86,7 +86,10 @@ EOF
   exit "$err"
 }
 
-check_missing() { [ -n "${2-}" ] || die "Missing argument for $1"; }
+true()  { return 0; }
+false() { ! true;   }
+
+check_missing() { [ $# -gt 1 ] || die "Missing argument for $1"; }
 
 die() { echo >&2 "$SELF: $*"; exit 1; }
 
@@ -273,15 +276,15 @@ while [ $# -gt 0 ]; do
     -v|--version) echo "$SELF $VERSION"; exit ;;
 
     -u|--urgency)
-      check_missing $1 "${2-}"
-      handle_urgency "$2"
+      check_missing $1 $2
+      handle_urgency $2
       shift
       ;;
     --urgency=*) handle_urgency "${1#*=}" ;;
 
     -t|--expire-time)
-      check_missing $1 "${2-}"
-      handle_expire_time "$2"
+      check_missing $1 $2
+      handle_expire_time $2
       shift
       ;;
     --expire-time=*) handle_expire_time "${1#*=}" ;;
@@ -289,49 +292,49 @@ while [ $# -gt 0 ]; do
     -f|--force-expire) FORCE_EXPIRE=true ;;
 
     -a|--app-name)
-      check_missing $1 "${2-}"
+      check_missing $1 "$2"
       APP_NAME=$2
       shift
       ;;
      --app-name=*) APP_NAME=${1#*=} ;;
 
     -i|--icon)
-      check_missing $1 "${2-}"
+      check_missing $1 "$2"
       APP_ICON=$2
       shift
       ;;
      --icon=*) APP_ICON=${1#*=} ;;
 
     -c|--category)
-      check_missing $1 "${2-}"
+      check_missing $1 "$2"
       handle_category "$2"
       shift
       ;;
      --category=*) handle_category "${1#*=}" ;;
 
     -h|--hint)
-      check_missing $1 "${2-}"
-      handle_hint "${2-}"
+      check_missing $1 "$2"
+      handle_hint "$2"
       shift
       ;;
      --hint=*) handle_hint "${1#*=}" ;;
 
     -o|--action)
-      check_missing $1 "${2-}"
+      check_missing $1 "$2"
       handle_action "$2"
       shift
       ;;
      --action=*) handle_action "${1#*=}" ;;
 
     -d|--default-action)
-      check_missing $1 "${2-}"
+      check_missing $1 "$2"
       handle_named_action default "$2"
       shift
       ;;
      --default-action=*) handle_named_action default "${1#*=}" ;;
 
     -l|--close-action)
-      check_missing $1 "${2-}"
+      check_missing $1 "$2"
       handle_named_action close "$2"
       shift
       ;;
@@ -340,25 +343,25 @@ while [ $# -gt 0 ]; do
     -p|--print-id) PRINT_ID=true ;;
 
     -r|--replace)
-      check_missing $1 "${2-}"
+      check_missing $1 $2
       REPLACES_ID=$2
       shift
       ;;
      --replace=*) REPLACES_ID=${1#*=} ;;
 
     -R|--replace-file)
-      check_missing $1 "${2-}"
+      check_missing $1 "$2"
       handle_replace_file "$2"
       shift
       ;;
      --replace-file=*) handle_replace_file "${1#*=}" ;;
 
     -s|--close)
-      check_missing $1 "${2-}"
-      handle_close "${2-}"
+      check_missing $1 $2
+      handle_close $2
       exit $?
       ;;
-     --close=*) handle_close "${1#*=}"; exit $? ;;
+     --close=*) handle_close ${1#*=}; exit $? ;;
 
     --) is_positional=true ;;
 
