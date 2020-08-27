@@ -1,20 +1,14 @@
 #!/bin/sh
 # requires:
 #   brightnessctl (brightnessctl, screen brightness control)
-set -eu
+set -e
 
 app_name=${0##*/}
-lock_name=${XDG_RUNTIME_DIR-/tmp}/.$app_name.lock
-nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
-
-min=5
-max=100
-step=5
+lock_file=${XDG_RUNTIME_DIR:-/tmp}/.$app_name.lock
+nid_file=${XDG_RUNTIME_DIR:-/tmp}/.$app_name.bin.nid
 
 usage() {
-  cat <<EOF
-Usage: ${0##*/} [-m min=$min] [-M max=$max] [-s step=$step] [+|-|[= val]]
-EOF
+  echo "Usage: $app_name [-h] [+|-]<val>%"
   exit "${1-0}"
 }
 
@@ -22,60 +16,42 @@ min() { [ "$1" -lt "$2" ] && echo "$1" || echo "$2"; }
 max() { [ "$1" -gt "$2" ] && echo "$1" || echo "$2"; }
 clamp() { min "$(max "$1" "$2")" "$3"; }
 
-while getopts "hm:M:s:" opt; do
-  case "$opt" in
-    h) usage ;;
-    m) min=$(clamp "$OPTARG" 1 100) ;;
-    M) max=$(clamp "$OPTARG" 1 100) ;;
-    s) if [ "$OPTARG" -ne 0 ]; then
-         step=$OPTARG
-         [ "$step" -lt 0 ] && step=$((-step))
-       fi
-       ;;
-    ?) usage 2 ;;
-    *) usage 1 ;;
-  esac
-done
-shift $((OPTIND - 1))
+[ -f "$lock_file" ] && exit
+touch "$lock_file" && trap 'rm -f "$lock_file"' EXIT TERM INT
+[ -d "${nid_file%/*}" ] || exit 1
 
-[ -f "$lock_name" ] && exit
-touch "$lock_name" && trap 'rm -f $lock_name' TERM INT
+[ $# -gt 0 ] || usage 1
+[ "$1" = "-h" ] && usage
 
-current=$(brightnessctl -mc backlight|awk -F, '{print $4}'|tr -d %)
-case "${1-}" in
-  =) new=$(clamp "${2-$current}" "$min" "$max") ;;
-  +) new=$(min "$((current + step))" "$max") ;;
-  -) new=$(max "$((current - step))" "$min") ;;
-  *) echo "$current"; exit ;;
+pval=${1#[-+]}
+val=${pval%\%}
+[ "$val" != "$pval" ] || usage 1
+case $val in *[![:digit:]]*|"") usage 1 ;; esac
+
+current=$(brightnessctl -mc backlight | cut -d , -f 4)
+current=${current%\%}
+case $1 in
+  -*) new=$(max $((current - val))   0) ;;
+  +*) new=$(min $((current + val)) 100) ;;
+   *) new=$(clamp "$val" 0 100) ;;
 esac
 brightnessctl -qc backlight s "$new%"
-rm -f "$lock_name"
 
 icon=notification-display-brightness
 case $new in
-  0) # 0
-    urgency=low
-    icon="$icon-off"
-    ;;
-  [1-9]|[1-3][0-9]) # 1 -> 39
-    urgency=low
-    icon="$icon-low"
-    ;;
-  [4-7][0-9]) # 40 -> 79
-    urgency=normal
-    icon="$icon-medium"
-    ;;
-  [8-9][0-9]|100) # 80 -> 100
-    urgency=critical
-    icon="$icon-full"
-    ;;
+  0)                urgency=low      icon=$icon-off    ;;
+  [1-9]|[1-3][0-9]) urgency=low      icon=$icon-low    ;;
+  [4-7][0-9])       urgency=normal   icon=$icon-medium ;;
+  [8-9][0-9]|100)   urgency=critical icon=$icon-full   ;;
 esac
 
 notify-send.sh \
-  --urgency "$urgency" \
-  --app-name "${0##*/}" \
-  --icon "$icon" \
+  --urgency $urgency \
+  --app-name "$app_name" \
+  --icon $icon \
   --expire-time 3000 \
   --replace-file "$nid_file" \
-  --hint int:value:"$new" \
+  --hint "int:value:$new" \
   "Brightness: $new%"
+
+until [ -f "$nid_file" ]; do sleep 0.2; done
