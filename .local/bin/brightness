@@ -16,6 +16,14 @@ min() { [ "$1" -lt "$2" ] && echo "$1" || echo "$2"; }
 max() { [ "$1" -gt "$2" ] && echo "$1" || echo "$2"; }
 clamp() { min "$(max "$1" "$2")" "$3"; }
 
+get_brightness() {
+  _=$(brightnessctl -mc backlight | cut -d , -f 4)
+  echo "${_%\%}"
+  unset _
+}
+set_brightness() { brightnessctl -qc backlight s "$1%"; }
+
+
 [ -f "$lock_file" ] && exit
 touch "$lock_file" && trap 'rm -f "$lock_file"' EXIT TERM INT
 [ -d "${nid_file%/*}" ] || exit 1
@@ -27,14 +35,12 @@ val=${1#[-+]}
 val=${val%\%}
 case $val in *[![:digit:]]*|"") usage 1 ;; esac
 
-current=$(brightnessctl -mc backlight | cut -d , -f 4)
-current=${current%\%}
 case $1 in
-  -*) new=$(max $((current - val))   0) ;;
-  +*) new=$(min $((current + val)) 100) ;;
+  -*) new=$(max $(($(get_brightness) - val))   0) ;;
+  +*) new=$(min $(($(get_brightness) + val)) 100) ;;
    *) new=$(clamp "$val" 0 100) ;;
 esac
-brightnessctl -qc backlight s "$new%"
+set_brightness "$new"
 
 icon=notification-display-brightness
 case $new in
