@@ -1,24 +1,18 @@
 #!/bin/sh
-# loosely based on https://github.com/pavanjadhaw/betterlockscreen
 # requires:
-#   bc (bc, numerical computation)
 #   convert (imagemagick, capture and pixelate)
 #   i3lock (i3lock)
 #   xdpyinfo (xorg-xdpyinfo, screen information)
-#   xset (xorg-xset, dpms control)
 # uses:
 #   playerctl (playerctl, to pause before lock)
 #   xgetres (xgetres, retrieve X resource values)
-set -eu
+set -e
 pgrep i3lock && exit
-
-bgcolor=${COLOR_BACKGROUND-$(xgetres i3.color0 || echo "#000000")} # black
-bgcolor=${bgcolor#\#} # trim potential leading #
 
 has_sleep_lock() { [ -e "/dev/fd/${XSS_SLEEP_LOCK_FD--1}" ]; }
 pre_lock() {
   dunstctl set-paused true
-  has_sleep_lock && playerctl pause || true
+  has_sleep_lock && playerctl pause || :
 }
 
 lock() {
@@ -26,8 +20,7 @@ lock() {
 $(xdpyinfo | awk -F'x| *' '/dimensions:/ {print $3,$4}')
 EOF
 
-  opts= # i3 opts
-  opts="$opts -c $bgcolor"
+  opts="$opts -c ${COLOR_BACKGROUND-$(xgetres i3.color0 || echo "#000000")}"
   opts="$opts -u" # hide indicator
   opts="$opts -t" # tile the image (multihead)
   opts="$opts -i /dev/stdin --raw=${w}x${h}:rgb"
