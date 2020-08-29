@@ -15,12 +15,11 @@ border-size=0
 progress-color=#89CDFF7F
 max-icon-size=48
 icon-path=/usr/share/icons/Papirus-Dark
-default-timeout=20000
+default-timeout=5000
 
 [urgency=low]
 background-color=#212121
 text-color=#BDBDBD
-default-timeout=10000
 
 [urgency=high]
 background-color=#F07178
