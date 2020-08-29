@@ -1,0 +1,22 @@
+# Newsboat Settings
+auto-reload yes
+confirm-exit yes
+# browser "firefox %u"
+datetime-format "%a, %b %d"
+download-full-page yes
+download-retries 2
+error-log "~/.local/share/newsboat/error.log"
+history-limit 1000
+
+notify-format "Newsboat - %d new articles\n● %n unread articles\n● %f unread feeds"
+notify-program notify-send.sh
+
+refresh-on-startup yes
+reload-threads 2
+reload-time 30
+
+text-width 80
+
+# Bindings
+bind-key ^R reload-all
+
