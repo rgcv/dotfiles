@@ -1,95 +1,92 @@
 #!/bin/sh
 # requires:
 #   jq (jq, json parsing)
-set -eu
+set -e
 
-trim() {
-  echo "$1" |
-    if [ ${#1} -gt "${2-10}" ]; then
-      awk '{print substr($0, 1, '"${2-10}"'-1)"…"}'
-    else cat; fi
+[ "${markup-}" = pango ] && pango=true || pango=false
+player=${BLOCK_INSTANCE-spotify}
+
+true()  { return 0; }
+false() { ! true;   }
+
+ellipsize() {
+  _l=${2-10}
+  if [ ${#1} -gt "$_l" ]; then
+    awk 'BEGIN {print substr('"$1"', 1, '"$_l"'-1)"…"}'
+  else
+    echo "$1"
+  fi
 }
 
 escape() {
-  echo "$@" | if [ "${markup-}" = pango ]; then
-    sed \
+  if $pango; then
+    echo "$@" | sed \
       -e 's/&/\&amp;/g'  \
       -e 's/>/\&gt;/g'   \
       -e 's/</\&lt;/g'   \
       -e 's/"/\&quot;/g'
-  else cat; fi
+  else
+    echo "$@"
+  fi
 }
 
 json() {
   printf '{"full_text":"%s","short_text":"%s","color":"%s"}\n' \
-    "${1-}" "${2-}" "${3-#ffffff}"
+    "${1-}" "${2-}" "${3-${foreground-#ffffff}}"
 }
 
 display() {
   status=$1; shift
   case $status in
-    Playing) prefix=${ICON_STATUS_PLAYING-} ;; #  
-    Paused)  prefix=${ICON_STATUS_PAUSED-} ;; #  
+    playing) status=${ICON_STATUS_PLAYING-} ;; #  
+    paused)  status=${ICON_STATUS_PAUSED-} ;; #  
     *)       json; return; # prefix=${ICON_STATUS_UNKNOWN-}; status=unknown ;;
   esac
 
   case $player in
     spotify)
-      if [ "${markup-}" = pango ]; then
-        prefix="$prefix <span color='#81b71a'>"
-      else
-        prefix="$prefix "
-      fi
+      icon=
+      $pango && icon="<span color='#81b71a'>$icon</span?"
       ;;
-    *) prefix="$prefix ${ICON_PLAYER-}" ;;
+    *) icon=${ICON_PLAYER-} ;;
   esac
+
+  prefix="$status$icon"
 
   if [ "$status" = unknown ]; then
     full_text=$prefix
     short_text=$prefix
   else
-    prefix="$prefix "
-
-    full_text="$(trim "$1" "${ARTIST_MAX_FULL-17}") - $(trim "$2" "${SONG_MAX_FULL-17}")"
-    short_text=$(trim "$2" "${SONG_MAX_SHORT-11}")
-
-    suffix=
-    [ "${markup-}" = pango ] && [ "$player" = spotify ] && suffix="</span>"
-
-    full_text="$prefix$(escape "$full_text")$suffix"
-    short_text="$prefix$(escape "$short_text")$suffix"
+    full_text="$prefix $(ellipsize "$1" "${ARTIST_MAX_FULL-17}") - $(ellipsize "$2" "${SONG_MAX_FULL-17}")"
+    short_text="$prefix $(ellipsize "$2" "${SONG_MAX_SHORT-11}")"
   fi
 
-  json "$full_text" "$short_text" "${foreground-#ffffff}"
+  json "$full_text" "$short_text" "${color15-#ffffff}"
 }
 
 # following code adapted from
 # https://gitlab.com/gamma-neodots/neodots.i3/blob/base/LIB/i3blocks/playerctl.sh
 shutdown() {
   # get process gid
-  pgid=$(ps -o pgid= $$ | sed -e 's/ //g')
+  pgid=$(ps -o pgid= $$)
   # kill it in a new process group
-  setsid kill -- -"$pgid"
+  setsid kill -TERM -"${pgid##* }"
   exit 0
 }
 trap shutdown INT TERM
 
-player=${BLOCK_INSTANCE-spotify}
-player_arg="--player=$player"
-
 while true; do
-  playerctl "$player_arg" --follow metadata \
-    --format "$(printf '{{status}}\t{{artist}}\t{{title}}')" |
+  playerctl --player="$player" --follow metadata \
+    --format "$(printf '{{lc(status)}}\t{{artist}}\t{{title}}')" |
   while IFS=$(printf '\t') read -r how who what; do
     display "$how" "$who" "$what"
   done; sleep 15
 done &
 
 while read -r json; do
-  button=$(echo "$json" | jq '.button?')
-  case $button in
-    1) playerctl "$player_arg" play-pause ;;
-    2) playerctl "$player_arg" previous ;;
-    3) playerctl "$player_arg" next ;;
+  case "$(echo "$json" | jq .button?)" in
+    1) playerctl --player="$player" play-pause ;;
+    2) playerctl --player="$player" previous ;;
+    3) playerctl --player="$player" next ;;
   esac
 done

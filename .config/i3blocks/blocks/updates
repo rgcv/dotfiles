@@ -1,41 +1,42 @@
 #!/bin/sh
-set -eu
+set -e
 
-while ! grep -q up /sys/class/net/*/operstate; do sleep 5; done
+while ! grep -q up /sys/class/net/*/operstate; do
+  sleep "${BLOCK_INTERVAL-5}"
+done
 
 BLOCK_BUTTON=${BLOCK_BUTTON--1}
 BUTTON_CHECK=${BUTTON_CHECK-1}
-NOTIFICATION_PKGS_MAX=${NOTIFICATION_PKGS_MAX-20}
 PACMAN=${PACMAN-pacman}
 
 app_name=${0##*/}
 nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.i3b.nid
+[ "${markup-}" = pango ] && pango=true || pango=false
+pkgs_max=${NOTIFICATION_PKGS_MAX-20}
 
-true() { return 0; }
-false() { ! true; }
+true()  { return 0; }
+false() { ! true;   }
 
 ellipsize() {
-  len=${2-12}
-  if [ ${#1} -gt "$len" ]; then
-    printf "%.*s…\n" "$((len - 1))" "$1"
+  if [ ${#1} -gt "$2" ]; then
+    printf '%.*s…\n' "$(($2 - 1))" "$1"
   else
     echo "$1"
   fi
 }
 
 prettify() {
-  color_old=${COLOR_VERSION_OLD-${color1-#ff5555}}
-  color_new=${COLOR_VERSION_NEW-${color2-#55ff55}}
+  color_old=${COLOR_VERSION_OLD-${color9-#ff5555}}
+  color_new=${COLOR_VERSION_NEW-${color10-#55ff55}}
   c=0
-  max=$NOTIFICATION_PKGS_MAX
-  while [ $c -le "$max" ] && read -r pkg old _ new; do
-    old=$(ellipsize "$old" 10)
-    new=$(ellipsize "$new" 10)
-    if [ "${markup-}" = pango ]; then
+  while [ $c -le "$pkgs_max" ] && read -r pkg old _ new; do
+    old=$(ellipsize "$old" 12)
+    new=$(ellipsize "$new" 12)
+    if $pango; then
       old="<span color='$color_old'>$old</span>"
       new="<span color='$color_new'>$new</span>"
     fi
-    printf '%12s %s\t→ %s\n' "$(ellipsize "$pkg")" "$old" "$new"
+    printf '%10s %-12s → %-12s\n' "$(ellipsize "$pkg" 10)" "$old" "$new"
 
     c=$((c + 1))
   done <<EOF
@@ -56,7 +57,7 @@ display() {
   icon=${ICON-}
   count=$1
   text=
-  if [ "${markup-}" = pango ]; then
+  if $pango; then
     case $count in
        0) color=${ICON_COLOR_UPDATED-${color10-#55ff55}} ;;
       -*) color=${ICON_COLOR_FAILED-${color9-#ff5555}} ;;
@@ -65,17 +66,17 @@ display() {
     icon="<span color='$color'>$icon</span>"
   fi
   [ "$count" -gt 0 ] && text=" $count"
-  [ "${markup-}" = pango ] && text="<b>$text</b>"
+  $pango && text="<b>$text</b>"
 
   echo "$icon$text"
   echo "$icon$text"
 }
 
-[ "$BLOCK_BUTTON" -eq "$BUTTON_CHECK" ] && check=true || check=false
+[ "$BLOCK_BUTTON" -eq "$BUTTON_CHECK" ] && notify=true || notify=false
 
-$check && notify "Checking for updates"
+$notify && notify "Checking for updates"
 handle_error() {
-  $check && notify --icon dialog-error \
+  $notify && notify --icon dialog-error \
     "Something went wrong" \
     "Couldn't check if updates were available"
   display -1
@@ -97,14 +98,14 @@ pkgs=$({
 count=$(printf "%s" "$pkgs" | wc -l)
 [ -z "$pkgs" ] || count=$((count + 1))
 if [ "$count" -eq 0 ]; then
-  $check && notify --icon checkmark --expire-time 3000 "System up-to-date"
-elif $check; then
+  $notify && notify --icon checkmark --expire-time 3000 "System up-to-date"
+elif $notify; then
   numupds="$count update"
   [ "$count" -eq 1 ] || numupds=${numupds}s
-  if [ "$count" -gt "$NOTIFICATION_PKGS_MAX" ]; then
-    hidden=" ($((count - NOTIFICATION_PKGS_MAX)) hidden)"
+  if [ "$count" -gt "$pkgs_max" ]; then
+    hidden="($((count - pkgs_max)) hidden)"
   fi
-  notify --icon package "$numupds available${hidden-}" "$(prettify "$pkgs")"
+  notify --icon package "$numupds available $hidden" "$(prettify "$pkgs")"
 fi
 
 display "$count"

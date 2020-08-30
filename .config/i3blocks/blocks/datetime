@@ -1,15 +1,20 @@
 #!/bin/sh
-set -eu
+set -e
 
-case ${BLOCK_INSTANCE-} in
+[ "${markup-}" = pango ] && pango=true || pango=false
+
+true()  { return 0; }
+false() { ! true;   }
+
+case $BLOCK_INSTANCE in
   date)
     full_format=${DATE_FORMAT_FULL-%a, %b %d, %Y}
     short_format=${DATE_FORMAT_SHORT-%Y-%m-%d}
     color=${COLOR_ICON_DATE-${color6-#55ffff}}
-    icon=${ICON_DATE-}
+    icon=$ICON_DATE
     if [ -z "$icon" ]; then
       icon=
-      [ "${markup-}" = pango ] && icon="<b>$icon</b>"
+      $pango && icon="<b>$icon</b>"
     fi
     ;;
   time)
@@ -19,13 +24,13 @@ case ${BLOCK_INSTANCE-} in
     icon=${ICON_TIME-}
     if [ -z "$icon" ]; then
       icon=
-      [ "${markup-}" = pango ] && icon="<b>$icon</b>"
+      $pango && icon="<b>$icon</b>"
     fi
     ;;
   *) exit ;;
 esac
 
-[ "${markup-}" = pango ] && icon="<span color='$color'>$icon</span>"
+$pango && icon="<span color='$color'>$icon</span>"
 
 echo "$icon $(date +"$full_format")"
 echo "$icon $(date +"$short_format")"

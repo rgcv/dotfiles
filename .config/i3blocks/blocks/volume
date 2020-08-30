@@ -3,10 +3,9 @@
 #   amixer (alsa-utils, sound management)
 # uses:
 #   pactl   (libpulse, subscribe mode)
-set -eu
+set -e
 
 interval=${interval-}
-format=${format-}
 
 mixer=default
 amixer -qD pulse info >&- 2>&- && mixer=pulse
@@ -42,7 +41,7 @@ display() {
 
   text=$(printf '%s %3d%%' "$icon" "$volume")
 
-  if [ "${format-}" = json ] || [ "${interval-}" = persist ]; then
+  if [ "${format-}" = json ] || [ "$interval" = persist ]; then
     json "$text" "$text" "$color"
   else
     echo "$text"
@@ -51,13 +50,13 @@ display() {
   fi
 }
 
+mixerctl() { amixer -qMD $mixer sset "$scontrol" "$capability" "$@"; }
 handle_button() {
-  case ${BLOCK_BUTTON-$(echo "${1-}" | jq .button?)} in
-    2) echo toggle ;;
-    4) echo 5%+ unmute ;;
-    5) echo 5%- unmute ;;
-    *) echo noop ;;
-  esac | xargs amixer -qMD $mixer sset "$scontrol" "$capability"
+  case ${BLOCK_BUTTON-$(echo "$1" | jq .button?)} in
+    2) mixerctl toggle ;;
+    4) mixerctl 5%+ unmute ;;
+    5) mixerctl 5%- unmute ;;
+  esac
 }
 
 if [ "$interval" != persist ] || [ $mixer != pulse ]; then
@@ -68,17 +67,19 @@ fi
 
 shutdown() {
   # get process gid
-  pgid=$(ps -o pgid= $$ | sed -e 's/ //g')
+  pgid=$(ps -o pgid= $$)
   # kill it in a new process group
-  setsid kill -- -"$pgid"
+  setsid kill -TERM -"${pgid##* }"
   exit 0
 }
 trap shutdown INT TERM
 
 display
 while :; do
-  pactl subscribe | grep --line-buffered change | while read -r _; do
-    display
+  pactl subscribe | while read -r event; do
+    case $event in
+      *change*) display ;;
+    esac
   done; sleep 5
 done &
 

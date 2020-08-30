@@ -1,21 +1,20 @@
 #!/bin/sh
 # requires:
 #   ip (iproute2, determine default route + device addr)
-set -eu
+set -e
 
-markup=${markup-}
 AF=${AF-inet6?}
 
 iface=${BLOCK_INSTANCE-$(ip route | awk '/^default/ {print $5; exit}')}
 # no default route
-[ -z "$iface" ] && exit
+[ -n "$iface" ] || exit
 
 case $iface in
-  en*|eth*) icon= ;;
+  e*)  icon= ;;
   wl*) icon= ;;
   ww*) icon= ;;
 esac
-[ "$markup" = pango ] && icon="<b>$icon</b>"
+[ "${markup-}" = pango ] && icon="<b>$icon</b>"
 
 # interface missing
 if [ ! -d "/sys/class/net/$iface" ]; then

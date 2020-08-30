@@ -1,13 +1,10 @@
 #!/bin/sh
-# requires:
-#   awk (gawk, parse+process cpu info)
-#   bc (bc, calculate cpu usage percentage)
-set -eu
+set -e
 
-used()  { awk '/^cpu  / {print $1+$2+$3+$6+$7+$8+$9+$10}'    < /proc/stat; }
-total() { awk '/^cpu  / {for(i=s=0;i<NF;) s+=$++i; print s}' < /proc/stat; }
+used()  { awk '/^cpu / {print $1+$2+$3+$6+$7+$8+$9+$10}'         < /proc/stat; }
+total() { awk '/^cpu / {for(i=s=0;i<NF;) s+=$++i} END {print s}' < /proc/stat; }
 display() {
-  text=$(printf '%s %2d%%' "${ICON-}" "$1")
+  text=$(printf '%s %2.0f%%' "${ICON-}" "$1")
   printf '{"full_text":"%s","short_text":"%s","color":"%s"}\n' \
     "$text" "$text" "${foreground-#ffffff}"
 }
@@ -19,7 +16,7 @@ while :; do
   used=$(used)
   total=$(total)
 
-  display "$(echo "100 * ($used - $old_used) / ($total - $old_total)" | bc -s)"
+  display "$(awk "BEGIN {print 100 * ($used - $old_used) / ($total - $old_total)}")"
 
   old_used=$used
   old_total=$total

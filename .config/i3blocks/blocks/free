@@ -1,30 +1,33 @@
 #!/bin/sh
-set -eu
+set -e
 
-markup=${markup-}
+[ "${markup-}" = pango ] && pango=true || pango=false
 target=${BLOCK_INSTANCE-/home}
 
-extract() {
-  fields=${1-}; shift
+true()  { return 0; }
+false() { ! true;   }
+
+dfree() {
+  fields=$1; shift
   df --output="$fields" "$@" "$target" | tail -n 1
 }
 
 color=${COLOR_ICON_DRIVE-${color6-#55ffff}}
-icon=${ICON_DRIVE-}
+icon=$ICON_DRIVE
 if [ -z "$icon" ]; then
   icon=
-  [ "$markup" = pango ] && icon="<b>$icon</b>"
+  $pango && icon="<b>$icon</b>"
 fi
-[ "$markup" = pango ] && icon="<span color='$color'>$icon</span>"
+$pango && icon="<span color='$color'>$icon</span>"
 
 if [ ! -e "$target" ] || ! df "$target" >/dev/null; then
   echo "$icon $target ??"
   exit
 fi
 
-root=$(extract target)
-percent=$(echo "100 * $(extract avail) / $(extract size)" | bc -s)
-avail=$(extract avail -B"${MEMORY_UNIT-GB}" | xargs printf '%s')
+root=$(dfree target)
+percent=$(awk "BEGIN {print 100 * $(dfree avail) / $(dfree size)}")
+avail=$(dfree avail -B"${MEMORY_UNIT-GB}" | xargs printf '%s')
 
 echo "$icon $avail $root"
 echo "$icon $avail $root"

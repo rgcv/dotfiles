@@ -1,8 +1,8 @@
 #!/bin/sh
-set -eu
+set -e
 
 query() {
-  if [ -n "${SWAYSOCK-}" ]; then
+  if [ -n "$SWAYSOCK" ]; then
     ln=$(swaymsg -t get_inputs |\
       jq -r 'map(select(.type=="keyboard"))|first|.xkb_active_layout_name')
     case $ln in
@@ -21,11 +21,9 @@ query() {
   fi
 }
 
-markup=${markup-}
-
 if [ -z "${ICON-}" ]; then
   icon=
-  [ "$markup" = pango ] && icon="<b>$icon</b>"
+  [ "${markup-}" = pango ] && icon="<b>$icon</b>"
 else
   icon=$ICON
 fi

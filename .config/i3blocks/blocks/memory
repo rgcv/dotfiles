@@ -1,7 +1,7 @@
 #!/bin/sh
 # requires:
 #   awk (gawk, fetch mem values+compute if under given threshold)
-set -eu
+set -e
 
 lo=${THRESHOLD_LOW-1}
 memory=${MEMORY-Mem}
@@ -27,26 +27,25 @@ case $unit in
 esac
 case $unit in *bi) hunit=${hunit}iB ;; esac
 
-extract() {
+memory() {
   case $1 in
     total) col=2 ;;
     used)  col=3 ;;
     free)  col=4 ;;
-    available) col=7 ;;
     *) echo "$icon field $1 ??"; exit ;;
   esac
   shift
   free --"$unit" "$@" | awk "/^$memory:/ {print \$$col}"
 }
 
-used=$(extract used)
+used=$(memory used)
 
-if [ "$(awk "BEGIN {print ${used%[A-Za-z]} < $lo}")" -eq 1 ]; then
+if [ "$used" -lt "$lo" ]; then
   [ "${markup-}" = pango ] && used="&lt;$lo" || used="<$lo"
   used=$used$hunit
 else
-  used=$(extract used -h)
+  used=$(memory used -h)
 fi
 
-echo "$icon $used / $(extract total -h)"
+echo "$icon $used / $(memory total -h)"
 echo "$icon $used"

@@ -1,9 +1,9 @@
 #!/bin/sh
 # uses:
 #   acpi (acpi, estimate remaining charge)
-set -eu
+set -e
 
-battery=${BLOCK_INSTANCE-}
+battery=$BLOCK_INSTANCE
 if [ -n "$battery" ]; then
   path="/sys/class/power_supply/$battery"
 else
@@ -35,7 +35,7 @@ case "$status" in
     ;;
   Full|Unknown)
     icon=${ICON_FULL-}
-    color=${COLOR_FULL-${color2-#55ff55}}
+    color=${COLOR_FULL-${color10-#55ff55}}
     ;;
   # Unknown|*)
   #   icon=${ICON_UNKNOWN-}
@@ -57,6 +57,6 @@ displayln "$icon" "$capacity"
 
 # color if under critical threshold
 if [ "$status" = Discharging ] && [ "$capacity" -lt "${CRITICAL_THRESHOLD-25}" ]; then
-  echo "${COLOR_FG_CRITICAL-${foreground-#000000}}"
+  echo "${COLOR_FG_CRITICAL-${foreground-#ffffff}}"
   echo "${COLOR_BG_CRITICAL-${color1-#ff5555}}"
 fi
