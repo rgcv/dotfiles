@@ -53,6 +53,7 @@ Plug 'neomake/neomake' |
 \ Plug 'sinetoami/lightline-neomake'
 Plug 'Potatoesmaster/i3-vim-syntax'
 Plug 'pangloss/vim-javascript'
+Plug 'pearofducks/ansible-vim'
 Plug 'roxma/vim-paste-easy'
 if (has('nvim-0.3.0') || v:version >= 800) && has('python3') && has('timers')
   " requires pynvim + msgpack (pip)
