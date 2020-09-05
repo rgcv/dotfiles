@@ -6,7 +6,6 @@
 [core]
   autocrlf = input
   eol = lf
-  pager = less
 
 [color]
   ui = true
@@ -47,14 +46,16 @@
   ci = commit
   co = checkout
   rb = rebase
-  s = status --short
+  s  = status --short
   st = status
 
   # logging
   changes = !git lg --name-status
   clog = log --pretty=format:'%C(bold cyan)%h%Creset %<|(80,trunc)%s%+b'
   last = log -1 HEAD
-  lg = log --decorate=short --pretty=format:'%C(bold cyan)%h%Creset %C(bold green)%cr:%Creset %s %C(bold black)~%aN%Creset %C(auto)%d'
+  lg = log --decorate=short \
+    --pretty=format:'%C(bold cyan)%h %C(bold green)%cr:%Creset %s \
+%C(bold black)~%aN %C(auto)%d'
   lgg = !git lg --graph --topo-order
   summary = !git lg --stat
 
