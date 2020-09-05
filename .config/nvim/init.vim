@@ -302,8 +302,7 @@ endfunction
 
 function! LightlineFugitive()
   if exists('*fugitive#head')
-    let head = fugitive#head()
-    return head !=# '' ? ' ' . head : ''
+    return fugitive#head()
   else
     return ''
   endif
