@@ -59,8 +59,13 @@
   summary = !git lg --stat
 
   # misc
-  gi = !"gi() { curl -sL \"https://gitignore.io/api/$*\"; }; gi"
-  retag = !"retag() { git tag -d \"$1\" && git tag \"$1\" && git push -f --tags; }; retag"
+  ignore = !"gi() { \
+    curl -sL \"https://www.toptal.com/developers/gitignore/api/$*\" \
+    | tail -n +5 | head -n -2 \
+  ;}; gi"
+  retag = !"retag() { \
+    git tag -d \"$1\" && git tag \"$1\" && git push -f --tags \
+  ;}; retag"
   sync = !git pull && git push
   yolo = !git commit -am "$(curl -s http://whatthecommit.com/index.txt)"
 
