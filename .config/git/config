@@ -25,6 +25,9 @@
 [github]
   user = rgcv
 
+[init]
+  defaultBranch = main
+
 [push]
   followTags = true
 
