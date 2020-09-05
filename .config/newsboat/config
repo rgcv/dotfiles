@@ -9,7 +9,7 @@ error-log "~/.local/share/newsboat/error.log"
 history-limit 1000
 
 notify-format "Newsboat - %d new articles\n● %n unread articles\n● %f unread feeds"
-notify-program notify-send.sh
+notify-program ~/.local/bin/notify-send.sh
 
 refresh-on-startup yes
 reload-threads 2
