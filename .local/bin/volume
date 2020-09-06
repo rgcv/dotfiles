@@ -10,16 +10,22 @@ set -e
 app_name=${0##*/}
 lock_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.lock
 nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
+notify=false
+
+true()  { return 0; }
+false() { ! true;   }
 
 usage() {
   err=${1-0}
-  [ "$err" -ne 0 ] && exec >&2
+  [ "$err" -eq 0 ] || exec >&2
   cat<<EOF
 Usage: $app_name [options] [-|+]<value>[%]
   -h, --help    Show this.
 
+  --notify      Show a notification with updated information.
+
   -i, --input   Apply changes to input audio device.
-  -i, --output  Apply changes to output audio device.
+  -o, --output  Apply changes to output audio device.
 
   -m, --mute    Mute device.
   -u, --unmute  Unmute device.
@@ -28,12 +34,8 @@ EOF
   exit "$err"
 }
 
-true()  { return 0; }
-false() { ! true;   }
-
 [ -f "$lock_file" ] && exit
-touch "$lock_file" && trap 'rm -f "$lock_file"' EXIT TERM INT
-[ -d "${nid_file%/*}" ] || exit 1
+touch "$lock_file" && trap 'rm -f "$lock_file"' EXIT HUP INT TERM
 
 # input parsing and validation
 [ $# -gt 0 ] || usage 1
@@ -43,8 +45,10 @@ while [ $# -gt 0 ]; do
   case $1 in
     -h|--help) usage ;;
 
-    --input)  output=false ;;
-    --output) output=true  ;;
+    --notify) notify=true ;;
+
+    -i|--input)  output=false ;;
+    -o|--output) output=true  ;;
 
     -m|--mute)   mute=true   ;;
     -u|--unmute) mute=false  ;;
@@ -67,6 +71,8 @@ if [ $# -gt 0 ]; then
   pactl set-$target-volume "@DEFAULT_$TARGET@" "$1"
 fi
 [ -n "$mute" ] && pactl set-$target-mute "@DEFAULT_$TARGET@" $mute
+
+$notify || exit 0
 
 # query values for notification
 index=$(pacmd list-${target}s | grep -A0 '\* index:')
@@ -119,5 +125,3 @@ notify-send.sh \
   --hint int:value:"$volume" \
   --replace-file "$nid_file" \
   "$summary" "$description"
-
-[ "$volume" -eq 0 ] || ! $output || canberra-gtk-play -i audio-volume-change &

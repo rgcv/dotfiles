@@ -10,6 +10,28 @@ set -e
 app_name=${0##*/}
 file=${XDG_CACHE_HOME-$HOME/.cache}/touchpad-status
 nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
+notify=false
+
+true()  { return 0; }
+false() { ! true;   }
+
+usage() {
+  err=${1-0}
+  [ "$err" -eq 0 ] || exec >&2
+  echo "Usage: $app_name [-h] [--notify]"
+  exit "$err"
+}
+
+while [ -n "$1" ]; do
+  case $1 in
+    --notify) notify=true ;;
+    -h) usage ;;
+     *) break ;;
+  esac
+  shift
+done
+
+[ $# -gt 0 ] && usage 1
 
 if [ -f "$file" ]; then
   read -r status < "$file"
@@ -38,6 +60,8 @@ else
 fi
 
 echo $new > "$file"
+
+$notify || exit 0
 
 if [ $new -eq 0 ]; then
   urgency=low

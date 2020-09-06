@@ -6,9 +6,13 @@ set -e
 app_name=${0##*/}
 lock_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.lock
 nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
+notify=false
+
+true()  { return 0; }
+false() { ! true;   }
 
 usage() {
-  echo "Usage: $app_name [-h] [+|-]<val>[%]"
+  echo "Usage: $app_name [-h] [--notify] [+|-]<val>[%]"
   exit "${1-0}"
 }
 
@@ -25,11 +29,18 @@ set_brightness() { brightnessctl -qc backlight s "$1%"; }
 
 
 [ -f "$lock_file" ] && exit
-touch "$lock_file" && trap 'rm -f "$lock_file"' EXIT TERM INT
-[ -d "${nid_file%/*}" ] || exit 1
+touch "$lock_file" && trap 'rm -f "$lock_file"' EXIT HUP INT TERM
+
+while [ -n "$1" ]; do
+  case $1 in
+    --notify) notify=true ;;
+    -h) usage ;;
+     *) break ;;
+  esac
+  shift
+done
 
 [ $# -gt 0 ] || usage 1
-[ "$1" = "-h" ] && usage
 
 val=${1#[-+]}
 val=${val%\%}
@@ -41,6 +52,8 @@ case $1 in
    *) new=$(clamp "$val" 0 100) ;;
 esac
 set_brightness "$new"
+
+$notify || exit 0
 
 icon=notification-display-brightness
 case $new in
