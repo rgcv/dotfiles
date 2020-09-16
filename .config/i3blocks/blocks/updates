@@ -90,8 +90,7 @@ pkgs=$({
     exit
   fi
   case $PACMAN in
-    yaourt) $PACMAN -Qua ;;
-    yay)    $PACMAN -Qua --devel ;;
+    yaourt|yay) $PACMAN -Qua ;;
   esac
 })
 
