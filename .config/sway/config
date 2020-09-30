@@ -8,3 +8,4 @@
 xwayland disable
 include /etc/sway/config.d/*
 include ~/.config/sway/conf.d/*.conf
+include ~/.config/sway/$(hostname).conf
