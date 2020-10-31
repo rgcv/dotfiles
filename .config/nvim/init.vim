@@ -153,6 +153,8 @@ if !has('gui_running')
   set t_Co=256
 endif
 
+hi Normal guibg=NONE ctermbg=NONE
+
 set noshowmode " redundant with lightline/airline/powerline
 set nowrap
 
