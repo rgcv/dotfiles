@@ -13,6 +13,7 @@ export VISUAL=$EDITOR
 export INPUT_METHOD=fcitx5
 export GTK_IM_MODULE=$INPUT_METHOD
 export QT_IM_MODULE=$INPUT_METHOD
+export XMODIFIERS=\@im=fcitx5
 
 export JULIA_NUM_THREADS=$(( NPROC+2 ))
 

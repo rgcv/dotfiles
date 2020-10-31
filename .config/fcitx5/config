@@ -1,10 +1,8 @@
 [Hotkey]
 # Enumerate when press trigger key repeatedly
 EnumerateWithTriggerKeys=True
-# Enumerate Input Method Group Forward
-EnumerateGroupForwardKeys=
-# Enumerate Input Method Group Backward
-EnumerateGroupBackwardKeys=
+# Skip first input method while enumerating
+EnumerateSkipFirst=False
 
 [Hotkey/TriggerKeys]
 0=Alt+grave
@@ -19,6 +17,12 @@ EnumerateGroupBackwardKeys=
 
 [Hotkey/EnumerateBackwardKeys]
 0=Control+Shift_R
+
+[Hotkey/EnumerateGroupForwardKeys]
+0=Super+space
+
+[Hotkey/EnumerateGroupBackwardKeys]
+0=Shift+Super+space
 
 [Hotkey/ActivateKeys]
 0=Hangul_Hanja
@@ -38,6 +42,9 @@ EnumerateGroupBackwardKeys=
 [Hotkey/NextCandidate]
 0=Tab
 
+[Hotkey/TogglePreedit]
+0=Control+Alt+P
+
 [Behavior]
 # Active By Default
 ActiveByDefault=False
@@ -51,11 +58,12 @@ showInputMethodInformationWhenFocusIn=False
 DefaultPageSize=5
 # Force Enabled Addons
 EnabledAddons=
+# Preload input method to be used by default
+PreloadInputMethod=True
 
 [Behavior/DisabledAddons]
 0=classicui
-1=ibusfrontend
-2=kimpanel
-3=waylandim
-4=xcb
+1=kimpanel
+2=waylandim
+3=xim
 
