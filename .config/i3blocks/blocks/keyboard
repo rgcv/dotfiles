@@ -6,9 +6,8 @@ query() {
     ln=$(swaymsg -t get_inputs |\
       jq -r 'map(select(.type=="keyboard"))|first|.xkb_active_layout_name')
     case $ln in
-      "English (US, intl"*) l=US;  v=INTL ;;
-      "English (US)"      ) l=US;  v=     ;;
-      "Japanese"          ) l=あ;  v=     ;;
+      "English (US, intl"*) l=ENG; v=US ;;
+      "English (US)"      ) l=ENG; v=INTL ;;
                          *) l=$ln; v=     ;;
     esac
     case $1 in
