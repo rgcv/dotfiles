@@ -5,6 +5,7 @@
 # | | | | | | (_| |   < (_) |
 # |_| |_| |_|\__,_|_|\_\___/
 
+layer=overlay
 background-color=#4A4A4AE9
 text-color=#EEFFFFE9
 width=400
