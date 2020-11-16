@@ -64,11 +64,9 @@ if (has('nvim-0.3.0') || v:version >= 800) && has('python3') && has('timers')
     \ Plug 'roxma/nvim-yarp' |
     \ Plug 'roxma/vim-hug-neovim-rpc'
   end
-  if !has('win32')
-    Plug 'deoplete-plugins/deoplete-clang'
-  endif
   Plug 'deoplete-plugins/deoplete-jedi'
   Plug 'deoplete-plugins/deoplete-zsh'
+  Plug 'tweekmonster/deoplete-clang2'
   Plug 'Shougo/neoinclude.vim'
 endif
 if HasPatch(704, 774)
@@ -215,9 +213,6 @@ let g:deoplete#enable_at_startup = 1
 silent! call g:deoplete#custom#var('omni', 'input_patterns', {
       \ 'tex': g:vimtex#re#deoplete
       \ })
-" deoplete-clang
-let g:deoplete#sources#clang#libclang_path = '/usr/lib/libclang.so'
-let g:deoplete#sources#clang#clang_header = '/usr/lib/clang'
 " deoplete-go
 let g:deoplete#sources#go#sort_class = [
       \ 'package',
