@@ -213,6 +213,8 @@ let g:deoplete#enable_at_startup = 1
 silent! call g:deoplete#custom#var('omni', 'input_patterns', {
       \ 'tex': g:vimtex#re#deoplete
       \ })
+" deoplete-clang2
+let g:clang2_placeholder_next='<C-k>'
 " deoplete-go
 let g:deoplete#sources#go#sort_class = [
       \ 'package',
