@@ -53,14 +53,15 @@ export TERMINAL=termite
 
 
 # path configuration
-local=$HOME/.local
+pathprepend "$HOME/.go/bin" # go
+pathprepend "$HOME/.cargo/bin" # rust
 
-mkdir -p "$local/bin"     && pathprepend "$local/bin"
-mkdir -p "$local/lib"     && pathprepend "$local/lib" LD_LIBRARY_PATH
-mkdir -p "$local/include" && pathprepend "$local/include" CPATH
-unset local
+pathprepend "$HOME/.local/bin"
+pathprepend "$HOME/.local/lib" LD_LIBRARY_PATH
+pathprepend "$HOME/.local/include" CPATH
 
-## graphical environment
+
+# graphical environment
 if [ -z "$DISPLAY" ]; then
   case ${XDG_VTNR--1} in
     1) command -v sway   >/dev/null && exec with-env sway 2>/dev/null ;;
