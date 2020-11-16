@@ -300,11 +300,7 @@ function! LightlineFiletype()
 endfunction
 
 function! LightlineFugitive()
-  if exists('*fugitive#head')
-    return fugitive#head()
-  else
-    return ''
-  endif
+  return exists('*fugitive#head') ? fugitive#head() : ''
 endfunction
 
 function! LightlineMode()
