@@ -2,9 +2,7 @@
 # disable ctrl+s as stopping shell
 stty -ixon
 
-# HACK: set TERM here (because.. termite doesn't seem to like it being set on
-# login, idk)
-export TERM=xterm-256color
+export TERM=${TERM-xterm-256color}
 
 ## history
 HISTFILE=$HOME/.history
