@@ -11,3 +11,4 @@ shopt -s extglob
 shopt -s histappend
 
 [ -n "$GBT__HOME" ] && PS1='$(gbt $?)'
+[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

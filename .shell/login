@@ -42,6 +42,8 @@ export LESS_TERMCAP_us=$(printf '\033[01;32m')
 
 export MAKEFLAGS=-j$(( NPROC+2 ))
 
+export NVM_DIR=${XDG_CONFIG_HOME-$HOME/.config}/nvm
+
 for p in less more cat; do
   command -v $p >/dev/null && export PAGER=$p && break
 done; unset p

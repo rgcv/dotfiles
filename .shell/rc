@@ -17,6 +17,17 @@ if command -v gpg-connect-agent >/dev/null; then
   gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
 fi
 
+# less
+for hl in lesspipe.sh lesspipe; do
+  if cmd=$(command -v $hl); then
+    export LESSOPEN="| $cmd %s 2>&-"
+    break
+  fi
+done; unset cmd hl
+
+# nvm
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+
 # ssh agent
 SSH_ENV=ssh-agent.env
 [ -z "$XDG_RUNTIME_DIR" ] && SSH_ENV=$USER.$SSH_ENV
@@ -29,14 +40,6 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
 fi
 unset SSH_ENV
 
-## other variables
-# set the Less input preprocessor.
-for hl in lesspipe.sh lesspipe; do
-  if cmd=$(command -v $hl); then
-    export LESSOPEN="| $cmd %s 2>&-"
-    break
-  fi
-done; unset cmd hl
 
 ## aliases
 # config accessibility
