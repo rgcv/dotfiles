@@ -57,22 +57,10 @@ color index red black "~N|~O"
 # color body brightwhite black '\*+[^*]+\*+'
 # color body brightwhite black '_+[^_]+_+'
 
-# IMAP
-# IST account
-set my_ist_account = $my_config/accounts/ist/config
-source $my_ist_account
-folder-hook $folder 'source $my_ist_account'
-
-# Outlook account
-set my_outlook_account = $my_config/accounts/outlook/config
-source $my_outlook_account
-folder-hook $folder 'source $my_outlook_account'
+source $my_config/accounts/config
 
 set timeout = 15
 set mail_check = 90
 set imap_keepalive = 180
 set imap_idle
 unset mark_old
-
-macro index,pager <f2> '<sync-mailbox><enter-command>source $my_outlook_account<enter><change-folder>!<enter>'
-macro index,pager <f3> '<sync-mailbox><enter-command>source $my_ist_account<enter><change-folder>!<enter>'
