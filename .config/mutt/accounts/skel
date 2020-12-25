@@ -26,6 +26,6 @@ set my_smtp_port = 587
 set my_smtp_authenticators = login
 
 # Go ahead
-source $my_config/imap+smtp
+source $my_config/accounts/imap+smtp
 unset record # if mail server already records sent email
 
