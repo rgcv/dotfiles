@@ -8,9 +8,9 @@
 set -e
 
 app_name=${0##*/}
-file=${XDG_CACHE_HOME-$HOME/.cache}/touchpad-status
+cache_file=${XDG_CACHE_HOME-$HOME/.cache}/touchpad-status
 nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
-notify=false
+should_notify=false
 
 true()  { return 0; }
 false() { ! true;   }
@@ -21,10 +21,28 @@ usage() {
   echo "Usage: $app_name [-h] [--notify]"
   exit "$err"
 }
+notify() {
+  notify-send.sh \
+    --urgency normal \
+    --expire-time 3000 \
+    --app-name "$app_name" \
+    --icon input-touchpad \
+    --replace-file "$nid_file" \
+    "$@"
+}
+check_avail() {
+  if ! command -v "$1" >/dev/null; then
+    echo >&2 "Missing dependency: $1"
+    $should_notify && notify "Missing dependency: $1"
+    false
+  else
+    true
+  fi
+}
 
 while [ -n "$1" ]; do
   case $1 in
-    --notify) notify=true ;;
+    --notify) should_notify=true ;;
     -h) usage ;;
      *) break ;;
   esac
@@ -32,11 +50,17 @@ while [ -n "$1" ]; do
 done
 
 [ $# -gt 0 ] && usage 1
-
-if [ -f "$file" ]; then
-  read -r status < "$file"
+if [ -n "$SWAYSOCK" ]; then
+  check_avail swaymsg || exit 1
+  check_avail jq || exit 1
 else
-  mkdir -p "${file%/*}"
+  check_avail xinput || exit 1
+fi
+
+if [ -f "$cache_file" ]; then
+  read -r status < "$cache_file"
+else
+  mkdir -p "${cache_file%/*}"
   if [ -n "$SWAYSOCK" ]; then
     evs=$(swaymsg -t get_inputs |
       jq -r 'first(.[], select(.type=="touchpad")).libinput.send_events')
@@ -59,24 +83,18 @@ else
   xinput set-prop "$tpid" "$setting" $new
 fi
 
-echo $new > "$file"
+echo $new > "$cache_file"
 
-$notify || exit 0
+$should_notify || exit 0
 
 if [ $new -eq 0 ]; then
-  urgency=low
-  icon=input-touchpad-off
-  summary="Touchpad Disabled"
+  notify \
+    --urgency low \
+    --icon input-touchpad-off \
+    "Touchpad Disabled"
 else
-  urgency=normal
-  icon=input-touchpad-on
-  summary="Touchpad Enabled"
+  notify \
+    --urgency normal \
+    --icon input-touchpad-on \
+    "Touchpad Enabled"
 fi
-
-notify-send.sh \
-  --app-name "$app_name" \
-  --urgency $urgency \
-  --expire-time 3000 \
-  --icon $icon \
-  --replace-file "$nid_file" \
-  "$summary"

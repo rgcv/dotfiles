@@ -6,7 +6,7 @@ set -e
 app_name=${0##*/}
 lock_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.lock
 nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
-notify=false
+should_notify=false
 
 true()  { return 0; }
 false() { ! true;   }
@@ -14,6 +14,24 @@ false() { ! true;   }
 usage() {
   echo "Usage: $app_name [-h] [--notify] [+|-]<val>[%]"
   exit "${1-0}"
+}
+notify() {
+  notify-send.sh \
+    --urgency normal \
+    --expire-time 3000 \
+    --app-name "$app_name" \
+    --icon notification-display-brightness \
+    --replace-file "$nid_file" \
+    "$@"
+}
+check_avail() {
+  if ! command -v "$1" >/dev/null; then
+    echo >&2 "Missing dependency: $1"
+    $should_notify && notify "Missing dependency: $1"
+    false
+  else
+    true
+  fi
 }
 
 min() { [ "$1" -lt "$2" ] && echo "$1" || echo "$2"; }
@@ -33,7 +51,7 @@ touch "$lock_file" && trap 'rm -f "$lock_file"' EXIT HUP INT TERM
 
 while [ -n "$1" ]; do
   case $1 in
-    --notify) notify=true ;;
+    --notify) should_notify=true ;;
     -h) usage ;;
      *) break ;;
   esac
@@ -41,6 +59,7 @@ while [ -n "$1" ]; do
 done
 
 [ $# -gt 0 ] || usage 1
+check_avail brightnessctl || exit 1
 
 val=${1#[-+]}
 val=${val%\%}
@@ -53,7 +72,7 @@ case $1 in
 esac
 set_brightness "$new"
 
-$notify || exit 0
+$should_notify || exit 0
 
 icon=notification-display-brightness
 case $new in
@@ -63,11 +82,8 @@ case $new in
   [8-9][0-9]|100)   urgency=critical icon=$icon-full   ;;
 esac
 
-notify-send.sh \
-  --urgency $urgency \
-  --app-name "$app_name" \
+notify \
   --icon $icon \
-  --expire-time 3000 \
-  --replace-file "$nid_file" \
+  --urgency $urgency \
   --hint "int:value:$new" \
   "Brightness: $new%"

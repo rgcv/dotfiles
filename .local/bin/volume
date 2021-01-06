@@ -10,7 +10,8 @@ set -e
 app_name=${0##*/}
 lock_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.lock
 nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
-notify=false
+should_notify=false
+is_output=true
 
 true()  { return 0; }
 false() { ! true;   }
@@ -33,6 +34,30 @@ Usage: $app_name [options] [-|+]<value>[%]
 EOF
   exit "$err"
 }
+notify() {
+  _notify_icon=notification
+  $is_output && \
+    _notify_icon=$_notify_icon-audio-volume || \
+    _notify_icon=$_notify_icon-microphone-sensitivity
+  _notify_icon=$_notify_icon-high
+  notify-send.sh \
+    --urgency normal \
+    --expire-time 3000 \
+    --app-name "$app_name" \
+    --icon $_notify_icon \
+    --replace-file "$nid_file" \
+    "$@"
+  unset _notify_icon
+}
+check_avail() {
+  if ! command -v "$1" >/dev/null; then
+    echo >&2 "Missing dependency: $1"
+    $should_notify && notify "Missing dependency: $1"
+    false
+  else
+    true
+  fi
+}
 
 [ -f "$lock_file" ] && exit
 touch "$lock_file" && trap 'rm -f "$lock_file"' EXIT HUP INT TERM
@@ -40,15 +65,14 @@ touch "$lock_file" && trap 'rm -f "$lock_file"' EXIT HUP INT TERM
 # input parsing and validation
 [ $# -gt 0 ] || usage 1
 
-output=true
 while [ $# -gt 0 ]; do
   case $1 in
     -h|--help) usage ;;
 
-    --notify) notify=true ;;
+    --notify) should_notify=true ;;
 
-    -i|--input)  output=false ;;
-    -o|--output) output=true  ;;
+    -i|--input)  is_output=false ;;
+    -o|--output) is_output=true  ;;
 
     -m|--mute)   mute=true   ;;
     -u|--unmute) mute=false  ;;
@@ -59,7 +83,10 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-$output && target=sink || target=source
+check_avail pactl || exit 1
+check_avail pacmd || exit 1
+
+$is_output && target=sink || target=source
 TARGET=$(echo $target | tr '[:lower:]' '[:upper:]')
 
 if [ $# -gt 0 ]; then
@@ -72,7 +99,7 @@ if [ $# -gt 0 ]; then
 fi
 [ -n "$mute" ] && pactl set-$target-mute "@DEFAULT_$TARGET@" $mute
 
-$notify || exit 0
+$should_notify || exit 0
 
 # query values for notification
 index=$(pacmd list-${target}s | grep -A0 '\* index:')
@@ -90,7 +117,7 @@ muted=$(echo "$data" | grep Mute:)
 muted=${muted#*: }
 
 icon=notification
-if $output; then
+if $is_output; then
   label="Output volume"
   icon=$icon-audio-volume
 else
@@ -117,11 +144,8 @@ case $muted in
 esac
 
 pgrep -xu "$USER" pactl || pkill -RTMIN+25 i3blocks
-notify-send.sh \
-  --app-name "$app_name" \
+notify \
   --urgency $urgency \
-  --expire-time 3000 \
   --icon $icon \
   --hint int:value:"$volume" \
-  --replace-file "$nid_file" \
   "$summary" "$description"
