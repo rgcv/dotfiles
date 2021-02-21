@@ -50,10 +50,16 @@ EnumerateSkipFirst=False
 ActiveByDefault=False
 # Share Input State
 ShareInputState=No
+# Show preedit in application
+PreeditEnabledByDefault=True
 # Show Input Method Information when switch input method
 ShowInputMethodInformation=True
 # Show Input Method Information when changing focus
 showInputMethodInformationWhenFocusIn=False
+# Show compact input method information
+CompactInputMethodInformation=True
+# Show first input method information
+ShowFirstInputMethodInformation=True
 # Default page size
 DefaultPageSize=5
 # Force Enabled Addons
@@ -64,6 +70,7 @@ PreloadInputMethod=True
 [Behavior/DisabledAddons]
 0=classicui
 1=kimpanel
-2=waylandim
-3=xim
+2=notificationitem
+3=waylandim
+4=xim
 
