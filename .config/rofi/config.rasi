@@ -1,0 +1,6 @@
+configuration {
+  modi: "combi,run";
+  show-icons: true;
+  combi-modi: "drun,run";
+  display-drun: "app";
+}
