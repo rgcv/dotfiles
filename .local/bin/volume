@@ -1,7 +1,6 @@
 #!/bin/sh
 # requires:
 #   pactl (libpulse, set sink/source volume)
-#   pacmd (pulseaudio, query sink/source status)
 # uses:
 #   canberra-gtk-play (libcanberra, play volume change sound
 #                      libcanberra-pulse, pulseaudio backend may be required)
@@ -84,7 +83,6 @@ while [ $# -gt 0 ]; do
 done
 
 check_avail pactl || exit 1
-check_avail pacmd || exit 1
 
 $is_output && target=sink || target=source
 TARGET=$(echo $target | tr '[:lower:]' '[:upper:]')
@@ -102,10 +100,7 @@ fi
 $should_notify || exit 0
 
 # query values for notification
-index=$(pacmd list-${target}s | grep -A0 '\* index:')
-index=${index#*: }
-
-data=$(pactl list ${target}s | grep -A9 "S${target#s} #$index")
+data=$(pactl list ${target}s | grep -A8 "State: RUNNING")
 
 description=$(echo "$data" | grep Description:)
 description=${description#*: }
