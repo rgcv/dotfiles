@@ -100,7 +100,10 @@ fi
 $should_notify || exit 0
 
 # query values for notification
-data=$(pactl list ${target}s | grep -A8 "State: RUNNING")
+device=$(pactl info | grep "Default S${target#s}:")
+device=${device#*: }
+
+data=$(pactl list ${target}s | grep -A8 "Name: $device")
 
 description=$(echo "$data" | grep Description:)
 description=${description#*: }
