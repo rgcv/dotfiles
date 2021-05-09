@@ -70,7 +70,5 @@ PreloadInputMethod=True
 [Behavior/DisabledAddons]
 0=classicui
 1=kimpanel
-2=notificationitem
-3=waylandim
-4=xim
+2=xim
 
