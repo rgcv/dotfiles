@@ -57,6 +57,7 @@ config_alias() {
 home_config_alias() { config_alias "$HOME" "$@"; }
 xdg_config_alias()  { config_alias "${XDG_CONFIG_HOME:-$HOME/.config}" "$@"; }
 
+xdg_config_alias   alacrittycf alacritty/alacritty.yml
 xdg_config_alias   batcf       bat/config
 xdg_config_alias   dunstrc     dunst/dunstrc
 xdg_config_alias   fcitx       fcitx5/config
