@@ -64,11 +64,8 @@ ShowFirstInputMethodInformation=True
 DefaultPageSize=5
 # Force Enabled Addons
 EnabledAddons=
+# Force Disabled Addons
+DisabledAddons=
 # Preload input method to be used by default
 PreloadInputMethod=True
-
-[Behavior/DisabledAddons]
-0=classicui
-1=kimpanel
-2=xim
 

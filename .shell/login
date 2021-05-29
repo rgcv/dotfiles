@@ -10,7 +10,7 @@ for v in nvim vim vi; do
 done; unset v
 export VISUAL=$EDITOR
 
-export INPUT_METHOD=fcitx5
+export INPUT_METHOD=fcitx
 export GTK_IM_MODULE=$INPUT_METHOD
 export QT_IM_MODULE=$INPUT_METHOD
 export XMODIFIERS=\@im=$INPUT_METHOD
