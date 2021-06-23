@@ -1,16 +1,7 @@
 #!/bin/sh
-if command -v getconf >/dev/null; then
-  PATH=$(getconf PATH)
-else
-  PATH=/usr/local/sbin:/usr/local/bin:/sbin:/usr/sbin:/bin:/usr/bin
-fi
+export QT_QPA_PLATFORM=wayland
+export MOZ_ENABLE_WAYLAND=1
+export XDG_CURRENT_DESKTOP=sway
+export XDG_SESSION_TYPE=wayland
 
-# shellcheck disable=SC2034
-{
-QT_QPA_PLATFORM=wayland
-MOZ_ENABLE_WAYLAND=1
-XDG_CURRENT_DESKTOP=sway
-XDG_SESSION_TYPE=wayland
-}
-
-exec sway "$@"
+command -p sway "$@"
