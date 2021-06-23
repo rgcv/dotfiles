@@ -1,0 +1,17 @@
+#!/bin/sh
+if command -v getconf >/dev/null; then
+  PATH=$(getconf PATH)
+else
+  PATH=/usr/local/sbin:/usr/local/bin:/sbin:/usr/sbin:/bin:/usr/bin
+fi
+
+BEMENU=${1-bemenu}
+[ $# -gt 0 ] && shift
+
+exec $BEMENU \
+  --tf=#212121 --tb=#89DDFF \
+  --ff=#B2CCD6 --fb=#212121 \
+  --nf=#B2CCD6 --nb=#212121 \
+  --hf=#212121 --hb=#89DDFF \
+  --sf=#212121 --sb=#82AAFF \
+  "$@"

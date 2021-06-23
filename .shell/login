@@ -66,7 +66,7 @@ pathprepend "$HOME/.local/include" CPATH
 # graphical environment
 if [ -z "$DISPLAY" ]; then
   case ${XDG_VTNR--1} in
-    1) command -v sway   >/dev/null && exec with-env sway 2>/dev/null  ;;
+    1) command -v sway   >/dev/null && exec sway 2>/dev/null ;;
     2) command -v startx >/dev/null && exec startx -- ":1" ;;
   esac
 fi

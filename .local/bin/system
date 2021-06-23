@@ -3,8 +3,7 @@
 #   bemenu (bemenu, option selection)
 set -e
 
-menu="with-env bemenu"
-choice=$($menu -i -p System <<EOF | tr '[:upper:]' '[:lower:]'
+choice=$(bemenu -i -p System <<EOF | tr '[:upper:]' '[:lower:]'
 Logout
 Suspend
 Restart
@@ -14,7 +13,7 @@ EOF
 )
 
 [ -n "$choice" ] || exit
-case $(printf 'no\nyes' | $menu -p "Are you sure you want to $choice?") in
+case $(printf 'no\nyes' | bemenu -p "Are you sure you want to $choice?") in
   y*) ;;
    *) exit ;;
 esac

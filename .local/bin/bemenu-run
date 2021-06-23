@@ -1,0 +1,3 @@
+#!/bin/sh
+
+bemenu-base bemenu-run
