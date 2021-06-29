@@ -57,6 +57,7 @@ color index red black "~N|~O"
 # color body brightwhite black '\*+[^*]+\*+'
 # color body brightwhite black '_+[^_]+_+'
 
+source $my_config/gpg.rc
 source $my_config/accounts/config
 
 set timeout = 15
