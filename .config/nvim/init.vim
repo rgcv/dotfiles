@@ -332,8 +332,6 @@ let g:javascript_plugin_ngdoc = 1
 command! PU PlugUpdate | PlugUpgrade
 " vimtex
 let g:vimtex_compiler_latexmk = {
-      \ 'backend': (has('nvim') ? 'n' : '') . 'vim',
-      \ 'background': 1,
       \ 'build_dir': '',
       \ 'callback': 1,
       \ 'continuous': 1,
@@ -347,11 +345,10 @@ let g:vimtex_compiler_latexmk = {
       \   '-interaction=nonstopmode',
       \ ],
       \}
-let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_view_method = 'zathura'
-let g:vimtex_viewer_zathura_options
-      \ = '-x "nvr --servername ' . v:servername . ' --remote +\%{line} \%{input}"'
-      \ . '--synctex-forward @line:@col:@tex g:syncpdf'
+let g:vimtex_viewer_zathura_options =
+      \ '-x "nvr --servername ' . v:servername . ' --remote +\%{line} \%{input}"'
+      \.'--synctex-forward @line:@col:@tex g:syncpdf'
 
 " autocmds
 augroup init#configs
