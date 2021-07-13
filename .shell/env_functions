@@ -4,17 +4,16 @@
 __append()  { export $2="${3:+$3:}$1"; }
 __prepend() { export $2="$1${3:+:$3}"; }
 
+__expand() { eval "echo \$$1"; }
 __inpath() {
-  v=$(eval "echo \$$2")
-  case ":$v:" in
-    *:"$1":*) ;;
-    *) echo "$v" ;;
-  esac; unset v
+  case ":$(__expand "$2"):" in
+    *:"$1":*) return 0 ;;
+    *)        return 1 ;;
+  esac
 }
 
 __pathadd() {
-  expanded=$(__inpath "$2" "$3")
-  [ -n "$expanded" ] && $1 "$2" "$3" "$expanded"
+  __inpath "$2" "$3" || $1 "$2" "$3" "$(__expand "$3")"
 }
 
 pathappend()  { __pathadd __append  "$1" "${2-PATH}"; }

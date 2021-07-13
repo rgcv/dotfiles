@@ -61,9 +61,8 @@ pathprepend "$HOME/.go/bin" # go
 pathprepend "$HOME/.cargo/bin" # rust
 
 pathprepend "$HOME/.local/bin"
-pathprepend "$HOME/.local/lib" LD_LIBRARY_PATH
 pathprepend "$HOME/.local/include" CPATH
-
+pathprepend "$HOME/.local/lib" LD_LIBRARY_PATH
 
 # graphical environment
 if [ -z "$DISPLAY" ]; then
