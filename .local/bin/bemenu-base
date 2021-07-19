@@ -3,6 +3,7 @@ BEMENU=${1-bemenu}
 [ $# -gt 0 ] && shift
 
 command -p "$BEMENU" \
+  --fn="Roboto Mono,monospace 9" \
   --tf=#212121 --tb=#89DDFF \
   --ff=#B2CCD6 --fb=#212121 \
   --nf=#B2CCD6 --nb=#212121 \
