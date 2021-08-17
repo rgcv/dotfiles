@@ -1,15 +1,16 @@
 #!/bin/sh
-# disable ctrl+s as stopping shell
 
 case $- in
-  *i*) stty -ixon ;;
+  *i*)
+    # disable ctrl+s as stopping shell
+    stty -ixon ;;
 esac
 
 export TERM=${TERM-xterm-256color}
 
 ## history
-HISTFILE=$HOME/.history
 HISTSIZE=10000
+export HISTFILE=${XDG_STATE_HOME-$HOME/.local/state}/shell/history
 
 # gnupg
 if command -v gpg-connect-agent >/dev/null; then
@@ -27,18 +28,17 @@ for hl in lesspipe.sh lesspipe; do
 done; unset cmd hl
 
 # nvm
+# shellcheck disable=SC1090
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 # ssh agent
-SSH_ENV=ssh-agent.env
-[ -z "$XDG_RUNTIME_DIR" ] && SSH_ENV=$USER.$SSH_ENV
+SSH_ENV=${XDG_STATE_HOME-$HOME/.local/state}/ssh-agent/env
 if ! pgrep -u "$USER" ssh-agent >/dev/null; then
-  ssh-agent 2>/dev/null >"${XDG_RUNTIME_DIR-/tmp}/$SSH_ENV"
+  mkdir -p "${SSH_ENV%/*}"
+  ssh-agent 2>/dev/null > "$SSH_ENV"
 fi
-if [ -z "$SSH_AUTH_SOCK" ]; then
-  # shellcheck disable=SC1090
-  . "${XDG_RUNTIME_DIR-/tmp}/$SSH_ENV" >/dev/null 2>&1
-fi
+# shellcheck disable=SC1090
+[ -z "$SSH_AUTH_SOCK" ] && . "$SSH_ENV" >/dev/null 2>&1
 unset SSH_ENV
 
 
@@ -220,7 +220,8 @@ if command -v xclip >/dev/null; then
 fi
 
 # where were we?
-CWD="/dev/shm/$USER-cwd"
+CWD="${XDG_STATE_HOME-$HOME/.local/state}/misc/cwd"
+mkdir -p "${CWD%/*}"
 __cd() {
   \cd "$@" || return
   pwd > "$CWD"
