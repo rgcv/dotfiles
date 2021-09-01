@@ -4,7 +4,7 @@ export ENV="$HOME/.sh/rc"
 # BASH_ENV for *non-interactive* shells
 export BASH_ENV="$HOME/.bash/env"
 # env functions required for manipulating PATH-like variables
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 . "$HOME/.shell/env_functions"
 # strict umask
 umask 0077

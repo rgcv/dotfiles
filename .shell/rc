@@ -28,7 +28,7 @@ for hl in lesspipe.sh lesspipe; do
 done; unset cmd hl
 
 # nvm
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 # ssh agent
@@ -178,7 +178,7 @@ case "$(tty)" in
   *)
     if command -v gbt >/dev/null && [ -z "$SSH_CONNECTION" ]; then
       export GBT__HOME=/usr/share/gbt
-      # shellcheck disable=SC1090
+      # shellcheck disable=SC1091
       . "$GBT__HOME/sources/gbts/cmd/local.sh"
       # skipping mysql, looks broken
       for c in docker screen su sudo ssh vagrant; do
