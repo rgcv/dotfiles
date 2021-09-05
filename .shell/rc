@@ -11,8 +11,7 @@ export TERM=${TERM-xterm-256color}
 ## history
 HISTSIZE=10000
 export HISTFILE=${XDG_STATE_HOME-$HOME/.local/state}/shell/history
-mkdir -p "${HISTFILE%?*}"
-touch "$HISTFILE"
+mkdir -p "${HISTFILE%/*}"
 
 # gnupg
 if command -v gpg-connect-agent >/dev/null; then
