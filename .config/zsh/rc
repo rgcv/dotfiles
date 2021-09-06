@@ -1,23 +1,33 @@
 #!/bin/zsh
 # zmodload zsh/zprof
-source "$HOME/.shell/rc"
+source "${XDG_CONFIG_HOME-$HOME/.config}/shell/rc"
 
 SAVEHIST=$HISTSIZE
-source "$HOME/.zsh/rc.d/opts"
-source "$HOME/.zsh/rc.d/keys"
+export HISTFILE="${XDG_STATE_HOME-$HOME/.local/state}/zsh/history"
+mkdir -p "${HISTFILE%/*}"
+
+source "${XDG_CONFIG_HOME-$HOME/.config}/zsh/rc.d/opts"
+source "${XDG_CONFIG_HOME-$HOME/.config}/zsh/rc.d/keys"
+
+# completion module
+autoload -Uz compinit
+cache_home="${XDG_CACHE_HOME-$HOME/.cache}/zsh"
+mkdir -p "$cache_home"
+for comp in "$cache_home"/zcompdump-$ZSH_VERSION(N.mh+24); do
+  compinit -d "$cache_home/zcompdump-$ZSH_VERSION"
+done; unset cache_home
+compinit -C
 
 # lookup style
 zstyle :compinstall filename '${ZDOTDIR:-$HOME}/.zshrc'
+zstyle ':completion:*' cache-path '${XDG_CACHE_HOME-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION'
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' rehash true
 zstyle ':completion::complete:*' gain-privileges 1
 zstyle ':completion:*:descriptions' format %U%B%d%b%u
 zstyle ':completion:*:warnings' format '%BNo matches for: %d%b'
-# completion module
-autoload -Uz compinit
-for comp in ~/.zcompdump(N.mh+24); do compinit; done
-compinit -C
+
 # load zsh/nearcolor if 24-bit colors aren't supported
 case $COLOR_TERM in
   24bit|truecolor) ;;

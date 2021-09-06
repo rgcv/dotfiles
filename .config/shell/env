@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# needed if starting graphic session in shell so non-login interactive shell
+# startup scripts run fine
+export ENV="${XDG_CONFIG_HOME-$HOME/.config}/sh/rc"
+# additionally, for non-interactive shells
+export BASH_ENV="${XDG_CONFIG_HOME-$HOME/.config}/bash/env"
+
+# shellcheck disable=SC1091
+. "${XDG_CONFIG_HOME-$HOME/.config}/shell/env_functions"
+
+# strict umask
+umask 0077

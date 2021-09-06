@@ -1,4 +1,4 @@
 #!/bin/sh
-# shellcheck disable=SC1090
-. "$HOME/.sh/env"
-. "$HOME/.sh/login"
+# shellcheck disable=SC1091
+. "${XDG_CONFIG_HOME-$HOME/.config}/sh/env"
+. "${XDG_CONFIG_HOME-$HOME/.config}/sh/login"

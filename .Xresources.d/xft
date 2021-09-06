@@ -1,8 +1,0 @@
-!----------------------------
-! Xft
-!----------------------------
-Xft.antialias: true
-Xft.hinting: true
-Xft.dpi: 96
-
-! vim:ft=xdefaults

@@ -8,8 +8,8 @@
 set -e
 
 app_name=${0##*/}
-cache_file=${XDG_CACHE_HOME-$HOME/.cache}/touchpad-status
-nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
+state_file="${XDG_STATE_HOME-$HOME/.local/state}/touchpad/status"
+nid_file="${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid"
 should_notify=false
 
 true()  { return 0; }
@@ -57,10 +57,10 @@ else
   check_avail xinput || exit 1
 fi
 
-if [ -f "$cache_file" ]; then
-  read -r status < "$cache_file"
+if [ -f "$state_file" ]; then
+  read -r status < "$state_file"
 else
-  mkdir -p "${cache_file%/*}"
+  mkdir -p "${state_file%/*}"
   if [ -n "$SWAYSOCK" ]; then
     evs=$(swaymsg -t get_inputs |
       jq -r 'first(.[], select(.type=="touchpad")).libinput.send_events')
@@ -83,7 +83,7 @@ else
   xinput set-prop "$tpid" "$setting" $new
 fi
 
-echo $new > "$cache_file"
+echo $new > "$state_file"
 
 $should_notify || exit 0
 

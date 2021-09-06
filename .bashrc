@@ -1,7 +1,4 @@
 #!/bin/bash
-# shellcheck disable=SC1090
-source "$HOME/.bash/env"
-source "$HOME/.bash/rc"
-
-# added by travis gem
-[ -f /home/rgcv/.travis/travis.sh ] && source /home/rgcv/.travis/travis.sh
+# shellcheck disable=SC1091
+source "${XDG_CONFIG_HOME-$HOME/.config}/bash/env"
+source "${XDG_CONFIG_HOME-$HOME/.config}/bash/rc"

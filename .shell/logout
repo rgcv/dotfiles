@@ -1,3 +1,0 @@
-#!/bin/bash
-# clear the console
-[ $SHLVL -eq 1 ] && printf '\ec'

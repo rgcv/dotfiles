@@ -15,7 +15,7 @@ if [ -n "$tpid" ]; then
   tpid=${tpid#id=}
   xinput set-prop "$tpid" "libinput Tapping Enabled" 1
   xinput set-prop "$tpid" "libinput Natural Scrolling Enabled" 1
-  read -r touchpad_status < "${XDG_CACHE_HOME-$HOME/.cache}/touchpad-status"
+  read -r touchpad_status < "${XDG_STATE_HOME-$HOME/.local/state}/touchpad/status" 2>/dev/null
   if [ -n "$touchpad_status" ]; then
     xinput set-prop "$tpid" "Device Enabled" "$touchpad_status"
   fi; unset touchpad_status
