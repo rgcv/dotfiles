@@ -5,26 +5,30 @@
 
 # Load resources
 for file in /etc/X11/Xresources \
-    "${XDG_CONFIG_HOME-$HOME/.config}/X11/xresources" \
+    "${XDG_CONFIG_HOME=$HOME/.config}/X11/xresources" \
     "$HOME/.Xresources"; do
   [ -f "$file" ] && xrdb -merge -I"${file%/*}" "$file"
 done; unset file
 
 # Load keymaps
-for file in /etc/X11/Xkbmap "$HOME/.Xkbmap"; do
+for file in /etc/X11/Xkbmap \
+    "$XDG_CONFIG_HOME/X11/xkbmap" \
+    "$HOME/.Xkbmap"; do
   [ -f "$file" ] && setxkbmap -config "$file" && XKB_IN_USE=yes
 done; unset file
 
 # Load xmodmap if not using XKB
 if [ -z "$XKB_IN_USE" ]; then
-  for file in /etc/X11/Xmodmap "$HOME/.Xmodmap"; do
+  for file in /etc/X11/Xmodmap \
+      "$XDG_CONFIG_HOME/X11/xmodmap" \
+      "$HOME/.Xmodmap"; do
     [ -f "$file" ] && xmodmap "$file"
   done; unset file
 fi; unset XKB_IN_USE
 
 # Source xinitrc.d scripts
 for xinitrcd in /etc/X11/xinit/xinitrc.d \
-    "${XDG_CONFIG_HOME-$HOME/.config}/X11/xresources" \
+    "$XDG_CONFIG_HOME/X11/xinitrc.d" \
     "$HOME/.xinitrc.d"; do
   if [ -d "$xinitrcd" ]; then
     for script in "$xinitrcd"/*; do
@@ -35,8 +39,7 @@ done; unset xinitrcd
 
 # Source user's .xsession
 
-for file in "${XDG_CONFIG_HOME-$HOME/.config}/X11/xsession" \
-    "$HOME/.Xsession"; do
+for file in "$XDG_CONFIG_HOME/X11/xsession" "$HOME/.Xsession"; do
   [ -x "$file" ] && [ ! -d "$file" ] && . "$file"
 done; unset file
 

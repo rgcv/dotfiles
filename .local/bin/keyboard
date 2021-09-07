@@ -6,7 +6,11 @@ query() { setxkbmap -query | awk '/^'"$1"':/ {print $2}'; }
 layout=$(query layout)
 variant=$(query variant)
 
-[ -r "$HOME/.Xkbmap" ] && setxkbmap -config "$HOME/.Xkbmap"
+if [ -r "${XDG_CONFIG_HOME=$HOME/.config}/X11/xkbmap" ]; then
+  setxkbmap -config "$XDG_CONFIG_HOME/X11/xkbmap"
+elif [ -r "$HOME/.Xkbmap" ]; then
+  setxkbmap -config "$HOME/.Xkbmap"
+fi
 
 case $1 in
   pt|us|'us(intl)') setxkbmap "$1" ;;
