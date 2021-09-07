@@ -37,7 +37,7 @@ export LC_TELEPHONE=$lang
 unset LC_ALL lang
 
 # julia
-export JULIA_NUM_THREAD=$(( NPROC+2 ))
+export JULIA_NUM_THREADS=$(( NPROC+2 ))
 
 # less
 LESS=
