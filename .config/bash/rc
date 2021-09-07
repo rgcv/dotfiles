@@ -1,6 +1,6 @@
 #!/bin/bash
 # shellcheck disable=SC1091
-source "$XDG_CONFIG_HOME/shell/rc"
+source "${XDG_CONFIG_HOME-$HOME/.config}/shell/rc"
 
 HISTCONTROL=ignoreboth
 

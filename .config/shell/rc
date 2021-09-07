@@ -28,7 +28,7 @@ done; unset cmd hl
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 # ssh agent
-SSH_ENV="$XDG_STATE_HOME/ssh-agent/env"
+SSH_ENV="${XDG_STATE_HOME-$HOME/.local/state}/ssh-agent/env"
 if ! pgrep -u "$USER" ssh-agent >/dev/null; then
   mkdir -p "${SSH_ENV%/*}"
   ssh-agent 2>/dev/null > "$SSH_ENV"
@@ -54,7 +54,7 @@ config_alias() {
   fi
 }
 home_config_alias() { config_alias "$HOME" "$@"; }
-xdg_config_alias()  { config_alias "$XDG_CONFIG_HOME" "$@"; }
+xdg_config_alias()  { config_alias "${XDG_CONFIG_HOME-$HOME/.config}" "$@"; }
 
 xdg_config_alias   alacrittycf alacritty/alacritty.yml
 xdg_config_alias   batcf       bat/config
@@ -97,7 +97,7 @@ unset -f config_alias home_config_alias xdg_config_alias
 # shell
 shell_conf_alias() {
   for f in env rc login logout xlogin; do
-    dir="$XDG_CONFIG_HOME/$1"
+    dir="${XDG_CONFIG_HOME-$HOME/.config}/$1"
     # shellcheck disable=SC2086,SC2139
     if [ -r "$dir/$f" ]; then
       alias .${2-$1}$f=". $dir/$f"
@@ -123,7 +123,7 @@ alias mv="mv -i"
 alias rm="rm -i"
 
 alias diff="diff --color"
-alias dots='git --git-dir="$XDG_DATA_HOME/dotfiles" --work-tree="$HOME"'
+alias dots='git --git-dir="${XDG_DATA_HOME-$HOME/.local/share}/dotfiles" --work-tree="$HOME"'
 alias g=git
 
 alias grep="grep --color=auto"
@@ -141,7 +141,7 @@ alias   lS="ls -1FSsh"  #dir sizes
 alias lart="ls -1Fcart" #all relative + types
 alias  lrt="ls -1Fcrt"  #relative + types
 
-alias mvn='mvn -gs "$XDG_CONFIG_HOME/maven/settings.xml"'
+alias mvn='mvn -gs "${XDG_CONFIG_HOME-$HOME/.config}/maven/settings.xml"'
 alias myip="curl -s https://ifconfig.me/ip"
 alias nnn="nnn -d -e"
 alias n=nnn
@@ -161,10 +161,10 @@ fi
 alias nv=nvim
 alias  v=vi
 
-alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'
+alias wget='wget --hsts-file="${XDG_CACHE_HOME-$HOME/.cache}/wget-hsts"'
 
-alias xload='xrdb -load "$XDG_CONFIG_HOME/X11/xresources"'
-alias xmerge='xrdb -merge "$XDG_CONFIG_HOME/X11/xresources"'
+alias xload='xrdb -load "${XDG_CONFIG_HOME-$HOME/.config}/X11/xresources"'
+alias xmerge='xrdb -merge "${XDG_CONFIG_HOME-$HOME/.config}/X11/xresources"'
 
 alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME/yarn/config"'
 
@@ -224,7 +224,7 @@ if command -v xclip >/dev/null; then
 fi
 
 # where were we?
-CWD="$XDG_STATE_HOME/misc/cwd"
+CWD="${XDG_STATE_HOME-$HOME/.local/state}/misc/cwd"
 mkdir -p "${CWD%/*}"
 __cd() {
   \cd "$@" || return
