@@ -1,4 +1,3 @@
 #!/bin/zsh
 source "${XDG_CONFIG_HOME-$HOME/.config}/shell/env"
-
-export ZDOTDIR="${XDG_CONFIG_HOME-$HOME/.config}/zsh"
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"

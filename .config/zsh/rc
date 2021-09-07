@@ -1,26 +1,27 @@
 #!/bin/zsh
 # zmodload zsh/zprof
-source "${XDG_CONFIG_HOME-$HOME/.config}/shell/rc"
+source "$XDG_CONFIG_HOME/shell/rc"
 
 SAVEHIST=$HISTSIZE
-export HISTFILE="${XDG_STATE_HOME-$HOME/.local/state}/zsh/history"
-mkdir -p "${HISTFILE%/*}"
+export HISTFILE="$XDG_STATE_HOME/zsh/history"
+[ -f "${HISTFILE%/*}" ] || mkdir -p "${HISTFILE%/*}"
 
-source "${XDG_CONFIG_HOME-$HOME/.config}/zsh/rc.d/opts"
-source "${XDG_CONFIG_HOME-$HOME/.config}/zsh/rc.d/keys"
+source "$XDG_CONFIG_HOME/zsh/rc.d/opts"
+source "$XDG_CONFIG_HOME/zsh/rc.d/keys"
 
 # completion module
 autoload -Uz compinit
-cache_home="${XDG_CACHE_HOME-$HOME/.cache}/zsh"
-mkdir -p "$cache_home"
-for comp in "$cache_home"/zcompdump-$ZSH_VERSION(N.mh+24); do
-  compinit -d "$cache_home/zcompdump-$ZSH_VERSION"
-done; unset cache_home
+ZCOMPDUMP="$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
+[ -d "${ZCOMPDUMP%/*}" ] || mkdir -p "${ZCOMPDUMP%/*}"
+if [ -n "$ZCOMPDUMP"(#qN.mh+24) ]; then
+  compinit -d "$ZCOMPDUMP"
+  compdump
+fi; unset ZCOMPDUMP
 compinit -C
 
 # lookup style
 zstyle :compinstall filename '${ZDOTDIR:-$HOME}/.zshrc'
-zstyle ':completion:*' cache-path '${XDG_CACHE_HOME-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION'
+zstyle ':completion:*' cache-path '$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION'
 zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
 zstyle ':completion:*' menu select
 zstyle ':completion:*' rehash true
