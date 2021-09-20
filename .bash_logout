@@ -1,1 +1,1 @@
-.bash/logout
+.config/bash/logout
