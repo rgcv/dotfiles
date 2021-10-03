@@ -1,0 +1,179 @@
+#!/bin/sh
+## XDG Base Directory spec
+# user-specific
+export XDG_CACHE_HOME=${XDG_CACHE_HOME-$HOME/.cache}
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME-$HOME/.config}
+export XDG_DATA_HOME=${XDG_DATA_HOME-$HOME/.local/share}
+export XDG_STATE_HOME=${XDG_STATE_HOME-$HOME/.local/state}
+export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR-/tmp/run.user-$(id -u)}
+# system
+export XDG_DATA_DIRS=${XDG_DATA_DIRS-/usr/local/share/:/usr/share/}
+export XDG_CONFIG_DIRS=${XDG_CONFIG_DIRS-/etc/xdg}
+
+## helpers
+# PATH-like environment variable manipulation functions
+# shellcheck disable=SC2086
+__append()  { export $2="${3:+$3:}$1"; }
+# shellcheck disable=SC2086
+__prepend() { export $2="$1${3:+:$3}"; }
+
+__expand() { eval "echo \$$1"; }
+__inpath() {
+  case ":$(__expand "$2"):" in
+    *:"$1":*) return 0 ;;
+    *)        return 1 ;;
+  esac
+}
+
+__pathadd() {
+  __inpath "$2" "$3" || $1 "$2" "$3" "$(__expand "$3")"
+}
+
+pathappend()  { __pathadd __append  "$1" "${2-PATH}"; }
+pathprepend() { __pathadd __prepend "$1" "${2-PATH}"; }
+
+## user config
+# web browser
+export BROWSER=firefox
+
+# pager
+for pager in less more cat; do
+  command -v $pager >/dev/null && export PAGER=$pager && break
+done; unset pager
+
+# editor
+for ed in nvim vim emacs vi nano; do
+  command -v $ed >/dev/null && export EDITOR=$ed && break
+done; unset ed
+export VISUAL=$EDITOR
+
+# locale
+lang=pt_PT.UTF-8
+export LANG=en_US.UTF-8
+export LC_ADDRESS=$lang
+export LC_COLLATE=$lang
+export LC_IDENTIFICATION=$lang
+export LC_MONETARY=$lang
+export LC_MEASUREMENT=$lang
+export LC_PAPER=$lang
+export LC_TELEPHONE=$lang
+unset LC_ALL lang
+
+# input method
+export INPUT_METHOD=fcitx
+export GTK_IM_MODULE=$INPUT_METHOD
+export QT_IM_MODULE=$INPUT_METHOD
+export XMODIFIERS=\@im=$INPUT_METHOD
+
+# num. threads
+NPROC=$(nproc || grep -c processor </proc/cpuinfo || echo)
+export NPROC=${NPROC:-5}
+
+export LESS=
+LESS="$LESS -i"   # ignore search pattern case
+LESS="$LESS -g"   # highlight search result
+LESS="$LESS -w"   # highlight first "new" unread line
+LESS="$LESS -M"   # more verbose prompt than `more`
+LESS="$LESS -R"   # ANSI color escape sequences
+LESS="$LESS -S"   # chop long lines
+LESS="$LESS -z-4" # window scroll size sub 4
+# shellcheck disable=SC2155
+{
+export LESS_TERMCAP_mb=$(printf '\033[01;31m')
+export LESS_TERMCAP_md=$(printf '\033[01;36m')
+export LESS_TERMCAP_me=$(printf '\033[0m')
+export LESS_TERMCAP_so=$(printf '\033[01;44;33m')
+export LESS_TERMCAP_se=$(printf '\033[0m')
+export LESS_TERMCAP_us=$(printf '\033[01;32m')
+export LESS_TERMCAP_ue=$(printf '\033[0m')
+}
+
+## app-specific environment
+export ASPELL_CONF=
+ASPELL_CONF="$ASPELL_CONF per-conf $XDG_CONFIG_HOME/aspell/aspell.conf;"
+ASPELL_CONF="$ASPELL_CONF personal $XDG_CONFIG_HOME/aspell/en.pws;"
+ASPELL_CONF="$ASPELL_CONF repl     $XDG_CONFIG_HOME/aspell/en.prepl"
+
+export ATOM_HOME="$XDG_DATA_HOME/atom"
+
+export AWS_SHARED_CREDENTIALS_FILE="$XDG_CONFIG_HOME/aws/credentials"
+export AWS_CONFIG_FILE="$XDG_CONFIG_HOME/aws/config"
+
+export BASH_COMPLETION_USER_FILE="$XDG_CONFIG_HOME/bash-completion/bash_completion"
+
+export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+export MACHINE_STORAGE_PATH="$XDG_DATA_HOME/docker-machine"
+
+export FFMPEG_DATADIR="$XDG_CONFIG_HOME/ffmpeg"
+
+export GOPATH="$XDG_DATA_HOME/go"
+pathappend "$GOPATH/bin"
+
+export GRADLE_USER_HOME="$XDG_DATA_HOME/gradle"
+
+export GTK_RC_FILES="$XDG_CONFIG_HOME/gtk-1.0/gtkrc"
+export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
+
+export IPYTHONDIR="$XDG_CONFIG_HOME/jupyter"
+export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
+export JUPYTERLAB_DIR="$XDG_DATA_HOME/jupyter/lab"
+
+export JULIA_NUM_THREADS=$(( NPROC+2 ))
+
+export MAKEFLAGS=-j$(( NPROC+2 ))
+
+export MAXIMA_USERDIR="$XDG_CONFIG_HOME/maxima"
+
+export MYSQL_HISTFILE="$XDG_CONFIG_HOME/mysql_history"
+
+export NODE_REPL_HISTORY="$XDG_DATA_HOME/node_repl_history"
+
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+
+export NUGET_PACKAGES="$XDG_CACHE_HOME/NuGetPackages"
+
+export NVM_DIR="$XDG_CONFIG_HOME/nvm"
+
+export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
+
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+pathappend "$CARGO_HOME/bin"
+
+export TEXMFHOME="$XDG_DATA_HOME/texmf"
+export TEXMFVAR="$XDG_CACHE_HOME/texlive/texmf-var"
+export TEXMFCONFIG="$XDG_CONFIG_HOME/texlive/texmf-config"
+
+export VAGRANT_HOME="$XDG_DATA_HOME/vagrant"
+export VAGRANT_ALIAS_FILE="$VAGRANT_HOME/aliases"
+
+export WORKON_HOME="$XDG_DATA_HOME/virtualenvs"
+
+export WGETRC="$XDG_CONFIG_HOME/wgetrc"
+
+export XAUTHORITY="$XDG_CONFIG_HOME/Xauthority"
+
+export XINITRC="$XDG_CONFIG_HOME/X11/xinitrc"
+export XSERVERRC="$XDG_CONFIG_HOME/X11/xserverrc"
+
+## XDG User directories
+# shellcheck disable=SC1091
+[ -r "$XDG_CONFIG_HOME/user-dirs.dirs" ] && . "$XDG_CONFIG_HOME/user-dirs.dirs"
+export XDG_DESKTOP_DIR=${XDG_DESKTOP_DIR-$HOME/Desktop}
+export XDG_DOCUMENTS_DIR=${XDG_DOCUMENTS_DIR-$HOME/Documents}
+export XDG_DOWNLOAD_DIR=${XDG_DOWNLOAD_DIR-$HOME/Downloads}
+export XDG_MUSIC_DIR=${XDG_MUSIC_DIR-$HOME/Music}
+export XDG_PICTURES_DIR=${XDG_PICTURES_DIR-$HOME/Pictures}
+export XDG_PUBLICSHARE_DIR=${XDG_PUBLICSHARE_DIR-$HOME/Public}
+export XDG_SCREENSHOTS_DIR=${XDG_SCREENSHOTS_DIR-$HOME/Pictures/Screenshots}
+export XDG_TEMPLATES_DIR=${XDG_TEMPLATES_DIR-$HOME/Templates}
+export XDG_VIDEOS_DIR=${XDG_VIDEOS_DIR-$HOME/Videos}
+
+## path config
+pathprepend "$HOME/.local/bin"     PATH
+pathprepend "$HOME/.local/include" CPATH
+pathprepend "$HOME/.local/lib"     LD_LIBRARY_PATH
+
+## other environments
+export ENV="$XDG_CONFIG_HOME/sh/interactive"
+export BASH_ENV="$XDG_CONFIG_HOME/bash/env"

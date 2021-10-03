@@ -1,1 +1,1 @@
-rc
+interactive

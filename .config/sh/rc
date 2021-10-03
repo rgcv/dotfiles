@@ -1,6 +1,0 @@
-#!/bin/sh
-# shellcheck disable=SC1091
-. "${XDG_CONFIG_HOME-$HOME/.config}/shell/rc"
-
-export HISTFILE="${XDG_STATE_HOME-$HOME/.local/state}/sh/history"
-mkdir -p "${HISTFILE%/*}"

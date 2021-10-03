@@ -1,2 +1,2 @@
 #!/bin/zsh
-source "${XDG_CONFIG_HOME-$HOME/.config}/shell/logout"
+source "$XDG_CONFIG_HOME/shell/logout"

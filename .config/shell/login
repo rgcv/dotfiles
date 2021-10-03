@@ -1,194 +1,38 @@
 #!/bin/sh
+## XDG Base Directory spec
+# shellcheck disable=SC2174
+[ -d "$XDG_RUNTIME_DIR" ] || mkdir -pm 0700 "$XDG_RUNTIME_DIR"
 
-# #threads detection
-NPROC=$(nproc || grep -c 'processor' < /proc/cpuinfo)
-export NPROC=${NPROC-5}
-
-# BROWSER
-export BROWSER=firefox
-
-# PAGER
-for p in less more cat; do
-  command -v $p >/dev/null && export PAGER=$p && break
-done; unset p
-
-# VISUAL + EDITOR
-for v in nvim vim vi; do
-  command -v $v >/dev/null && export EDITOR=$v && break
-done; unset v
-export VISUAL=$EDITOR
-
-# input method
-export INPUT_METHOD=fcitx
-export GTK_IM_MODULE=$INPUT_METHOD
-export QT_IM_MODULE=$INPUT_METHOD
-export XMODIFIERS=\@im=$INPUT_METHOD
-
-# locale
-lang=pt_PT.UTF-8
-export LANG=en_US.UTF-8
-export LC_ADDRESS=$lang
-export LC_COLLATE=$lang
-export LC_IDENTIFICATION=$lang
-export LC_MONETARY=$lang
-export LC_MEASUREMENT=$lang
-export LC_PAPER=$lang
-export LC_TELEPHONE=$lang
-unset LC_ALL lang
-
-# julia
-export JULIA_NUM_THREADS=$(( NPROC+2 ))
-
-# less
-LESS=
-LESS="$LESS -i"   # ignore search pattern case
-LESS="$LESS -g"   # highlight search result
-LESS="$LESS -w"   # highlight first "new" unread line
-LESS="$LESS -M"   # more verbose prompt than `more`
-LESS="$LESS -R"   # ANSI color escape sequences
-LESS="$LESS -S"   # chop long lines
-LESS="$LESS -z-4" # window scroll size sub 4
-export LESS
-# shellcheck disable=SC2155
-{
-export LESS_TERMCAP_mb=$(printf '\033[01;31m')
-export LESS_TERMCAP_md=$(printf '\033[01;36m')
-export LESS_TERMCAP_me=$(printf '\033[0m')
-export LESS_TERMCAP_se=$(printf '\033[0m')
-export LESS_TERMCAP_so=$(printf '\033[01;44;33m')
-export LESS_TERMCAP_ue=$(printf '\033[0m')
-export LESS_TERMCAP_us=$(printf '\033[01;32m')
-}
-
-# make
-export MAKEFLAGS=-j$(( NPROC+2 ))
-
-# qt
-export QT_QPA_PLATFORMTHEME=gtk3
-
-
-## XDG Base directories
-# shellcheck disable=SC1091
-[ -r "$HOME/.config/base-dirs.dirs" ] && . "$HOME/.config/base-dirs.dirs"
-export XDG_CACHE_HOME=${XDG_CACHE_HOME-$HOME/.cache}
-export XDG_CONFIG_HOME=${XDG_CONFIG_HOME-$HOME/.config}
-export XDG_DATA_HOME=${XDG_DATA_HOME-$HOME/.local/share}
-export XDG_STATE_HOME=${XDG_STATE_HOME-$HOME/.local/state}
-export XDG_RUNTIME_DIR=${XDG_RUNTIME_DIR-$HOME/.local/run}
-
-# aspell
-ASPELL_CONF=
-ASPELL_CONF="$ASPELL_CONF per-conf $XDG_CONFIG_HOME/aspell/aspell.conf;"
-ASPELL_CONF="$ASPELL_CONF personal $XDG_CONFIG_HOME/aspell/en.pws;"
-ASPELL_CONF="$ASPELL_CONF repl     $XDG_CONFIG_HOME/aspell/en.prepl"
-export ASPELL_CONF
-
-# atom
-export ATOM_HOME="$XDG_DATA_HOME/atom"
-
-# aws
-export AWS_SHARED_CREDENTIALS_FILE="$XDG_CONFIG_HOME/aws/credentials"
-export AWS_CONFIG_FILE="$XDG_CONFIG_HOME/aws/config"
-
-# bash
-export BASH_COMPLETION_USER_FILE="$XDG_CONFIG_HOME/bash-completion/bash_completion"
-
-# docker
-export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
-export MACHINE_STORAGE_PATH="$XDG_DATA_HOME/docker-machine"
-
-# ffmpeg
-export FFMPEG_DATADIR="$XDG_CONFIG_HOME/ffmpeg"
-
-# go
-export GOPATH="$XDG_DATA_HOME/go"
-pathappend "$GOPATH/bin"
-
-# gradle
-export GRADLE_USER_HOME="$XDG_DATA_HOME/gradle"
-
-# gtk
-export GTK_RC_FILES="$XDG_CONFIG_HOME/gtk-1.0/gtkrc"
-export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
-
-# jupyter
-export IPYTHONDIR="$XDG_CONFIG_HOME/jupyter"
-export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
-export JUPYTERLAB_DIR="$XDG_DATA_HOME/jupyter/lab"
-
-# maxima
-export MAXIMA_USERDIR="$XDG_CONFIG_HOME/maxima"
-
-# mysql
-export MYSQL_HISTFILE="$XDG_CONFIG_HOME/mysql_history"
-
-# node.js
-export NODE_REPL_HISTORY="$XDG_DATA_HOME/node_repl_history"
-
-# npm
-export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
-
-# nuget
-export NUGET_PACKAGES="$XDG_CACHE_HOME/NuGetPackages"
-
-# nvm
-export NVM_DIR="$XDG_CONFIG_HOME/nvm"
-
-# readline
-export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
-
-# rust
-export CARGO_HOME="$XDG_DATA_HOME/cargo"
-export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
-pathappend "$CARGO_HOME/bin"
-
-# texlive
-export TEXMFHOME="$XDG_DATA_HOME/texmf"
-export TEXMFVAR="$XDG_CACHE_HOME/texlive/texmf-var"
-export TEXMFCONFIG="$XDG_CONFIG_HOME/texlive/texmf-config"
-
-# vagrant
-export VAGRANT_HOME="$XDG_DATA_HOME/vagrant"
-export VAGRANT_ALIAS_FILE="$VAGRANT_HOME/aliases"
-
-# virtualenv
-export WORKON_HOME="$XDG_DATA_HOME/virtualenvs"
-
-# wget
-export WGETRC="$XDG_CONFIG_HOME/wgetrc"
-
-# X11
-export XAUTHORITY="$XDG_CONFIG_HOME/Xauthority"
-
-export XINITRC="$XDG_CONFIG_HOME/X11/xinitrc"
-export XSERVERRC="$XDG_CONFIG_HOME/X11/xserverrc"
-
-
-## XDG User directories
-# shellcheck disable=SC1091
-[ -r "$XDG_CONFIG_HOME/user-dirs.dirs" ] && . "$XDG_CONFIG_HOME/user-dirs.dirs"
-export XDG_DESKTOP_DIR=${XDG_DESKTOP_DIR-$HOME/Desktop}
-export XDG_DOCUMENTS_DIR=${XDG_DOCUMENTS_DIR-$HOME/Documents}
-export XDG_DOWNLOAD_DIR=${XDG_DOWNLOAD_DIR-$HOME/Downloads}
-export XDG_MUSIC_DIR=${XDG_MUSIC_DIR-$HOME/Music}
-export XDG_PICTURES_DIR=${XDG_PICTURES_DIR-$HOME/Pictures}
-export XDG_PUBLICSHARE_DIR=${XDG_PUBLICSHARE_DIR-$HOME/Public}
-export XDG_SCREENSHOTS_DIR=${XDG_SCREENSHOTS_DIR-$HOME/Pictures/Screenshots}
-export XDG_TEMPLATES_DIR=${XDG_TEMPLATES_DIR-$HOME/Templates}
-export XDG_VIDEOS_DIR=${XDG_VIDEOS_DIR-$HOME/Videos}
-
-
-## path config
-pathprepend "$HOME/.local/bin"     PATH
-pathprepend "$HOME/.local/include" CPATH
-pathprepend "$HOME/.local/lib"     LD_LIBRARY_PATH
-
+## umask
+umask 0077
 
 ## graphic session
 if [ -z "$DISPLAY" ]; then
   TTY=$(tty || echo "${XDG_VTNR--1}")
   case ${TTY#/dev/tty} in
-    1) command -v sway   >/dev/null && exec sway 2>/dev/null ;;
-    2) command -v startx >/dev/null && exec startx "$XINITRC" -- ":1" ;;
+    1)
+      if command -v sway >/dev/null; then
+        export QT_QPA_PLATFORM=wayland
+        export MOZ_ENABLE_WAYLAND=1
+        export XDG_SESSION_TYPE=wayland
+        export XDG_CURRENT_DESKTOP=sway
+        exec sway 2>/dev/null
+      fi
+      echo >&2 "sway not found"
+      ;;
+    2)
+      command -v startx >/dev/null && exec startx "$XINITRC" -- ":1"
+      echo >&2 "startx not found"
+      ;;
+    3)
+      if command -v gnome-shell >/dev/null; then
+        export QT_QPA_PLATFORM=wayland
+        export MOZ_ENABLE_WAYLAND=1
+        export XDG_SESSION_TYPE=wayland
+        export XDG_CURRENT_DESKTOP=gnome
+        exec gnome-shell --wayland
+      fi
+      echo >&2 "gnome-shell not found"
+      ;;
   esac; unset TTY
 fi
