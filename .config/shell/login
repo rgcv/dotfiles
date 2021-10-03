@@ -10,29 +10,8 @@ umask 0077
 if [ -z "$DISPLAY" ]; then
   TTY=$(tty || echo "${XDG_VTNR--1}")
   case ${TTY#/dev/tty} in
-    1)
-      if command -v sway >/dev/null; then
-        export QT_QPA_PLATFORM=wayland
-        export MOZ_ENABLE_WAYLAND=1
-        export XDG_SESSION_TYPE=wayland
-        export XDG_CURRENT_DESKTOP=sway
-        exec sway 2>/dev/null
-      fi
-      echo >&2 "sway not found"
-      ;;
-    2)
-      command -v startx >/dev/null && exec startx "$XINITRC" -- ":1"
-      echo >&2 "startx not found"
-      ;;
-    3)
-      if command -v gnome-shell >/dev/null; then
-        export QT_QPA_PLATFORM=wayland
-        export MOZ_ENABLE_WAYLAND=1
-        export XDG_SESSION_TYPE=wayland
-        export XDG_CURRENT_DESKTOP=gnome
-        exec gnome-shell --wayland
-      fi
-      echo >&2 "gnome-shell not found"
-      ;;
+    1) command -v sway        >/dev/null && exec sway ;;
+    2) command -v startx      >/dev/null && exec startx "$XINITRC" -- ":1" ;;
+    3) command -v gnome-shell >/dev/null && exec gnome-shell --wayland ;;
   esac; unset TTY
 fi
