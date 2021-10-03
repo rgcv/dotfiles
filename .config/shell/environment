@@ -176,4 +176,4 @@ pathprepend "$HOME/.local/lib"     LD_LIBRARY_PATH
 
 ## other environments
 export ENV="$XDG_CONFIG_HOME/sh/interactive"
-export BASH_ENV="$XDG_CONFIG_HOME/bash/env"
+export BASH_ENV="$XDG_CONFIG_HOME/bash/environment"
