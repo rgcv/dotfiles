@@ -163,8 +163,8 @@ alias  v=vi
 
 alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'
 
-alias xload='xrdb -load "$XDG_CONFIG_HOME/X11/xresources"'
-alias xmerge='xrdb -merge "$XDG_CONFIG_HOME/X11/xresources"'
+alias xload='xrdb -load "$XDG_CONFIG_HOME/x11/xresources"'
+alias xmerge='xrdb -merge "$XDG_CONFIG_HOME/x11/xresources"'
 
 alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME/yarn/config"'
 
