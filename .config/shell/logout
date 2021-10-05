@@ -1,4 +1,4 @@
 #!/bin/sh
 # clear the console
 # shellcheck disable=SC3028
-[ ${SHLVL-0} -eq 1 ] && printf '\ec'
+[ ${SHLVL-0} -ne 1 ] || printf '\ec'
