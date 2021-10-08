@@ -26,7 +26,7 @@ if [ ! -e "$target" ] || ! df "$target" >/dev/null; then
 fi
 
 root=$(dfree target)
-percent=$(awk "BEGIN {print 100 * $(dfree avail) / $(dfree size)}")
+percent=$(awk "BEGIN {printf \"%.0f\", 100 * $(dfree avail) / $(dfree size)}")
 avail=$(dfree avail -B"${MEMORY_UNIT-GB}" | xargs printf '%s')
 
 echo "$icon $avail $root"
