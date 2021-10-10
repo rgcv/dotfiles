@@ -45,6 +45,8 @@ endif
 Plug 'itchyny/lightline.vim'
 Plug 'JuliaEditorSupport/julia-vim'
 Plug 'junegunn/vim-slash'
+Plug 'kana/vim-textobj-user' |
+\ Plug 'kana/vim-textobj-entire'
 Plug 'lepture/vim-jinja'
 Plug 'lervag/vimtex'
 Plug 'mattn/emmet-vim'
