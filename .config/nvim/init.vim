@@ -86,6 +86,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-sleuth'
 Plug 'tpope/vim-surround'
 Plug 'udalov/kotlin-vim'
+Plug 'vim-scripts/argtextobj.vim'
 Plug 'wannesm/wmgraphviz.vim'
 call plug#end()
 
