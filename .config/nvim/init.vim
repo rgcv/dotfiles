@@ -76,6 +76,7 @@ if v:version >= 704
   Plug 'Shougo/neosnippet.vim' |
   \ Plug 'Shougo/neosnippet-snippets'
 endif
+Plug 'tommcdo/vim-exchange'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive' |
 \ Plug 'tpope/vim-rhubarb'
