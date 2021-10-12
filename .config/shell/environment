@@ -118,9 +118,9 @@ export IPYTHONDIR="$XDG_CONFIG_HOME/jupyter"
 export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
 export JUPYTERLAB_DIR="$XDG_DATA_HOME/jupyter/lab"
 
-export JULIA_NUM_THREADS=$(( NPROC+2 ))
+export JULIA_NUM_THREADS=$(( 1 + NPROC / 2 ))
 
-export MAKEFLAGS=-j$(( NPROC+2 ))
+export MAKEFLAGS=-j$(( 1 + NPROC / 2 ))
 
 export MAXIMA_USERDIR="$XDG_CONFIG_HOME/maxima"
 
