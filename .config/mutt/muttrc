@@ -60,6 +60,12 @@ color index red black "~N|~O"
 source $my_config/gpg.rc
 source $my_config/accounts/config
 
+# sample account config
+# set my_custom_account = $my_config/accounts/custom/config
+# source $my_custom_account
+# folder-hook $folder 'source $my_custom_account'
+# macro index,pager <f#> '<sync-mailbox><enter-command>source $my_custom_account<enter><change-folder>!<enter>'
+
 set timeout = 15
 set mail_check = 90
 set imap_keepalive = 180
