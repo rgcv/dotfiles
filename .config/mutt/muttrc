@@ -12,7 +12,7 @@ set my_config = ~/.config/mutt
 
 # Cache
 set message_cachedir = $my_cache
-set header_cache     = $message_cachedir
+set header_cache     = $message_cachedir/headers
 
 # Viewing
 set mailcap_path = $my_config/mailcap
