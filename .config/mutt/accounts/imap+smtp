@@ -8,7 +8,7 @@ set hostname = $my_hostname
 # Receive options
 set imap_user = $my_imap_user
 set imap_pass = $my_imap_pass
-set folder    = imaps://$my_imap_host
+set folder    = imaps://$my_imap_user@$my_imap_host
 
 set spoolfile = +$my_inbox
 set postponed = +$my_drafts
