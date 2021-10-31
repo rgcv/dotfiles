@@ -15,12 +15,12 @@ set postponed = +$my_drafts
 set record    = +$my_sent
 set trash     = +$my_trash
 
+set imap_check_subscribed
+
 # Send options
 set from      = $my_from
 set smtp_pass = $my_smtp_pass
 set smtp_url  = smtp://$my_smtp_user@$my_smtp_host:$my_smtp_port/
-
-set smtp_authenticators = $my_smtp_authenticators
 
 set ssl_force_tls = yes
 
