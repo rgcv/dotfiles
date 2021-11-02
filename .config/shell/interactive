@@ -141,7 +141,6 @@ alias   lS="ls -1FSsh"  #dir sizes
 alias lart="ls -1Fcart" #all relative + types
 alias  lrt="ls -1Fcrt"  #relative + types
 
-alias mvn='mvn -gs "$XDG_CONFIG_HOME/maven/settings.xml"'
 alias myip="curl -s https://ifconfig.me/ip"
 alias nnn="nnn -d -e"
 alias n=nnn
