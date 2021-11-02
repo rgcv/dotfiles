@@ -80,6 +80,7 @@ xdg_config_alias   neomuttrc   neomutt/neomuttrc
 home_config_alias  neomuttrc   .neomutt/neomuttrc
 xdg_config_alias   newsboatrc  newsboat/config
 home_config_alias  newsboatrc  .newsboat/config
+xdg_config_alias   npmcf       npm/config
 xdg_config_alias   nvimrc      nvim/init.vim
 xdg_config_alias   roficf      rofi/config
 home_config_alias  sshcf       .ssh/config
