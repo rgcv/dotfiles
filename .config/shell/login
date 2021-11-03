@@ -4,7 +4,7 @@
 [ -d "$XDG_RUNTIME_DIR" ] || mkdir -pm 0700 "$XDG_RUNTIME_DIR"
 
 ## umask
-umask 0027
+umask 0077
 
 ## graphic session
 if [ -z "$DISPLAY" ]; then
