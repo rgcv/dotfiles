@@ -9,7 +9,8 @@ umask 0077
 ## graphic session
 if [ -z "$DISPLAY" ]; then
   TTY=$(tty || echo "${XDG_VTNR--1}")
-  case ${TTY#/dev/tty} in
+  TTY=${TTY#/dev/tty}
+  case $TTY in
     1)
       if command -v sway >/dev/null; then
         export MOZ_ENABLE_WAYLAND=1
