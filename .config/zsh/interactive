@@ -11,12 +11,13 @@ source "$XDG_CONFIG_HOME/zsh/rc.d/keys"
 
 # completion module
 autoload -Uz compinit
-cache_home="$XDG_CACHE_HOME/zsh"
-mkdir -p "$cache_home"
-for comp in "$cache_home"/zcompdump-$ZSH_VERSION(N.mh+24); do
-  compinit -d "$cache_home/zcompdump-$ZSH_VERSION"
-done; unset cache_home
-compinit -C
+dump_file="$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
+mkdir -p "${dump_file%/*}"
+for comp in "$dump_file"(N.mh+24); do
+  compinit -d "$dump_file"
+done
+compinit -C -d "$dump_file"
+unset dump_file
 
 # lookup style
 zstyle :compinstall filename '${ZDOTDIR:-$HOME}/.zshrc'
