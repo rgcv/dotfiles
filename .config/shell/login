@@ -17,7 +17,7 @@ if [ -z "$DISPLAY" ]; then
         export XDG_CURRENT_DESKTOP=sway
         export XDG_SESSION_TYPE=wayland
         export _JAVA_AWT_WM_NONREPARENTING=1
-        exec sway
+        exec sway >/dev/null 2>&1
       fi
       ;;
     2)
