@@ -1,6 +1,6 @@
 #!/bin/sh
 # usage: import-gsettings
-config="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-3.0/settings.ini"
+config="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-4.0/settings.ini"
 [ -f "$config" ] || exit 1
 
 value_for() { grep "$1" "$config" | sed 's/.*\s*=\s*//'; }
