@@ -9,7 +9,7 @@ setopt AUTO_CD
 # Completion
 # prevent aliases on the cli from being internally subbed before completion is
 # attempted. treating aliases as distinct commands
-setopt COMPLETE_ALIASES
+# setopt COMPLETE_ALIASES
 # whenever a completion or correction is attempted, hash the entire path first.
 # despite first completion slowdown, avoids mistakes
 setopt HASH_LIST_ALL
