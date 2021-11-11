@@ -22,9 +22,9 @@ unset dump_file
 
 # bash completion
 if autoload -U +X bashcompinit && bashcompinit; then
-  for comp in "$XDG_DATA_HOME/bash-completion/completions"/*; do
-    source "$comp" 2>/dev/null
-  done
+  find "$XDG_DATA_HOME/bash-completion/completions" \
+    -type f \
+    -exec source "{}" 2>/dev/null \;
 fi
 
 # lookup style
