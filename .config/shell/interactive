@@ -28,14 +28,16 @@ done; unset cmd hl
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 # ssh agent
-SSH_ENV="$XDG_STATE_HOME/ssh-agent/env"
-if ! pgrep -u "$USER" ssh-agent >/dev/null; then
-  mkdir -p "${SSH_ENV%/*}"
-  ssh-agent 2>/dev/null > "$SSH_ENV"
+if [ -z "$SSH_AUTH_SOCK" ]; then
+  SSH_ENV="$XDG_STATE_HOME/ssh-agent/env"
+  if ! pgrep -u "$USER" ssh-agent >/dev/null; then
+    mkdir -p "${SSH_ENV%/*}"
+    ssh-agent 2>/dev/null > "$SSH_ENV"
+  fi
+  # shellcheck disable=SC1090
+  . "$SSH_ENV" >/dev/null 2>&1
+  unset SSH_ENV
 fi
-# shellcheck disable=SC1090
-[ -z "$SSH_AUTH_SOCK" ] && . "$SSH_ENV" >/dev/null 2>&1
-unset SSH_ENV
 
 
 ## aliases

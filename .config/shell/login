@@ -17,6 +17,10 @@ if [ -z "$DISPLAY" ]; then
         export XDG_CURRENT_DESKTOP=sway
         export XDG_SESSION_TYPE=wayland
         export _JAVA_AWT_WM_NONREPARENTING=1
+        if command -v gnome-keyring-daemon >/dev/null; then
+          eval "$(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)"
+          export SSH_AUTH_SOCK
+        fi
         exec sway >/dev/null 2>&1
       fi
       ;;
