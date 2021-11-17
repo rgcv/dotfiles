@@ -10,28 +10,38 @@ umask 0077
 if [ -z "$DISPLAY" ]; then
   TTY=$(tty || echo "${XDG_VTNR--1}")
   TTY=${TTY#/dev/tty}
+  # check for graphical env options
   case $TTY in
     1)
-      if command -v sway >/dev/null; then
-        export MOZ_ENABLE_WAYLAND=1
-        export XDG_CURRENT_DESKTOP=sway
-        export XDG_SESSION_TYPE=wayland
-        export _JAVA_AWT_WM_NONREPARENTING=1
-        if command -v gnome-keyring-daemon >/dev/null; then
-          eval "$(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)"
-          export SSH_AUTH_SOCK
-        fi
-        exec sway >/dev/null 2>&1
-      fi
+      command -v sway >/dev/null || return
+      export XDG_CURRENT_DESKTOP=sway
+      export _JAVA_AWT_WM_NONREPARENTING=1
       ;;
     2)
-      if command -v gnome-shell >/dev/null; then
-        export MOZ_ENABLE_WAYLAND=1
-        export XDG_CURRENT_DESKTOP=gnome
-        export XDG_SESSION_TYPE=wayland
-        exec gnome-shell --wayland
+      command -v gnome-shell >/dev/null || return
+      export XDG_CURRENT_DESKTOP=gnome
+      ;;
+    3) command -v startx >/dev/null || return ;;
+    *) return ;;
+  esac
+
+  # setup environment
+  case $TTY in
+    1|2)
+      export MOZ_ENABLE_WAYLAND=1
+      export XDG_SESSION_TYPE=wayland
+      if command -v gnome-keyring-daemon >/dev/null; then
+        eval "$(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)"
+        export SSH_AUTH_SOCK
       fi
       ;;
-    3) command -v startx >/dev/null && exec startx "$XINITRC" -- ":$TTY" ;;
+  esac
+
+
+  # run
+  case $TTY in
+    1) exec sway 2>"$HOME/.sway.error" ;;
+    2) exec gnome-shell --wayland ;;
+    3) exec startx "$XINITRC" -- ":$TTY" ;;
   esac; unset TTY
 fi
