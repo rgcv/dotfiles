@@ -40,7 +40,7 @@ if [ -z "$DISPLAY" ]; then
 
   # run
   case $TTY in
-    1) exec sway 2>"$HOME/.sway.error" ;;
+    1) exec sway >/dev/null 2>&1 ;;
     2) exec gnome-shell --wayland ;;
     3) exec startx "$XINITRC" -- ":$TTY" ;;
   esac; unset TTY
