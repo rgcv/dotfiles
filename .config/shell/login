@@ -6,6 +6,10 @@
 ## umask
 umask 0077
 
+## ssh agent
+eval "$(ssh-agent)" >/dev/null
+export SSH_AUTH_SOCK
+
 ## graphic session
 if [ -z "$DISPLAY" ]; then
   TTY=$(tty || echo "${XDG_VTNR--1}")
@@ -14,34 +18,23 @@ if [ -z "$DISPLAY" ]; then
   case $TTY in
     1)
       command -v sway >/dev/null || return
+      export MOZ_ENABLE_WAYLAND=1
+      export XDG_SESSION_TYPE=wayland
       export XDG_CURRENT_DESKTOP=sway
       export _JAVA_AWT_WM_NONREPARENTING=1
+      exec sway >/dev/null 2>&1
       ;;
     2)
       command -v gnome-shell >/dev/null || return
-      export XDG_CURRENT_DESKTOP=gnome
-      ;;
-    3) command -v startx >/dev/null || return ;;
-    *) return ;;
-  esac
-
-  # setup environment
-  case $TTY in
-    1|2)
       export MOZ_ENABLE_WAYLAND=1
       export XDG_SESSION_TYPE=wayland
-      if command -v gnome-keyring-daemon >/dev/null; then
-        eval "$(gnome-keyring-daemon --start --components=pkcs11,secrets,ssh)"
-        export SSH_AUTH_SOCK
-      fi
+      export XDG_CURRENT_DESKTOP=gnome
+      exec gnome-shell --wayland
       ;;
-  esac
-
-
-  # run
-  case $TTY in
-    1) exec sway >/dev/null 2>&1 ;;
-    2) exec gnome-shell --wayland ;;
-    3) exec startx "$XINITRC" -- ":$TTY" ;;
+    3)
+      command -v startx >/dev/null || return
+      exec startx "$XINITRC" -- ":$TTY"
+      ;;
+    *) return ;;
   esac; unset TTY
 fi
