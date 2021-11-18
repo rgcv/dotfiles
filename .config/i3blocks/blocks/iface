@@ -7,12 +7,12 @@ AF=${AF-inet6?}
 
 iface=${BLOCK_INSTANCE-$(ip route | awk '/^default/ {print $5; exit}')}
 # no default route
-[ -n "$iface" ] || exit
+[ -n "$iface" ] || exit 0
 
 case $iface in
-  e*|t*)  icon= ;;
-  wl*)    icon= ;;
-  ww*)    icon= ;;
+  e*|t*) icon= ;;
+    wl*) icon= ;;
+    ww*) icon= ;;
 esac
 [ "${markup-}" = pango ] && icon="<b>$icon</b>"
 
