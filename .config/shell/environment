@@ -114,6 +114,8 @@ export GRADLE_USER_HOME="$XDG_DATA_HOME/gradle"
 export GTK_RC_FILES="$XDG_CONFIG_HOME/gtk-1.0/gtkrc"
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
 
+export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
+
 export IPYTHONDIR="$XDG_CONFIG_HOME/jupyter"
 export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
 export JUPYTERLAB_DIR="$XDG_DATA_HOME/jupyter/lab"
@@ -134,10 +136,14 @@ export NUGET_PACKAGES="$XDG_CACHE_HOME/NuGetPackages"
 
 export NVM_DIR="$XDG_DATA_HOME/nvm"
 
-export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
+export PSQLRC="$XDG_CONFIG_HOME/postgresql/psqlrc"
+export PSQL_HISTORY="$XDG_STATE_HOME/postgresql/psql_history"
+export PGPASSFILE="$XDG_CONFIG_HOME/postgresql/pgpass"
+export PGSERVICEFILE="$XDG_CONFIG_HOME/postgresql/pg_service.conf"
+mkdir "${PSQL_HISTORY%/*}" 2>/dev/null
 
-export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
 pathappend "$CARGO_HOME/bin"
 
 export TEXMFHOME="$XDG_DATA_HOME/texmf"
