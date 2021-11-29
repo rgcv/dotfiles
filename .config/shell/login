@@ -24,6 +24,7 @@ if [ -z "$DISPLAY" ]; then
     1)
       command -v sway >/dev/null || return
       export MOZ_ENABLE_WAYLAND=1
+      export QT_QPA_PLATFORM=wayland
       export XDG_SESSION_TYPE=wayland
       export XDG_CURRENT_DESKTOP=sway
       export _JAVA_AWT_WM_NONREPARENTING=1
@@ -32,6 +33,7 @@ if [ -z "$DISPLAY" ]; then
     2)
       command -v gnome-shell >/dev/null || return
       export MOZ_ENABLE_WAYLAND=1
+      export QT_QPA_PLATFORM=wayland
       export XDG_SESSION_TYPE=wayland
       export XDG_CURRENT_DESKTOP=gnome
       exec gnome-shell --wayland
