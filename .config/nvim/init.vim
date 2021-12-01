@@ -136,6 +136,7 @@ endif
 set clipboard=unnamed,unnamedplus " yank to X + primary clipboards
 set colorcolumn=+1
 set expandtab " I like spaces, don't @ me
+set path+=**
 set mouse=a " enable mouse support if we have it
 set number relativenumber
 set shiftwidth=2
