@@ -10,6 +10,5 @@ shopt -s autocd
 shopt -s extglob
 shopt -s histappend
 
-[ -z "$GBT__HOME" ] || PS1='$(gbt $?)'
 [ ! -s "$NVM_DIR/bash_completion" ] || source "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 [ ! -f "$HOME/.travis/travis.sh" ] || source "$HOME/.travis/travis.sh"

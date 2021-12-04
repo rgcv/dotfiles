@@ -166,25 +166,6 @@ alias yta="yt -x"
 alias pacman="pacman --color auto"
 alias    yay="yay --color auto"
 
-## prompt
-# go bullet trains: https://github.com/jtyr/gbt
-case "$(tty)" in
-  /dev/tty*) ;;
-  *)
-    if command -v gbt >/dev/null && [ -z "$SSH_CONNECTION" ]; then
-      export GBT__HOME=/usr/share/gbt
-      # shellcheck disable=SC1091
-      . "$GBT__HOME/sources/gbts/cmd/local.sh"
-      # skipping mysql, looks broken
-      for c in docker screen su sudo ssh vagrant; do
-        # shellcheck disable=SC2139
-        alias $c=gbt_$c
-      done; unset c
-      export GBT_CAR_TIME_BG=19
-      export GBT_CAR_DIR_BG=19
-    fi ;;
-esac
-
 ## functions
 # shell
 reload() { exec "${SHELL-sh}" "$@"; }

@@ -45,15 +45,7 @@ esac
 
 # prompt module
 autoload -Uz promptinit && promptinit
-# Go Bullet Trains
-if [ -n "$GBT__HOME" ]; then
-  PROMPT='$(gbt $?)'
-  for prog (docker mysql screen ssh su sudo vagrant)
-    typeset -f _$prog >/dev/null && compdef _$prog gbt_$prog=$prog
-  unset prog
-else
-  prompt redhat
-fi
+prompt redhat
 
 # plugins
 for p in /usr/share/zsh/plugins/*; do source "$p/${p##*/}.zsh"; done 2>/dev/null
