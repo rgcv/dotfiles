@@ -36,11 +36,6 @@ pathprepend() { __pathadd __prepend "$1" "${2-PATH}"; }
 # web browser
 export BROWSER=firefox
 
-# pager
-for pager in less more cat; do
-  command -v $pager >/dev/null && export PAGER=$pager && break
-done; unset pager
-
 # editor
 for ed in nvim vim emacs vi nano; do
   command -v $ed >/dev/null && export EDITOR=$ed && break
