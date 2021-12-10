@@ -35,6 +35,7 @@ endfunction
 call plug#begin('~/.local/share/nvim/plugged')
 Plug 'AndrewRadev/tagalong.vim'
 Plug 'airblade/vim-gitgutter'
+Plug 'andreshazard/vim-freemarker'
 Plug 'ararslan/license-to-vim'
 Plug 'chr4/nginx.vim'
 Plug 'chriskempson/base16-vim'
