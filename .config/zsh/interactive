@@ -52,7 +52,7 @@ unset p
 
 # functions
 fp=/usr/share/zsh/site-functions
-[ -d $fp ] && fpath=($fp $fpath)
+[ -d $fp ] && fpath=($fpath $fp)
 unset fp
 
 handle_usr1() { trap handle_usr1 USR1; rehash; }
