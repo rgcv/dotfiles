@@ -39,7 +39,7 @@ display() {
     color=${color8-#555555}
   fi
 
-  text=$(printf '%s %3d%%' "$icon" "$volume")
+  text=$(printf '%s %2d%%' "$icon" "$volume")
 
   if [ "${format-}" = json ] || [ "$interval" = persist ]; then
     json "$text" "$text" "$color"
