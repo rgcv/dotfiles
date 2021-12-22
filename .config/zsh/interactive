@@ -43,9 +43,8 @@ case $COLOR_TERM in
   *) [ "${terminfo[colors]}" -eq 16777216 ] || zmodload zsh/nearcolor 2>/dev/null
 esac
 
-# prompt module
-autoload -Uz promptinit && promptinit
-prompt redhat
+# prompt
+PROMPT="[%F{cyan}%n%f@%F{cyan}%m%f %1~]%(!.#.$) "
 
 # plugins
 for p in /usr/share/zsh/plugins/*; do source "$p/${p##*/}.zsh"; done 2>/dev/null
