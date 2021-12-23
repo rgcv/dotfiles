@@ -3,14 +3,14 @@ app_name=${0##*/}
 
 for term in \
   "$TERMINAL" \
-  mate-terminal \
-  gnome-terminal \
-  konsole \
-  xfce4-terminal \
   foot \
   kitty \
   alacritty \
   termite \
+  mate-terminal \
+  gnome-terminal \
+  konsole \
+  xfce4-terminal \
 ; do
   if command -v "$term" > /dev/null 2>&1; then
     exec "$term" "$@"
