@@ -1,0 +1,27 @@
+#!/bin/sh
+app_name=${0##*/}
+
+for term in \
+  "$TERMINAL" \
+  mate-terminal \
+  gnome-terminal \
+  konsole \
+  xfce4-terminal \
+  foot \
+  kitty \
+  alacritty \
+  termite \
+; do
+  if command -v "$term" > /dev/null 2>&1; then
+    exec "$term" "$@"
+  fi
+done
+
+notify-send \
+  --app-name "${0##*/}" \
+  --replace-file "${XDG_RUNTIME_DIR-/tmp}/.$app_name.nid" \
+  --urgency critical \
+  --expire-time 5000 \
+  --icon terminal \
+  "Missing Terminal" \
+  "Couldn't find a terminal emulator. Please install one."
