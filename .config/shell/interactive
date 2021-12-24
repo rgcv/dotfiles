@@ -52,6 +52,7 @@ xdg_config_alias   dunstrc     dunst/dunstrc
 xdg_config_alias   fcitxcf     fcitx/config
 xdg_config_alias   fcitx5cf    fcitx5/config
 xdg_config_alias   fontcf      fontconfig/fonts.conf
+xdg_config_alias   footcf      foot/foot.ini
 xdg_config_alias   gitcf       git/config
 home_config_alias  gitcf       .gitconfig
 xdg_config_alias   i3bcf       i3blocks/config
