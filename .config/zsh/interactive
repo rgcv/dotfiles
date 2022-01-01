@@ -44,7 +44,7 @@ case $COLOR_TERM in
 esac
 
 # prompt
-PROMPT="[%F{cyan}%n%f@%F{cyan}%m%f %1~]%(!.#.$) "
+PROMPT="[%F{cyan}%n%f@%F{cyan}%m%f %1~]%(?..%F{red})%(!.#.$)%f "
 
 # plugins
 for p in /usr/share/zsh/plugins/*; do source "$p/${p##*/}.zsh"; done 2>/dev/null
