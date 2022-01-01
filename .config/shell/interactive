@@ -123,20 +123,21 @@ alias grep="grep --color=auto"
 alias egrep="egrep --color=auto"
 alias fgrep="fgrep --color=auto"
 
-alias   ls="ls --color=auto"
 alias    l="ls -lFh"    #size,show type,human readable
-alias   la="ls -lAFh"   #long list,show almost all,show type,human readable
-alias   lr="ls -tRFh"   #sorted by date,recursive,show type,human readable
-alias   lt="ls -ltFh"   #long list,sorted by date,show type,human readable
-alias   ll="ls -l"      #long list
 alias   l.="ls -dF .*"  #hidden files
 alias   lS="ls -1FSsh"  #dir sizes
-alias lart="ls -1Fcart" #all relative + types
+alias   la="ls -lAFh"   #long list,show almost all,show type,human readable
+alias   ll="ls -l"      #long list
+alias   lr="ls -tRFh"   #sorted by date,recursive,show type,human readable
+alias   ls="ls --color=auto"
+alias   lt="ls -ltFh"   #long list,sorted by date,show type,human readable
 alias  lrt="ls -1Fcrt"  #relative + types
+alias lart="ls -1Fcart" #all relative + types
 
 alias myip="curl -s https://ifconfig.me/ip"
+alias   n=nnn
 alias nnn="nnn -d -e"
-alias n=nnn
+alias nv=nvim
 alias open=xdg-open
 alias primusrun="PRIMUS_SYNC=1 vblank_mode=0 primusrun"
 alias rsync="rsync -azvhP" # archive compressed verbose human readable
