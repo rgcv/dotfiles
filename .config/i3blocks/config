@@ -26,10 +26,6 @@ color15=#FFFFFF
 foreground=#FFFFFF
 background=#212121
 
-# [playerctl]
-# format=json
-# interval=persist
-
 [updates]
 interval=3600
 PACMAN=yay
@@ -61,18 +57,6 @@ interval=1
 
 [keyboard]
 signal=20
-interval=once
-
-[volume]
-signal=25
-format=json
-interval=once
-
-# padding at the end of the bar
-separator=false
-separator_block_width=5
-[_space_]
-command=echo
 interval=once
 
 # vim:ft=dosini
