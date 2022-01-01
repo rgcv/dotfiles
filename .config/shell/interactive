@@ -72,6 +72,7 @@ home_config_alias  neomuttrc   .neomutt/neomuttrc
 xdg_config_alias   newsboatrc  newsboat/config
 home_config_alias  newsboatrc  .newsboat/config
 xdg_config_alias   npmcf       npm/config
+xdg_config_alias   nvimrc      nvim/init.lua
 xdg_config_alias   nvimrc      nvim/init.vim
 xdg_config_alias   psqlrc      postgresql/psqlrc
 xdg_config_alias   roficf      rofi/config
@@ -82,7 +83,6 @@ xdg_config_alias   swaylockcf  swaylock/config
 home_config_alias  swaylockcf  .swaylock/config
 xdg_config_alias   termitecf   termite/config
 home_config_alias  vimrc       .vimrc
-home_config_alias  vrc         .vimrc
 xdg_config_alias   zathurarc   zathura/zathurarc
 
 unset -f config_alias home_config_alias xdg_config_alias
@@ -144,13 +144,9 @@ alias sudo='sudo ' # alias expansion
 
 alias tree="tree -C"
 
-if command -v nvim >/dev/null; then
-  alias vim=nvim
-  alias  vi=nvim
-elif command -v vim >/dev/null; then
-  alias  vi=vim
+if command -v vim >/dev/null; then 
+  alias vi=vim
 fi
-alias nv=nvim
 alias  v=vi
 
 alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'
