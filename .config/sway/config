@@ -6,4 +6,4 @@
 #                    |___/
 
 include /etc/sway/config.d/*
-include ~/.config/sway/conf.d/*.conf
+include ~/.config/sway/config.d/*.conf
