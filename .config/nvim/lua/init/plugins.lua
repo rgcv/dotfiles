@@ -51,7 +51,7 @@ require('packer').startup(function()
   -- nvim file explorer
   use {
     'kyazdani42/nvim-tree.lua',
-    requires = { 'kyazdani42/nvim-web-devicons' },
+    requires = { 'kyazdani42/nvim-web-devicons', opt = true },
     config = function()
       local map = vim.api.nvim_set_keymap
       map('n', '<C-n>', '<Cmd>NvimTreeToggle<CR>', { noremap = true })
@@ -65,6 +65,8 @@ require('packer').startup(function()
       })
     end
   }
+  -- web devicons (requires patched font)
+  use 'kyazdani42/nvim-web-devicons'
   -- emmet
   use 'mattn/emmet-vim'
   -- robust module reloading
@@ -72,7 +74,7 @@ require('packer').startup(function()
   -- statusline
   use {
     'nvim-lualine/lualine.nvim',
-    requires = 'kyazdani42/nvim-web-devicons',
+    requires = { 'kyazdani42/nvim-web-devicons', opt = true },
     config = function()
       local function filename()
         if vim.bo.filetype == 'help' then
