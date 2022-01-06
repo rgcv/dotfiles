@@ -26,17 +26,45 @@ require('packer').startup(function()
       local nls = require('null-ls')
       nls.setup({
         sources = {
-          nls.builtins.diagnostics.shellcheck,
-          nls.builtins.diagnostics.vint,
+          nls.builtins.code_actions.gitsigns,
           nls.builtins.diagnostics.luacheck.with({
             extra_args = { '--globals', 'vim' }
           }),
+          nls.builtins.diagnostics.shellcheck,
+          nls.builtins.diagnostics.vint,
         }
       })
     end
   }
   -- auto away hl
   use 'junegunn/vim-slash'
+  -- git decorations
+  use {
+    'lewis6991/gitsigns.nvim',
+    requires = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('gitsigns').setup({
+        current_line_blame = true
+      })
+    end
+  }
+  -- nvim file explorer
+  use {
+    'kyazdani42/nvim-tree.lua',
+    requires = { 'kyazdani42/nvim-web-devicons' },
+    config = function()
+      local map = vim.api.nvim_set_keymap
+      map('n', '<C-n>', '<Cmd>NvimTreeToggle<CR>', { noremap = true })
+      map('n', '<Leader>r', '<Cmd>NvimTreeRefresh<CR>', { noremap = true })
+      map('n', '<Leader>n', '<Cmd>NvimTreeFindFile<CR>', { noremap = true })
+      require('nvim-tree').setup({
+        auto_close = true,
+        view = {
+          auto_resize = true
+        }
+      })
+    end
+  }
   -- emmet
   use 'mattn/emmet-vim'
   -- robust module reloading
@@ -44,7 +72,7 @@ require('packer').startup(function()
   -- statusline
   use {
     'nvim-lualine/lualine.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons', opt = true },
+    requires = 'kyazdani42/nvim-web-devicons',
     config = function()
       local function filename()
         if vim.bo.filetype == 'help' then
@@ -100,7 +128,11 @@ require('packer').startup(function()
   -- github theme colorscheme
   use {
     'projekt0n/github-nvim-theme',
-    after = 'lualine.nvim',
+    after = {
+      'lualine.nvim',
+      'gitsigns.nvim',
+      'nvim-tree.lua',
+    },
     config = function()
       require('github-theme').setup({
         theme_style = 'dark_default',
