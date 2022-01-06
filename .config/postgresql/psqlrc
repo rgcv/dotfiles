@@ -1,0 +1,12 @@
+\set QUIET 1
+
+\set PROMPT1 '[%[%033[36m%]%n%[%033[0m%]@%[%033[36m%]%m%[%033[0m%]/%/%R%x]%# '
+\set PROMPT2 '[%[%033[36m%]%n%[%033[0m%]@%[%033[36m%]%m%[%033[0m%]/%/%R%x]%#> '
+
+\pset border 2
+\pset format wrapped
+\pset linestyle 'unicode'
+\pset unicode_header_linestyle 'double'
+\x auto
+
+\set QUIET 0
