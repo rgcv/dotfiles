@@ -17,6 +17,7 @@ opt.signcolumn = 'yes'
 opt.shiftwidth = 2
 opt.splitbelow = true
 opt.splitright = true
+opt.undofile = true
 opt.wrap = false
 
 g.mapleader = ','
