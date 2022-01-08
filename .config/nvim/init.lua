@@ -9,13 +9,10 @@ require('init.plugins')
 require('init.options')
 require('init.mappings')
 
-local map = vim.api.nvim_set_keymap
-
 function _G.ReloadConfig()
   require('plenary.reload').reload_module('init')
   dofile(vim.env.MYVIMRC)
 end
-vim.cmd('command! ReloadConfig lua ReloadConfig()')
 
 function _G.StripTrailingWhitespace()
   local l = vim.fn.line('.')
@@ -28,8 +25,8 @@ vim.cmd([[
   augroup init
     autocmd!
 
-    autocmd BufWritePost init.lua             ReloadConfig
-    autocmd BufWritePost *nvim/lua/init/*.lua ReloadConfig
+    autocmd BufWritePost init.lua             lua ReloadConfig()
+    autocmd BufWritePost *nvim/lua/init/*.lua lua ReloadConfig()
 
     " trim trailing whitespace
     autocmd BufWritePre    * lua StripTrailingWhitespace()
