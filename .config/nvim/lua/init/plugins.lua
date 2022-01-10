@@ -69,6 +69,8 @@ require('packer').startup(function()
   use 'kyazdani42/nvim-web-devicons'
   -- emmet
   use 'mattn/emmet-vim'
+  -- filetype for nvim
+  use 'nathom/filetype.nvim'
   -- robust module reloading
   use 'nvim-lua/plenary.nvim'
   -- statusline
