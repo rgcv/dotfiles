@@ -133,10 +133,11 @@ case $muted in
   *)
     summary="$label: $volume%"
     case $volume in
-      0)                urgency=low      icon=$icon-muted  ;;
-      [1-9]|[1-3][0-9]) urgency=low      icon=$icon-low    ;;
-      [4-7][0-9])       urgency=normal   icon=$icon-medium ;;
-      *)                urgency=critical icon=$icon-high   ;;
+      0)                        urgency=low      icon=$icon-muted  ;;
+      [1-9]|[12][0-9]|3[0-2])   urgency=normal   icon=$icon-low    ;;
+      3[3-9]|[45][0-9]|6[0-5])  urgency=normal   icon=$icon-medium ;;
+      6[6-9]|[7-9][0-9]|100)    urgency=normal   icon=$icon-high   ;;
+      *)                        urgency=critical icon=$icon-high   ;;
     esac
     ;;
 esac
