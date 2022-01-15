@@ -18,6 +18,8 @@ max-icon-size=48
 icon-path=/usr/share/icons/Papirus-Dark
 default-timeout=5000
 
+on-button-middle=exec makoctl menu -n "$id" bemenu -p 'Select action: '
+
 [urgency=low]
 background-color=#212121
 text-color=#BDBDBD
