@@ -15,6 +15,9 @@ fi
 [ -z "$SSH_AUTH_SOCK" ] && . "$SSH_AGENT_ENV" >/dev/null
 unset SSH_AGENT_ENV
 
+## systemd
+systemctl --user import-environment PATH
+
 ## graphic session
 if [ -z "$DISPLAY" ]; then
   TTY=$(tty || echo "${XDG_VTNR--1}")
