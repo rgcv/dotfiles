@@ -30,7 +30,9 @@ require('packer').startup(function()
           nls.builtins.diagnostics.luacheck.with({
             extra_args = { '--globals', 'vim' }
           }),
-          nls.builtins.diagnostics.shellcheck,
+          nls.builtins.diagnostics.shellcheck.with({
+            diagnostics_format = "[SC#{c}] #{m}"
+          }),
           nls.builtins.diagnostics.vint,
         }
       })
