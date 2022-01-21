@@ -18,7 +18,7 @@ for term in \
 done
 
 notify-send \
-  --app-name "${0##*/}" \
+  --app-name "$app_name" \
   --replace-file "${XDG_RUNTIME_DIR-/tmp}/.$app_name.nid" \
   --urgency critical \
   --expire-time 5000 \
