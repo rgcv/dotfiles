@@ -3,7 +3,7 @@
 # disable ctrl+s as stopping shell
 [ -t 0 ] && stty -ixon
 
-export TERM=${TERM-xterm-256color}
+export TERM="${TERM-xterm-256color}"
 
 ## history
 HISTSIZE=10000
@@ -116,7 +116,7 @@ alias mv="mv -i"
 alias rm="rm -i"
 
 alias diff="diff --color"
-alias dots='git --git-dir="$XDG_DATA_HOME/dotfiles" --work-tree="$HOME"'
+alias dots='git --git-dir="$XDG_DATA_HOME/dotfiles" --work-tree="$HOME" '
 alias g=git
 
 alias grep="grep --color=auto"
@@ -135,17 +135,16 @@ alias  lrt="ls -1Fcrt"  #relative + types
 alias lart="ls -1Fcart" #all relative + types
 
 alias myip="curl -s https://ifconfig.me/ip"
-alias   n=nnn
 alias nnn="nnn -d -e"
-alias nv=nvim
+alias n=nnn
 alias open=xdg-open
-alias primusrun="PRIMUS_SYNC=1 vblank_mode=0 primusrun"
+alias o=open
 alias rsync="rsync -azvhP" # archive compressed verbose human readable
 alias sudo='sudo ' # alias expansion
 
 alias tree="tree -C"
 
-if command -v vim >/dev/null; then 
+if command -v vim >/dev/null; then
   alias vi=vim
 fi
 alias  v=vi
