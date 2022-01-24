@@ -113,6 +113,13 @@ require('packer').startup(function()
       })
     end
   }
+  -- telescope
+  use {
+    'nvim-telescope/telescope.nvim',
+    requires = {
+      'nvim-lua/plenary.nvim'
+    }
+  }
   -- treesitter
   use {
     'nvim-treesitter/nvim-treesitter',
