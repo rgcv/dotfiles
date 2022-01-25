@@ -132,6 +132,15 @@ require('packer').startup(function()
   }
   -- ansible syntax
   use 'pearofducks/ansible-vim'
+  -- autosave
+  use {
+    'Pocco81/AutoSave.nvim',
+    config = function()
+      require('autosave').setup({
+        execution_message = ''
+      })
+    end
+  }
   -- i3 syntax
   use 'Potatoesmaster/i3-vim-syntax'
   -- github theme colorscheme
