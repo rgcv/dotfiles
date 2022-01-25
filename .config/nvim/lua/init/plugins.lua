@@ -40,16 +40,6 @@ require('packer').startup(function()
   }
   -- auto away hl
   use 'junegunn/vim-slash'
-  -- git decorations
-  use {
-    'lewis6991/gitsigns.nvim',
-    requires = { 'nvim-lua/plenary.nvim' },
-    config = function()
-      require('gitsigns').setup({
-        current_line_blame = true
-      })
-    end
-  }
   -- nvim file explorer
   use {
     'kyazdani42/nvim-tree.lua',
@@ -69,6 +59,16 @@ require('packer').startup(function()
   }
   -- web devicons (requires patched font)
   use 'kyazdani42/nvim-web-devicons'
+  -- git decorations
+  use {
+    'lewis6991/gitsigns.nvim',
+    requires = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      require('gitsigns').setup({
+        current_line_blame = true
+      })
+    end
+  }
   -- emmet
   use 'mattn/emmet-vim'
   -- robust module reloading
@@ -114,9 +114,7 @@ require('packer').startup(function()
   -- telescope
   use {
     'nvim-telescope/telescope.nvim',
-    requires = {
-      'nvim-lua/plenary.nvim'
-    }
+    requires = {'nvim-lua/plenary.nvim'}
   }
   -- treesitter
   use {
