@@ -116,7 +116,7 @@ alias mv="mv -i"
 alias rm="rm -i"
 
 alias diff="diff --color"
-alias dots='git --git-dir="$XDG_DATA_HOME/dotfiles" --work-tree="$HOME" '
+alias dots='git --git-dir="$XDG_DATA_HOME/dotfiles" --work-tree="$HOME"'
 alias g=git
 
 alias grep="grep --color=auto"
