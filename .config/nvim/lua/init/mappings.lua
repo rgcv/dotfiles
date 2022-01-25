@@ -1,11 +1,11 @@
 local map = vim.api.nvim_set_keymap
 
-local function nmap(lhs, rhs, opts)
-  return map('n', lhs, rhs, opts)
+local function nmap(...)
+  return vim.api.nvim_set_keymap('n', ...)
 end
 
-local function tmap(lhs, rhs, opts)
-  return map('t', lhs, rhs, opts)
+local function tmap(...)
+  return vim.api.nvim_set_keymap('t', ...)
 end
 
 local function nnoremap(lhs, rhs, opts)
