@@ -21,7 +21,7 @@ require('packer').startup(function()
   -- lsp-like functionality for other utilities
   use {
     'jose-elias-alvarez/null-ls.nvim',
-    requires = { 'nvmi-lua/plenary.nvim' },
+    requires = { 'nvim-lua/plenary.nvim' },
     config = function()
       local nls = require('null-ls')
       nls.setup({
