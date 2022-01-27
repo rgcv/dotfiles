@@ -65,7 +65,21 @@ require('packer').startup(function()
     requires = { 'nvim-lua/plenary.nvim' },
     config = function()
       require('gitsigns').setup({
-        current_line_blame = true
+        current_line_blame = true,
+        on_attach = function(_, bufnr)
+          local gs = package.loaded.gitsigns
+
+          local function map(mode, lhs, rhs, opts)
+            opts = vim.tbl_extend('force', {noremap = true, silent = true},
+                                  opts or {})
+            vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts)
+          end
+
+          map('n', '<Leader>hs', '<Cmd>Gitsigns stage_hunk<CR>')
+          map('v', '<Leader>hs', '<Cmd>Gitsigns stage_hunk<CR>')
+          map('n', '<Leader>hr', '<Cmd>Gitsigns reset_hunk<CR>')
+          map('v', '<Leader>hr', '<Cmd>Gitsigns reset_hunk<CR>')
+        end
       })
     end
   }
