@@ -69,6 +69,13 @@ require('packer').startup(function()
       })
     end
   }
+  -- strip whitespace
+  use {
+    'lewis6991/spaceless.nvim',
+    config = function()
+      require('spaceless').setup()
+    end
+  }
   -- emmet
   use 'mattn/emmet-vim'
   -- robust module reloading
