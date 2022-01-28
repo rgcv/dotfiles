@@ -18,6 +18,22 @@ require('packer').startup(function()
   use 'andreshazard/vim-freemarker'
   -- nginx syntax
   use 'chr4/nginx.vim'
+  -- pretty diagnostic info
+  use {
+    'folke/trouble.nvim',
+    requires = 'kyazdani42/nvim-web-devicons',
+    config = function()
+      require('trouble').setup()
+      local function map(mode, lhs, rhs, opts)
+        opts = opts or {}
+        opts.silent = true
+        opts.noremap = true
+        return vim.api.nvim_set_keymap(mode, lhs, rhs, opts)
+      end
+
+      map('n', '<Leader>xx', '<Cmd>TroubleToggle<CR>')
+    end
+  }
   -- lsp-like functionality for other utilities
   use {
     'jose-elias-alvarez/null-ls.nvim',
@@ -252,6 +268,17 @@ require('packer').startup(function()
       lspi.on_server_ready(function(server)
         server:setup({ on_attach = on_attach })
       end)
+
+      local signs = {
+        Error = " ",
+        Warn = " ",
+        Hint = " ",
+        Info = " "
+      }
+      for type, icon in pairs(signs) do
+        local hl = "DiagnosticSign" .. type
+        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+      end
     end
   }
 
