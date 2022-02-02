@@ -33,7 +33,7 @@ case "$status" in
     icon=${ICON_DISCHARGING-}
     color=${COLOR_DISCHARGING-${foreground-#ffffff}}
     ;;
-  Full|Unknown)
+  Full|Not\ charging|Unknown)
     icon=${ICON_FULL-}
     color=${COLOR_FULL-${color10-#55ff55}}
     ;;
