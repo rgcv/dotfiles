@@ -26,6 +26,8 @@ done; unset cmd hl
 # nvm
 # shellcheck disable=SC1091
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+. /usr/share/nvm/nvm.sh 2>/dev/null
+. /usr/share/nvm/install-nvm-exec 2>/dev/null
 
 
 ## aliases
