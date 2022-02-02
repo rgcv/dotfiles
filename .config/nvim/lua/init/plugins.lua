@@ -25,9 +25,8 @@ require('packer').startup(function()
     config = function()
       require('trouble').setup()
       local function map(mode, lhs, rhs, opts)
-        opts = opts or {}
-        opts.silent = true
-        opts.noremap = true
+        opts = vim.tbl_extend('force', { noremap = true, silent = true },
+                              opts or {})
         return vim.api.nvim_set_keymap(mode, lhs, rhs, opts)
       end
 
@@ -50,6 +49,9 @@ require('packer').startup(function()
             diagnostics_format = "[SC#{c}] #{m}"
           }),
           nls.builtins.diagnostics.vint,
+          nls.builtins.formatting.prettier.with({
+            prefer_local = 'node_modules/.bin',
+          }),
         }
       })
     end
@@ -61,10 +63,16 @@ require('packer').startup(function()
     'kyazdani42/nvim-tree.lua',
     requires = { 'kyazdani42/nvim-web-devicons', opt = true },
     config = function()
-      local map = vim.api.nvim_set_keymap
-      map('n', '<C-n>', '<Cmd>NvimTreeToggle<CR>', { noremap = true })
-      map('n', '<Leader>r', '<Cmd>NvimTreeRefresh<CR>', { noremap = true })
-      map('n', '<Leader>n', '<Cmd>NvimTreeFindFile<CR>', { noremap = true })
+      local function map(mode, lhs, rhs, opts)
+        opts = vim.tbl_extend('force', { noremap = true }, opts or {})
+        return vim.api.nvim_set_keymap(mode, lhs, rhs, opts)
+      end
+      local function nmap(...) return map('n', ...) end
+
+      nmap('<C-n>',     '<Cmd>NvimTreeToggle<CR>')
+      nmap('<Leader>r', '<Cmd>NvimTreeRefresh<CR>')
+      nmap('<Leader>n', '<Cmd>NvimTreeFindFile<CR>')
+
       require('nvim-tree').setup({
         auto_close = true,
         view = {
@@ -86,15 +94,17 @@ require('packer').startup(function()
           local gs = package.loaded.gitsigns
 
           local function map(mode, lhs, rhs, opts)
-            opts = vim.tbl_extend('force', {noremap = true, silent = true},
+            opts = vim.tbl_extend('force', { noremap = true, silent = true },
                                   opts or {})
             vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts)
           end
+          local function nmap(...) return map('n', ...) end
+          local function vmap(...) return map('v', ...) end
 
-          map('n', '<Leader>hs', '<Cmd>Gitsigns stage_hunk<CR>')
-          map('v', '<Leader>hs', '<Cmd>Gitsigns stage_hunk<CR>')
-          map('n', '<Leader>hr', '<Cmd>Gitsigns reset_hunk<CR>')
-          map('v', '<Leader>hr', '<Cmd>Gitsigns reset_hunk<CR>')
+          nmap('<Leader>hs', '<Cmd>Gitsigns stage_hunk<CR>')
+          vmap('<Leader>hs', '<Cmd>Gitsigns stage_hunk<CR>')
+          nmap('<Leader>hr', '<Cmd>Gitsigns reset_hunk<CR>')
+          vmap('<Leader>hr', '<Cmd>Gitsigns reset_hunk<CR>')
         end
       })
     end
@@ -137,21 +147,31 @@ require('packer').startup(function()
         },
         sections = {
           lualine_c = {
-            {filename},
-            {"vim.bo.readonly and 'readonly' or ''"}
+            { filename },
+            { "vim.bo.readonly and 'readonly' or ''" }
           }
         },
         inactive_sections = {
-          lualine_c = {{filename}}
+          lualine_c = { { filename } }
         },
-        extensions = {'fugitive'}
+        extensions = { 'fugitive' }
       })
     end
   }
   -- telescope
   use {
     'nvim-telescope/telescope.nvim',
-    requires = {'nvim-lua/plenary.nvim'}
+    requires = { 'nvim-lua/plenary.nvim' },
+    config = function()
+      local function map(mode, lhs, rhs, opts)
+        local o = vim.tbl_extend('force', { noremap = true }, opts or {})
+        return vim.api.nvim_set_keymap(mode, lhs, rhs, o)
+      end
+      local function nmap(...) map('n', ...) end
+
+      nmap('<Leader>tf', '<Cmd>Telescope find_files<CR>')
+      nmap('<Leader>tg', '<Cmd>Telescope live_grep<CR>')
+    end
   }
   -- treesitter
   use {
@@ -227,46 +247,39 @@ require('packer').startup(function()
       local on_attach = function(_, bufnr)
         local function set(...) vim.api.nvim_buf_set_option(bufnr, ...) end
         local function map(mode, lhs, rhs, opts)
-          opts = opts or {}
-          opts.noremap = true
-          opts.silent = true
+          opts = vim.tbl_extend('force', { noremap = true, silent = true },
+                                opts or {})
           vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts)
         end
-        local function nmap(...) map('n', ...) end
+        local function nmap(...) return map('n', ...) end
+        local function vmap(...) return map('v', ...) end
 
         set('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-        nmap('gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>')
-        nmap('gd', '<Cmd>lua vim.lsp.buf.definition()<CR>')
-        nmap('K', '<Cmd>lua vim.lsp.buf.hover()<CR>')
-        nmap('gi', '<Cmd>lua vim.lsp.buf.implementation()<CR>')
-        nmap('<C-k>', '<Cmd>lua vim.lsp.buf.signature_help()<CR>')
+        nmap('gD',         '<Cmd>lua vim.lsp.buf.declaration()<CR>')
+        nmap('gd',         '<Cmd>lua vim.lsp.buf.definition()<CR>')
+        nmap('K',          '<Cmd>lua vim.lsp.buf.hover()<CR>')
+        nmap('gi',         '<Cmd>lua vim.lsp.buf.implementation()<CR>')
+        nmap('<C-k>',      '<Cmd>lua vim.lsp.buf.signature_help()<CR>')
         nmap('<Leader>rn', '<Cmd>lua vim.lsp.buf.rename()<CR>')
-        nmap('gr', '<Cmd>lua vim.lsp.buf.references()<CR>')
-        nmap('[d', '<Cmd>lua vim.diagnostic.goto_prev()<CR>')
-        nmap(']d', '<Cmd>lua vim.diagnostic.goto_next()<CR>')
-        nmap('<Leader>f', '<Cmd>lua vim.lsp.buf.formatting()<CR>')
-      end
-
-      -- check and install a few servers
-      local servers = {
-        'clangd',
-        'ltex',
-        'tsserver',
-      }
-      for _, name in pairs(servers) do
-        local found, lsp = lspi.get_server(name)
-        if found then
-          if not lsp:is_installed() then
-            print('Installing ' .. name)
-            lsp:install()
-          end
-        end
+        nmap('gr',         '<Cmd>lua vim.lsp.buf.references()<CR>')
+        nmap('[d',         '<Cmd>lua vim.diagnostic.goto_prev()<CR>')
+        nmap(']d',         '<Cmd>lua vim.diagnostic.goto_next()<CR>')
+        nmap('<Leader>f',  '<Cmd>lua vim.lsp.buf.formatting()<CR>')
+        vmap('<Leader>f',  '<Cmd>lua vim.lsp.buf.range_formatting()<CR>')
       end
 
       -- setup once ready
       lspi.on_server_ready(function(server)
-        server:setup({ on_attach = on_attach })
+        server:setup({
+          on_attach = function(client, bufnr)
+            if server.name == 'tsserver' then
+              client.resolved_capabilities.document_formatting = false
+              client.resolved_capabilities.document_range_formatting = false
+            end
+            return on_attach(client, bufnr)
+          end
+        })
       end)
 
       local signs = {
