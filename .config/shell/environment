@@ -42,6 +42,9 @@ for ed in nvim vim emacs vi nano; do
 done; unset ed
 export VISUAL=$EDITOR
 
+# pager
+export PAGER=less
+
 # locale
 lang=pt_PT.UTF-8
 export LANG=en_US.UTF-8
@@ -65,13 +68,14 @@ NPROC=$(nproc || grep -c processor </proc/cpuinfo)
 export NPROC="${NPROC:-5}"
 
 export LESS=
-LESS="$LESS -i"   # ignore search pattern case
 LESS="$LESS -g"   # highlight search result
+LESS="$LESS -i"   # ignore search pattern case
 LESS="$LESS -w"   # highlight first "new" unread line
+LESS="$LESS -z-4" # window scroll size sub 4
+LESS="$LESS -F"   # quit if first page fits on screen
 LESS="$LESS -M"   # more verbose prompt than `more`
 LESS="$LESS -R"   # ANSI color escape sequences
 LESS="$LESS -S"   # chop long lines
-LESS="$LESS -z-4" # window scroll size sub 4
 # shellcheck disable=SC2155
 {
 export LESS_TERMCAP_mb="$(printf '\033[01;31m')"
