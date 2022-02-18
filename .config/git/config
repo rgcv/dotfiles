@@ -36,7 +36,6 @@
 [core]
   autocrlf = input
   eol = lf
-  pager = cat
 
 [color]
   ui = true
