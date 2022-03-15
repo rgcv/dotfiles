@@ -123,6 +123,7 @@ require('packer').startup(function()
   -- statusline
   use {
     'nvim-lualine/lualine.nvim',
+    after = 'github-nvim-theme',
     requires = { 'kyazdani42/nvim-web-devicons', opt = true },
     config = function()
       local function filename()
@@ -143,7 +144,7 @@ require('packer').startup(function()
 
       require('lualine').setup({
         options = {
-          theme = 'github',
+          theme = 'github_dark',
         },
         sections = {
           lualine_c = {
@@ -204,7 +205,6 @@ require('packer').startup(function()
   use {
     'projekt0n/github-nvim-theme',
     after = {
-      'lualine.nvim',
       'gitsigns.nvim',
       'nvim-tree.lua',
     },
