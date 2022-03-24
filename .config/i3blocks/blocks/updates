@@ -1,4 +1,8 @@
 #!/bin/sh
+# requires:
+# - checkupdates (pacman-contrib)
+# uses:
+# - yay (yay)
 set -e
 
 while ! grep -q up /sys/class/net/*/operstate; do
@@ -89,8 +93,12 @@ pkgs=$({
     kill -USR1 $$
     exit
   fi
+  if [ "$PACMAN" != pacman ] && ! command -v "$PACMAN" >/dev/null; then
+    kill -USR1 $$
+    exit
+  fi
   case $PACMAN in
-    yaourt|yay) $PACMAN -Qua ;;
+    yay) $PACMAN -Qua ;;
   esac
 })
 
