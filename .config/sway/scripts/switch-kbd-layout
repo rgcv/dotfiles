@@ -1,0 +1,28 @@
+#!/bin/sh
+
+app_name=${0##*/}
+nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
+should_notify=false
+
+true()  { return 0; }
+false() { ! true;   }
+
+while [ $# -gt 0 ]; do
+  case $1 in
+    --notify) should_notify=true ;;
+  esac
+  shift
+done
+
+swaymsg input type:keyboard xkb_switch_layout next
+pkill -RTMIN+20 i3blocks
+
+if $should_notify; then
+  notify-send.sh \
+    --expire-time 3000 \
+    --app-name "$app_name" \
+    --replace-file "$nid_file" \
+    --icon input-keyboard \
+    "Keyboard Layout" \
+    "$(swaymsg -t get_inputs|jq '.[0].xkb_active_layout_name')"
+fi

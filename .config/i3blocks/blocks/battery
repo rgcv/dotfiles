@@ -12,11 +12,7 @@ else
     break
   done
 fi
-if [ ! -d "$path" ]; then
-  icon=${ICON_BATTERY-}
-  echo "$icon $battery ??"
-  exit
-fi
+[ -d "$path" ] || exit 0
 
 display() { printf '%s %s%%' "$1" "$2"; }
 displayln() { display "$@"; echo; }
