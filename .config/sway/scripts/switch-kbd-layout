@@ -24,5 +24,5 @@ if $should_notify; then
     --replace-file "$nid_file" \
     --icon input-keyboard \
     "Keyboard Layout" \
-    "$(swaymsg -t get_inputs|jq '.[0].xkb_active_layout_name')"
+    "$(swaymsg -t get_inputs|jq 'first(.[].xkb_active_layout_name|values)')"
 fi
