@@ -5,9 +5,9 @@ BEMENU=${1-bemenu}
 command -p "$BEMENU" \
   --line-height 20 \
   --fn="monospace 9" \
-  --tf=#212121 --tb=#89DDFF \
+  --tf=#212121 --tb=#82AAFF \
   --ff=#B2CCD6 --fb=#212121 \
   --nf=#B2CCD6 --nb=#212121 \
-  --hf=#212121 --hb=#89DDFF \
+  --hf=#212121 --hb=#82AAFF \
   --sf=#212121 --sb=#82AAFF \
   "$@"
