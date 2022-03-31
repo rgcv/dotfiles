@@ -6,15 +6,15 @@
 # |_| |_| |_|\__,_|_|\_\___/
 
 layer=overlay
-#background-color=#353535E8
-background-color=#3175A8E8
+background-color=#5F7DBFE8
 text-color=#EEFFFFEE
 width=400
 height=400
+margin=24,24,0,0
 padding=8
-border-size=1
+border-size=2
 border-color=#EEFFFFC0
-progress-color=#89CDFFA0
+progress-color=#82AAFFA0
 max-icon-size=48
 icon-path=/usr/share/icons/Papirus-Dark
 default-timeout=5000
