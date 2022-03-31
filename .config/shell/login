@@ -22,24 +22,24 @@ if [ -z "$DISPLAY" ]; then
   TTY=${TTY#/dev/tty}
   # check for graphical env options
   case $TTY in
-    1)
-      command -v sway >/dev/null || return
+    1|2)
       export MOZ_ENABLE_WAYLAND=1
       export QT_QPA_PLATFORM=wayland
       export QT_QPA_PLATFORMTHEME=qt5ct
       export XDG_SESSION_TYPE=wayland
-      export XDG_CURRENT_DESKTOP=sway
-      export _JAVA_AWT_WM_NONREPARENTING=1
-      exec sway >/dev/null 2>&1
-      ;;
-    2)
-      command -v gnome-shell >/dev/null || return
-      export MOZ_ENABLE_WAYLAND=1
-      export QT_QPA_PLATFORM=wayland
-      export QT_QPA_PLATFORMTHEME=qt5ct
-      export XDG_SESSION_TYPE=wayland
-      export XDG_CURRENT_DESKTOP=gnome
-      exec gnome-shell --wayland
+      case $TTY in
+        1)
+          export XDG_CURRENT_DESKTOP=sway
+          export _JAVA_AWT_WM_NONREPARENTING=1
+          command -v sway >/dev/null || return
+          exec sway >/dev/null 2>&1
+          ;;
+        2)
+          export XDG_CURRENT_DESKTOP=gnome
+          command -v gnome-shell >/dev/null || return
+          exec gnome-shell --wayland
+          ;;
+      esac
       ;;
     3)
       command -v startx >/dev/null || return
