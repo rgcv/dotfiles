@@ -37,16 +37,6 @@ Plug 'Potatoesmaster/i3-vim-syntax'
 Plug 'pangloss/vim-javascript'
 Plug 'pearofducks/ansible-vim'
 Plug 'roxma/vim-paste-easy'
-if v:version >= 800 && has('python3') && has('timers')
-  " requires pynvim + msgpack (pip)
-  Plug 'Shougo/deoplete.nvim' |
-  \ Plug 'roxma/nvim-yarp' |
-  \ Plug 'roxma/vim-hug-neovim-rpc'
-  Plug 'deoplete-plugins/deoplete-jedi'
-  Plug 'deoplete-plugins/deoplete-zsh'
-  Plug 'tweekmonster/deoplete-clang2'
-  Plug 'Shougo/neoinclude.vim'
-endif
 Plug 'Shougo/echodoc'
 Plug 'Shougo/neosnippet.vim' |
 \ Plug 'Shougo/neosnippet-snippets'
@@ -167,21 +157,6 @@ endfunction
 function! CtrlPStatusFuncProg(str)
   return lightline#statusline(0)
 endfunction
-" deoplete
-let g:deoplete#enable_at_startup = 1
-silent! call g:deoplete#custom#var('omni', 'input_patterns', {
-      \ 'tex': g:vimtex#re#deoplete
-      \ })
-" deoplete-clang2
-let g:clang2_placeholder_next='<C-k>'
-" deoplete-go
-let g:deoplete#sources#go#sort_class = [
-      \ 'package',
-      \ 'func',
-      \ 'type',
-      \ 'var',
-      \ 'const',
-      \ ]
 " echodoc
 let g:echodoc#enable_at_startup = 1
 let g:echodoc#type = 'floating'
