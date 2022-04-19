@@ -25,9 +25,14 @@ require('packer').startup(function()
     config = function()
       require('trouble').setup()
       local function map(mode, lhs, rhs, opts)
-        opts = vim.tbl_extend('force', { noremap = true, silent = true },
-                              opts or {})
-        return vim.api.nvim_set_keymap(mode, lhs, rhs, opts)
+        opts = vim.tbl_extend(
+          'force',
+          {
+            noremap = true,
+            silent = true
+          },
+          opts or {})
+        return vim.keymap.set(mode, lhs, rhs, opts)
       end
 
       map('n', '<Leader>xx', '<Cmd>TroubleToggle<CR>')
@@ -65,7 +70,7 @@ require('packer').startup(function()
     config = function()
       local function map(mode, lhs, rhs, opts)
         opts = vim.tbl_extend('force', { noremap = true }, opts or {})
-        return vim.api.nvim_set_keymap(mode, lhs, rhs, opts)
+        return vim.keymap.set(mode, lhs, rhs, opts)
       end
       local function nmap(...) return map('n', ...) end
 
@@ -93,17 +98,21 @@ require('packer').startup(function()
           local gs = package.loaded.gitsigns
 
           local function map(mode, lhs, rhs, opts)
-            opts = vim.tbl_extend('force', { noremap = true, silent = true },
-                                  opts or {})
-            vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts)
+            opts = vim.tbl_extend(
+              'force',
+              {
+                noremap = true,
+                silent = true,
+                buffer = bufnr
+              },
+              opts or {})
+            vim.keymap.set(mode, lhs, rhs, opts)
           end
           local function nmap(...) return map('n', ...) end
           local function vmap(...) return map('v', ...) end
 
-          nmap('<Leader>hs', '<Cmd>Gitsigns stage_hunk<CR>')
-          vmap('<Leader>hs', '<Cmd>Gitsigns stage_hunk<CR>')
-          nmap('<Leader>hr', '<Cmd>Gitsigns reset_hunk<CR>')
-          vmap('<Leader>hr', '<Cmd>Gitsigns reset_hunk<CR>')
+          map({'n', 'v'}, '<Leader>hs', '<Cmd>Gitsigns stage_hunk<CR>')
+          map({'n', 'v'}, '<Leader>hr', '<Cmd>Gitsigns reset_hunk<CR>')
         end
       })
     end
@@ -165,7 +174,7 @@ require('packer').startup(function()
     config = function()
       local function map(mode, lhs, rhs, opts)
         local o = vim.tbl_extend('force', { noremap = true }, opts or {})
-        return vim.api.nvim_set_keymap(mode, lhs, rhs, o)
+        return vim.keymap.set(mode, lhs, rhs, o)
       end
       local function nmap(...) map('n', ...) end
 
@@ -237,9 +246,15 @@ require('packer').startup(function()
       local on_attach = function(_, bufnr)
         local function set(...) vim.api.nvim_buf_set_option(bufnr, ...) end
         local function map(mode, lhs, rhs, opts)
-          opts = vim.tbl_extend('force', { noremap = true, silent = true },
-                                opts or {})
-          vim.api.nvim_buf_set_keymap(bufnr, mode, lhs, rhs, opts)
+          opts = vim.tbl_extend(
+            'force',
+            {
+              noremap = true,
+              silent = true,
+              buffer = bufnr
+            },
+            opts or {})
+          vim.keymap.set(mode, lhs, rhs, opts)
         end
         local function nmap(...) return map('n', ...) end
         local function vmap(...) return map('v', ...) end
