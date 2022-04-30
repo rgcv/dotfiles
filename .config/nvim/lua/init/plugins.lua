@@ -79,8 +79,10 @@ require('packer').startup(function()
       nmap('<Leader>n', '<Cmd>NvimTreeFindFile<CR>')
 
       require('nvim-tree').setup({
-        view = {
-          auto_resize = true
+        actions = {
+          open_file = {
+            resize_window = true
+          }
         }
       })
     end
