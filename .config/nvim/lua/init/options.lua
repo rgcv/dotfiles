@@ -3,7 +3,6 @@ local opt = vim.opt
 
 opt.clipboard = opt.clipboard + { 'unnamed', 'unnamedplus' }
 opt.colorcolumn = { '+1', '120' }
-opt.concealcursor = 'niv'
 opt.conceallevel = 2
 opt.expandtab = true
 opt.formatoptions = opt.formatoptions - 't'
