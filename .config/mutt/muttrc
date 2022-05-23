@@ -22,7 +22,7 @@ auto_view text/html
 # Layout
 set sort=threads
 set sort_aux=reverse-last-date-received
-set index_format = "%4C | %Z [%{%b %d, %Y @ %R}] %-20.20F (%?l?%4l&%4c?) %s"
+set index_format = "%4C | %Z [%[!%b %d, %Y @ %R]] %-20.20F (%?l?%4l&%4c?) %s"
 
 # Replying
 set fast_reply = yes
