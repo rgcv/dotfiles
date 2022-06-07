@@ -1,12 +1,16 @@
 \set QUIET 1
 
+\set ON_ERROR_ROLLBACK
 \set PROMPT1 '[%[%033[36m%]%n%[%033[0m%]@%[%033[36m%]%m%[%033[0m%] %/%R%x]> '
 \set PROMPT2 '[%[%033[36m%]%n%[%033[0m%]@%[%033[36m%]%m%[%033[0m%] %/%R%x]> '
+\set VERBOSITY verbose
 
 \pset border 2
 \pset format wrapped
-\pset linestyle 'unicode'
-\pset unicode_header_linestyle 'double'
+\pset linestyle unicode
+\pset unicode_header_linestyle double
+
+\timing
 \x auto
 
-\set QUIET 0
+\unset QUIET
