@@ -57,12 +57,6 @@ export LC_PAPER=$lang
 export LC_TELEPHONE=$lang
 unset LC_ALL lang
 
-# input method
-export INPUT_METHOD=fcitx
-export GTK_IM_MODULE=$INPUT_METHOD
-export QT_IM_MODULE=$INPUT_METHOD
-export XMODIFIERS=\@im=$INPUT_METHOD
-
 # num. threads
 NPROC=$(grep -c '^processor' /proc/cpuinfo)
 [ "$NPROC" -gt 2 ] && NPROC=$((NPROC - 2))
