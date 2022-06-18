@@ -64,7 +64,8 @@ export QT_IM_MODULE=$INPUT_METHOD
 export XMODIFIERS=\@im=$INPUT_METHOD
 
 # num. threads
-NPROC=$(nproc || grep -c processor </proc/cpuinfo)
+NPROC=$(grep -c '^processor' /proc/cpuinfo)
+[ "$NPROC" -gt 2 ] && NPROC=$((NPROC - 2))
 export NPROC="${NPROC:-5}"
 
 export LESS=
