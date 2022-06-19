@@ -59,8 +59,8 @@ unset LC_ALL lang
 
 # input method
 export INPUT_METHOD=fcitx
-export GTK_IM_METHOD=$INPUT_METHOD
-export QT_IM_METHOD=$INPUT_METHOD
+export GTK_IM_MODULE=$INPUT_METHOD
+export QT_IM_MODULE=$INPUT_METHOD
 export XMODIFIERS=@im=$INPUT_METHOD
 
 # num. threads
