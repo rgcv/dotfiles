@@ -11,7 +11,6 @@ opt.listchars = { nbsp = '+', space = '·', tab = '→ ' }
 opt.mouse = 'a'
 opt.number = true
 opt.path = (opt.path - '.') ^ { '.', '**' }
-opt.relativenumber = true
 opt.scrolloff = 8
 opt.sidescrolloff = 8
 opt.signcolumn = 'number'
