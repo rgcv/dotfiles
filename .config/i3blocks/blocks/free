@@ -9,7 +9,7 @@ false() { ! true;   }
 
 dfree() {
   fields=$1; shift
-  df --output="$fields" "$@" "$target" | tail -n 1
+  df --output="$fields" "$@" "$target" | tail -n 1 | sed "s:$HOME:~:"
 }
 
 color=${COLOR_ICON_DRIVE-${color6-#55ffff}}
