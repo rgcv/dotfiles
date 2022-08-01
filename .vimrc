@@ -98,7 +98,7 @@ set colorcolumn=+1
 set expandtab " I like spaces, don't @ me
 set path+=**
 set mouse=a " enable mouse support if we have it
-set number relativenumber
+set number
 set shiftwidth=2
 set scrolloff=8 sidescrolloff=8
 if exists('+signcolumn')
