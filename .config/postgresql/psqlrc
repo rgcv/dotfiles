@@ -8,6 +8,7 @@
 \pset border 2
 \pset format wrapped
 \pset linestyle unicode
+\pset null ∅
 \pset unicode_header_linestyle double
 
 \timing
