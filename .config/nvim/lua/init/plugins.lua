@@ -285,6 +285,7 @@ require('packer').startup(function()
 
         set('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
+        nmap('ga',         '<Cmd>lua vim.lsp.buf.code_action()<CR>')
         nmap('gD',         '<Cmd>lua vim.lsp.buf.declaration()<CR>')
         nmap('gd',         '<Cmd>lua vim.lsp.buf.definition()<CR>')
         nmap('K',          '<Cmd>lua vim.lsp.buf.hover()<CR>')
