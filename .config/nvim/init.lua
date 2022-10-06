@@ -18,6 +18,7 @@ vim.cmd([[
   augroup init
     autocmd!
     autocmd BufWritePost init.lua             lua ReloadConfig()
+    autocmd BufWritePost lua/init/plugins.lua source <afile> | PackerCompile
     autocmd BufWritePost *nvim/lua/init/*.lua lua ReloadConfig()
   augroup end
 ]])

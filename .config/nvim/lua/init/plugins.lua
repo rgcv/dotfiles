@@ -1,17 +1,27 @@
-local install_path = vim.fn.stdpath('data')..'/site/pack/packer/opt/packer.nvim'
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  packer_bootstrap = vim.fn.system({
-    'git', 'clone',
-    '--depth', '1',
-    'https://github.com/wbthomason/packer.nvim',
-    install_path
-  })
+local ensure_packer = function()
+  local fn = vim.fn
+  local path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+  if fn.empty(fn.glob(path)) > 0 then
+    fn.system({
+      'git', 'clone',
+      '--depth', '1',
+      'https://github.com/wbthomason/packer.nvim',
+      path
+    })
+    vim.cmd [[packadd packer.nvim]]
+    return true
+  end
+  return false
 end
 
-vim.cmd('packadd packer.nvim')
-require('packer').startup(function()
+local packer_bootstrap = ensure_packer()
+
+local packer = require('packer')
+packer.startup(function()
+  local use = packer.use
+
   -- packer manages itself
-  use { 'wbthomason/packer.nvim', opt = true }
+  use 'wbthomason/packer.nvim'
 
   -- freemarker syntax
   use 'andreshazard/vim-freemarker'
@@ -46,9 +56,6 @@ require('packer').startup(function()
       nls.setup({
         sources = {
           nls.builtins.code_actions.gitsigns,
-          nls.builtins.diagnostics.luacheck.with({
-            extra_args = { '--globals', 'vim' }
-          }),
           nls.builtins.diagnostics.shellcheck.with({
             diagnostics_format = "[SC#{c}] #{m}"
           }),
@@ -96,8 +103,6 @@ require('packer').startup(function()
       require('gitsigns').setup({
         current_line_blame = true,
         on_attach = function(_, bufnr)
-          local gs = package.loaded.gitsigns
-
           local function map(mode, lhs, rhs, opts)
             opts = vim.tbl_extend(
               'force',
@@ -109,8 +114,6 @@ require('packer').startup(function()
               opts or {})
             vim.keymap.set(mode, lhs, rhs, opts)
           end
-          local function nmap(...) return map('n', ...) end
-          local function vmap(...) return map('v', ...) end
 
           map({'n', 'v'}, '<Leader>hs', '<Cmd>Gitsigns stage_hunk<CR>')
           map({'n', 'v'}, '<Leader>hr', '<Cmd>Gitsigns reset_hunk<CR>')
@@ -240,11 +243,9 @@ require('packer').startup(function()
   }
   -- auto pairing
   use {
-    'steelsojka/pears.nvim',
+    'windwp/nvim-autopairs',
     config = function()
-      require('pears').setup(function(conf)
-        conf.preset('tag_matching')
-      end)
+      require('nvim-autopairs').setup()
     end
   }
 
@@ -260,15 +261,19 @@ require('packer').startup(function()
   use 'tpope/vim-sleuth'
   use 'tpope/vim-surround'
 
-  -- install lsp servers
+  -- LSP server config
   use {
-    'williamboman/nvim-lsp-installer',
-    requires = { 'neovim/nvim-lspconfig' },
+    'williamboman/mason.nvim',
     config = function()
-      local lspi = require('nvim-lsp-installer')
-      -- settings and bindings to run when lsp attaches to buffer
+      require('mason').setup()
+    end
+  }
+  use {
+    'williamboman/mason-lspconfig.nvim',
+    requires = { 'neovim/nvim-lspconfig' },
+    after = { 'mason.nvim' },
+    config = function()
       local on_attach = function(_, bufnr)
-        local function set(...) vim.api.nvim_buf_set_option(bufnr, ...) end
         local function map(mode, lhs, rhs, opts)
           opts = vim.tbl_extend(
             'force',
@@ -282,50 +287,69 @@ require('packer').startup(function()
         end
         local function nmap(...) return map('n', ...) end
         local function vmap(...) return map('v', ...) end
+        local function set(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
         set('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-        nmap('ga',         '<Cmd>lua vim.lsp.buf.code_action()<CR>')
-        nmap('gD',         '<Cmd>lua vim.lsp.buf.declaration()<CR>')
-        nmap('gd',         '<Cmd>lua vim.lsp.buf.definition()<CR>')
-        nmap('K',          '<Cmd>lua vim.lsp.buf.hover()<CR>')
-        nmap('gi',         '<Cmd>lua vim.lsp.buf.implementation()<CR>')
-        nmap('<C-k>',      '<Cmd>lua vim.lsp.buf.signature_help()<CR>')
+        nmap('ga', '<Cmd>lua vim.lsp.buf.code_action()<CR>')
+        nmap('gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>')
+        nmap('gd', '<Cmd>lua vim.lsp.buf.definition()<CR>')
+        nmap('K', '<Cmd>lua vim.lsp.buf.hover()<CR>')
+        nmap('gi', '<Cmd>lua vim.lsp.buf.implementation()<CR>')
+        nmap('<C-k>', '<Cmd>lua vim.lsp.buf.signature_help()<CR>')
         nmap('<Leader>rn', '<Cmd>lua vim.lsp.buf.rename()<CR>')
-        nmap('gr',         '<Cmd>lua vim.lsp.buf.references()<CR>')
-        nmap('[d',         '<Cmd>lua vim.diagnostic.goto_prev()<CR>')
-        nmap(']d',         '<Cmd>lua vim.diagnostic.goto_next()<CR>')
-        nmap('<Leader>f',  '<Cmd>lua vim.lsp.buf.formatting()<CR>')
-        vmap('<Leader>f',  '<Cmd>lua vim.lsp.buf.range_formatting()<CR>')
+        nmap('gr', '<Cmd>lua vim.lsp.buf.references()<CR>')
+        nmap('[d', '<Cmd>lua vim.diagnostic.goto_prev()<CR>')
+        nmap(']d', '<Cmd>lua vim.diagnostic.goto_next()<CR>')
+        nmap('<Leader>f', '<Cmd>lua vim.lsp.buf.format { async = true }<CR>')
+        vmap('<Leader>f', '<Cmd>lua vim.lsp.buf.format { async = true }<CR>')
       end
 
-      -- setup once ready
-      lspi.on_server_ready(function(server)
-        server:setup({
+      local mlsp = require('mason-lspconfig')
+      mlsp.setup()
+
+      local confs = {
+        sumneko_lua = {
+          settings = {
+            Lua = {
+              diagnostics = {
+                globals = { 'vim' }
+              }
+            }
+          }
+        },
+        tsserver = {
           on_attach = function(client, bufnr)
-            if server.name == 'tsserver' then
-              client.resolved_capabilities.document_formatting = false
-              client.resolved_capabilities.document_range_formatting = false
-            end
+            client.server_capabilities.document_formatting = false
+            client.server_capabilities.document_range_formatting = false
             return on_attach(client, bufnr)
           end
-        })
-      end)
+        },
+      }
+
+      for _, name in pairs(mlsp.get_installed_servers()) do
+        local settings = vim.tbl_extend(
+          'force',
+          { on_attach = on_attach },
+          confs[name] or {}
+        )
+        require('lspconfig')[name].setup(settings)
+      end
 
       local signs = {
-        Error = " ",
-        Warn = " ",
-        Hint = " ",
-        Info = " "
+        Error = ' ',
+        Warn = ' ',
+        Hint = ' ',
+        Info = ' '
       }
       for type, icon in pairs(signs) do
-        local hl = "DiagnosticSign" .. type
+        local hl = 'DiagnosticSign' .. type
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
       end
     end
   }
 
   if packer_bootstrap then
-    require('packer').sync()
+    packer.sync()
   end
 end)
