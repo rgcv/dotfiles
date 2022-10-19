@@ -302,7 +302,7 @@ packer.startup(function()
         nmap('[d', '<Cmd>lua vim.diagnostic.goto_prev()<CR>')
         nmap(']d', '<Cmd>lua vim.diagnostic.goto_next()<CR>')
         nmap('<Leader>f', '<Cmd>lua vim.lsp.buf.format { async = true }<CR>')
-        vmap('<Leader>f', '<Cmd>lua vim.lsp.buf.format { async = true }<CR>')
+        vmap('<Leader>f', '<Cmd>lua vim.lsp.buf.format { async = true }<CR><Esc>')
       end
 
       local mlsp = require('mason-lspconfig')
