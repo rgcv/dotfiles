@@ -273,36 +273,46 @@ packer.startup(function()
     requires = { 'neovim/nvim-lspconfig' },
     after = { 'mason.nvim' },
     config = function()
+      local function format()
+        return vim.lsp.buf.format {
+          async = true,
+          filter = function (client)
+            return client.name ~= 'null-ls'
+          end
+        }
+      end
+
+      local function map(bufnr, mode, lhs, rhs, opts)
+        opts = vim.tbl_extend(
+          'force',
+          {
+            noremap = true,
+            silent = true,
+            buffer = bufnr
+          },
+          opts or {})
+        vim.keymap.set(mode, lhs, rhs, opts)
+      end
+
       local on_attach = function(_, bufnr)
-        local function map(mode, lhs, rhs, opts)
-          opts = vim.tbl_extend(
-            'force',
-            {
-              noremap = true,
-              silent = true,
-              buffer = bufnr
-            },
-            opts or {})
-          vim.keymap.set(mode, lhs, rhs, opts)
-        end
-        local function nmap(...) return map('n', ...) end
-        local function vmap(...) return map('v', ...) end
-        local function set(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+        vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-        set('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-        nmap('ga', '<Cmd>lua vim.lsp.buf.code_action()<CR>')
-        nmap('gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>')
-        nmap('gd', '<Cmd>lua vim.lsp.buf.definition()<CR>')
-        nmap('K', '<Cmd>lua vim.lsp.buf.hover()<CR>')
-        nmap('gi', '<Cmd>lua vim.lsp.buf.implementation()<CR>')
-        nmap('<C-k>', '<Cmd>lua vim.lsp.buf.signature_help()<CR>')
-        nmap('<Leader>rn', '<Cmd>lua vim.lsp.buf.rename()<CR>')
-        nmap('gr', '<Cmd>lua vim.lsp.buf.references()<CR>')
-        nmap('[d', '<Cmd>lua vim.diagnostic.goto_prev()<CR>')
-        nmap(']d', '<Cmd>lua vim.diagnostic.goto_next()<CR>')
-        nmap('<Leader>f', '<Cmd>lua vim.lsp.buf.format { async = true }<CR>')
-        vmap('<Leader>f', '<Cmd>lua vim.lsp.buf.format { async = true }<CR><Esc>')
+        map(bufnr, 'n', 'ga', '<Cmd>lua vim.lsp.buf.code_action()<CR>')
+        map(bufnr, 'n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>')
+        map(bufnr, 'n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>')
+        map(bufnr, 'n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>')
+        map(bufnr, 'n', 'gi', '<Cmd>lua vim.lsp.buf.implementation()<CR>')
+        map(bufnr, 'n', '<C-k>', '<Cmd>lua vim.lsp.buf.signature_help()<CR>')
+        map(bufnr, 'n', '<Leader>rn', '<Cmd>lua vim.lsp.buf.rename()<CR>')
+        map(bufnr, 'n', 'gr', '<Cmd>lua vim.lsp.buf.references()<CR>')
+        map(bufnr, 'n', '[d', '<Cmd>lua vim.diagnostic.goto_prev()<CR>')
+        map(bufnr, 'n', ']d', '<Cmd>lua vim.diagnostic.goto_next()<CR>')
+        map(bufnr, 'n', '<Leader>f', format)
+        map(bufnr, 'v', '<Leader>f', function ()
+          local result = format()
+          vim.api.nvim_input('<Esc>')
+          return result
+        end)
       end
 
       local mlsp = require('mason-lspconfig')
