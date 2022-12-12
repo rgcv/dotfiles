@@ -5,7 +5,6 @@ opt.clipboard = opt.clipboard + { 'unnamed', 'unnamedplus' }
 opt.colorcolumn = { '+1', '120' }
 opt.conceallevel = 2
 opt.expandtab = true
-opt.formatoptions = opt.formatoptions - 't'
 opt.list = true
 opt.listchars = { nbsp = '+', space = '·', tab = '→ ' }
 opt.mouse = 'a'
@@ -29,7 +28,7 @@ end
 
 vim.cmd([[
   augroup init#options
-    autocmd!
-    autocmd FileType * lua SetTextWidth()
+    au!
+    au FileType * lua SetTextWidth()
   augroup end
 ]])

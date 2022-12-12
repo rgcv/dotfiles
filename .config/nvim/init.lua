@@ -10,15 +10,15 @@ require('init.options')
 require('init.mappings')
 
 function _G.ReloadConfig()
-  require('plenary.reload').reload_module('init')
+  if pcall(require, 'plenary') then
+    require('plenary.reload').reload_module('init')
+  end
   dofile(vim.env.MYVIMRC)
 end
 
 vim.cmd([[
   augroup init
-    autocmd!
-    autocmd BufWritePost init.lua             lua ReloadConfig()
-    autocmd BufWritePost lua/init/plugins.lua source <afile> | PackerCompile
-    autocmd BufWritePost *nvim/lua/init/*.lua lua ReloadConfig()
+    au!
+    au BufWritePost *nvim/init.lua,*nvim/lua/init/*.lua lua ReloadConfig()
   augroup end
 ]])
