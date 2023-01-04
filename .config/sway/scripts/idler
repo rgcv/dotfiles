@@ -1,0 +1,57 @@
+#!/bin/sh
+
+LOCK=600
+BLANK=15
+SUSPEND=900
+
+usage() {
+   cat<<USAGE
+${0##*/} [OPTIONS...]
+
+Options:
+  --blank <timeout>    Timeout interval after which the screen should turn off
+                       while locked.  (default: $BLANK)
+  --lock <timeout>     The time in seconds while idle after which the screen
+                       should lock.  (default: $LOCK)
+  --suspend <timeout>  The time in seconds while idle after which the machine
+                       should suspend.  (default: $SUSPEND)
+USAGE
+}
+
+die() {
+   echo "$@" >&2
+   exit 1
+}
+
+set_timeout() {
+   case $2 in
+      *[![:digit:]]*) die "Invalid timeout, not a number: $2" ;;
+      -*|0) die "Invalid timeout, not positive: $2" ;;
+      *) ;;
+   esac
+   eval "$1=$2"
+}
+
+while [ $# -gt 0 ]; do
+   case $1 in
+      --lock|--blank|--suspend)
+         TIMEOUT=$(echo "${1#--}" | awk '{ print(toupper($0)) }')
+         shift
+         set_timeout "$TIMEOUT" "$1"
+         ;;
+      *) die "Unknown argument: $1" ;;
+   esac
+   shift
+done
+
+pkill swayidle # override current if re-running
+swayidle -w \
+   timeout $LOCK             'swaylock -f' \
+   timeout $((LOCK + BLANK)) 'swaymsg "output * power off"' \
+    resume                   'swaymsg "output * power on"' \
+   \
+   timeout $BLANK 'pgrep swaylock && swaymsg "output * power off"' \
+    resume        'pgrep swaylock && swaymsg "output * power on"' \
+   \
+   timeout $SUSPEND 'systemctl suspend' \
+  before-sleep 'swaylock -f'
