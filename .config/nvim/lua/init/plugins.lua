@@ -24,6 +24,14 @@ require('packer').startup(function(use)
   -- freemarker syntax
   use 'andreshazard/vim-freemarker'
 
+  -- color highlighter
+  use {
+    'norcalli/nvim-colorizer.lua',
+    config = function()
+      require('colorizer').setup()
+    end
+  }
+
   -- pretty diagnostic info
   use {
     'folke/trouble.nvim',
