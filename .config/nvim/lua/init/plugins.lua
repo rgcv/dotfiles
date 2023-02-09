@@ -21,10 +21,13 @@ require('packer').startup(function(use)
   -- packer manages itself
   use 'wbthomason/packer.nvim'
 
+  -- recursive zip handling
+  use 'lbrayner/vim-rzip'
+
   -- freemarker syntax
   use 'andreshazard/vim-freemarker'
 
-  -- color highlighter
+  -- css inline colors
   use {
     'norcalli/nvim-colorizer.lua',
     config = function()
@@ -152,7 +155,7 @@ end)
 vim.cmd [[
   augroup init#plugins
     au!
-    au BufWritePost *nvim/lua/init/plugins.lua source <afile> | PackerCompile
-    au BufWritePost *nvim/lua/plugins/*.lua    source <afile> | PackerCompile
+    au BufWritePost *nvim/lua/init/plugins.lua source <afile> | silent PackerCompile
+    au BufWritePost *nvim/lua/plugins/*.lua    source <afile> | silent PackerCompile
   augroup END
 ]]
