@@ -49,6 +49,13 @@ require('packer').startup(function(use)
     config = [[require('plugins.null-ls')]]
   }
 
+  -- dadbod UI
+  use {
+    'kristijanhusak/vim-dadbod-ui',
+    requires = { 'tpope/vim-dadbod' },
+    config = [[require('plugins.dadbod-ui')]]
+  }
+
   -- nvim file explorer
   use {
     'kyazdani42/nvim-tree.lua',
@@ -122,6 +129,7 @@ require('packer').startup(function(use)
 
   -- vimpope's suite of goodness
   use 'tpope/vim-apathy'
+  use 'tpope/vim-dadbod'
   use 'tpope/vim-commentary'
   use 'tpope/vim-endwise'
   use {
