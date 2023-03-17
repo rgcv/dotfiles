@@ -18,12 +18,7 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-data=$(swaymsg -t get_inputs|jq -r '[.[]|select(.type == "keyboard")][0]|[.xkb_active_layout_index,.xkb_layout_names|length]|@csv')
-current=${data%,*}
-length=${data#*,}
-next=$(( (current + 1) % length ))
-
-swaymsg input type:keyboard xkb_switch_layout $next
+swaymsg input type:keyboard xkb_switch_layout next
 
 if $should_notify; then
   notify-send.sh \
