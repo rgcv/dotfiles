@@ -11,6 +11,8 @@ app_name=${0##*/}
 state_file="${XDG_STATE_HOME-$HOME/.local/state}/touchpad/status"
 nid_file="${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid"
 should_notify=false
+toggle=false
+restore=false
 
 true()  { return 0; }
 false() { ! true;   }
@@ -18,7 +20,15 @@ false() { ! true;   }
 usage() {
   err=${1-0}
   [ "$err" -eq 0 ] || exec >&2
-  echo "Usage: $app_name [-h] [--notify]"
+  cat <<USAGE
+Usage: $app_name [OPTION...]
+Options:
+  -h,--help     Show this usage message.
+  -n,--notify   Trigger a notification.
+  -r,--restore  Restore the status from a file or store the
+                current one if it doesn't exist.
+  -t,--toggle   Toggle touchpad status.
+USAGE
   exit "$err"
 }
 notify() {
@@ -40,22 +50,26 @@ check_avail() {
   fi
 }
 
-while [ -n "$1" ]; do
-  case $1 in
-    --notify) should_notify=true ;;
-    -h) usage ;;
-     *) break ;;
-  esac
-  shift
-done
-
-[ $# -gt 0 ] && usage 1
 if [ -n "$SWAYSOCK" ]; then
   check_avail swaymsg || exit 1
   check_avail jq || exit 1
 else
   check_avail xinput || exit 1
 fi
+
+while [ -n "$1" ]; do
+  case $1 in
+    -h|--help) usage ;;
+    -n|--notify) should_notify=true ;;
+    -r|--restore) restore=true ;;
+    -t|--toggle) toggle=true ;;
+     *) break ;;
+  esac
+  shift
+done
+
+[ $# -gt 0 ] && usage 1
+$restore || $toggle || usage 1
 
 if [ -f "$state_file" ]; then
   read -r status < "$state_file"
@@ -72,6 +86,11 @@ else
     [ -n "$tpid" ] || exit
     status=$(xinput list-props "$tpid" | awk -F: '$0 ~ /'"$setting"'/ {print $2}')
   fi
+  $restore && echo "$status" > "$state_file"
+fi
+
+if $restore; then
+  exit
 fi
 
 new=$((status^1))
