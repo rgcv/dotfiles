@@ -136,10 +136,11 @@ alias lart="ls -1Fcart" #all relative + types
 
 alias myip="curl -s https://ifconfig.me/ip"
 alias netbeans='netbeans --userdir ${XDG_CONFIG_HOME-$HOME/.config}/netbeans --cachedir ${XDG_CACHE_HOME-$HOME/.cache}/netbeans'
-alias nnn="nnn -d -e"
 alias n=nnn
-alias open=xdg-open
+alias nnn="nnn -d -e"
+alias nv=nvim
 alias o=open
+alias open=xdg-open
 alias rsync="rsync -azvhP" # archive compressed verbose human readable
 alias sudo='sudo ' # alias expansion
 
@@ -204,3 +205,7 @@ if [ -f "$CWD" ]; then
   cd "$(cat "$CWD")" 2>/dev/null || :
 fi
 alias cd=__cd
+
+for file in "$XDG_CONFIG_HOME/shell/rc.d"/*.sh; do
+  [ -r "$file" ] && . "$file"
+done

@@ -1,14 +1,4 @@
 #!/bin/sh
-## XDG Base Directory spec
-# user-specific
-export XDG_CACHE_HOME="${XDG_CACHE_HOME-$HOME/.cache}"
-export XDG_CONFIG_HOME="${XDG_CONFIG_HOME-$HOME/.config}"
-export XDG_DATA_HOME="${XDG_DATA_HOME-$HOME/.local/share}"
-export XDG_STATE_HOME="${XDG_STATE_HOME-$HOME/.local/state}"
-export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR-/tmp/run.user-$(id -u)}"
-# system
-export XDG_DATA_DIRS="${XDG_DATA_DIRS-/usr/local/share/:/usr/share/}"
-export XDG_CONFIG_DIRS="${XDG_CONFIG_DIRS-/etc/xdg}"
 
 ## helpers
 # PATH-like environment variable manipulation functions
@@ -31,6 +21,17 @@ __pathadd() {
 
 pathappend()  { __pathadd __append  "$1" "${2-PATH}"; }
 pathprepend() { __pathadd __prepend "$1" "${2-PATH}"; }
+
+## XDG Base Directory spec
+# user-specific
+export XDG_CACHE_HOME="${XDG_CACHE_HOME-$HOME/.cache}"
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME-$HOME/.local/state}"
+export XDG_RUNTIME_DIR="${XDG_RUNTIME_DIR-/tmp/run.user-$(id -u)}"
+# system
+export XDG_DATA_DIRS="${XDG_DATA_DIRS-/usr/local/share/:/usr/share/}"
+export XDG_CONFIG_DIRS="${XDG_CONFIG_DIRS-/etc/xdg}"
 
 ## user config
 # web browser
@@ -182,3 +183,7 @@ pathprepend "$HOME/.local/lib"     LD_LIBRARY_PATH
 ## other environments
 export ENV="$XDG_CONFIG_HOME/sh/interactive"
 export BASH_ENV="$XDG_CONFIG_HOME/bash/environment"
+
+for file in "$XDG_CONFIG_HOME/shell/env.d"/*.sh; do
+  [ -r "$file" ] && . "$file"
+done
