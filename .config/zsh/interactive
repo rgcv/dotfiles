@@ -1,7 +1,8 @@
 #!/bin/zsh
+source "$XDG_CONFIG_HOME/shell/interactive"
+
 source "$XDG_CONFIG_HOME/zsh/rc.d/opts"
 source "$XDG_CONFIG_HOME/zsh/rc.d/keys"
-source "$XDG_CONFIG_HOME/shell/interactive"
 
 SAVEHIST=$HISTSIZE
 export HISTFILE="$XDG_STATE_HOME/zsh/history"

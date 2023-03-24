@@ -1,3 +1,5 @@
 #!/bin/zsh
+# if a pattern or filename generation has no match, delete it and move on
+setopt NULL_GLOB
 source "${XDG_CONFIG_HOME-$HOME/.config}/shell/environment"
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
