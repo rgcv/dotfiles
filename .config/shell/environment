@@ -184,6 +184,7 @@ pathprepend "$HOME/.local/lib"     LD_LIBRARY_PATH
 export ENV="$XDG_CONFIG_HOME/sh/interactive"
 export BASH_ENV="$XDG_CONFIG_HOME/bash/environment"
 
+# shellcheck source=./env.d/.keep
 for file in "$XDG_CONFIG_HOME/shell/env.d"/*.sh; do
   [ -r "$file" ] && . "$file"
 done

@@ -206,6 +206,7 @@ if [ -f "$CWD" ]; then
 fi
 alias cd=__cd
 
+# shellcheck source=./rc.d/.keep
 for file in "$XDG_CONFIG_HOME/shell/rc.d"/*.sh; do
   [ -r "$file" ] && . "$file"
 done
