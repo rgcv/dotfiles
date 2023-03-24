@@ -1,13 +1,11 @@
 #!/bin/zsh
-# zmodload zsh/zprof
+source "$XDG_CONFIG_HOME/zsh/rc.d/opts"
+source "$XDG_CONFIG_HOME/zsh/rc.d/keys"
 source "$XDG_CONFIG_HOME/shell/interactive"
 
 SAVEHIST=$HISTSIZE
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
 mkdir -p "${HISTFILE%/*}"
-
-source "$XDG_CONFIG_HOME/zsh/rc.d/opts"
-source "$XDG_CONFIG_HOME/zsh/rc.d/keys"
 
 # completion
 autoload -Uz compinit
@@ -57,4 +55,3 @@ unset fp
 
 handle_usr1() { trap handle_usr1 USR1; rehash; }
 trap handle_usr1 USR1
-# zprof

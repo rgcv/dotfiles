@@ -21,6 +21,8 @@ setopt LIST_TYPES
 # Expansion and Globbing
 # treat #, ~, ^ as part of patterns in filename generation
 setopt EXTENDED_GLOB
+# if a pattern or filename generation has no match, delete it and move on
+setopt NULL_GLOB
 
 # History
 # allow multiple term sessions to all append to one zsh history file
