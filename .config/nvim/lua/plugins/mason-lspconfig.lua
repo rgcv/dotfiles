@@ -36,7 +36,7 @@ local mlsp = require('mason-lspconfig')
 mlsp.setup()
 
 local confs = {
-  sumneko_lua = {
+  lua_ls = {
     settings = {
       Lua = {
         diagnostics = {
