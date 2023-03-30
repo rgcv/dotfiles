@@ -41,9 +41,6 @@ return {
           { "location"},
         },
       },
-      inactive_sections = {
-        lualine_c = { { filename } }
-      },
       extensions = { "fugitive" }
     })
   end

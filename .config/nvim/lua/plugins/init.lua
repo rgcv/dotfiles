@@ -1,26 +1,17 @@
 return {
-  -- emmet
-  "mattn/emmet-vim",
+  "andreshazard/vim-freemarker", -- freemarker syntax
+  "kyazdani42/nvim-web-devicons", -- patched devicons font
+  "lbrayner/vim-rzip", -- recursive zip handling
+  "mattn/emmet-vim", -- emmet support
 
   -- css inline colors
   {
     "norcalli/nvim-colorizer.lua",
+    event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("colorizer").setup()
-    end
+    end,
   },
-
-  -- web devicons (dependencies patched font)
-  "kyazdani42/nvim-web-devicons",
-
-  -- freemarker syntax
-  "andreshazard/vim-freemarker",
-
-  -- recursive zip handling
-  "lbrayner/vim-rzip",
-
-  -- robust module reloading
-  "nvim-lua/plenary.nvim",
 
   -- github theme colorscheme
   {
@@ -30,7 +21,7 @@ return {
       require("github-theme").setup({
         transparent = true,
       })
-    end
+    end,
   },
 
   -- auto pairing
