@@ -1,25 +1,25 @@
 --             _
 --  _ ____   _(_)_ __ ___
--- | '_ \ \ / / | '_ ` _ \
+-- | "_ \ \ / / | "_ ` _ \
 -- | | | \ V /| | | | | | |
 -- |_| |_|\_/ |_|_| |_| |_|
---
 
-require('init.plugins')
-require('init.options')
-require('init.mappings')
+require("config.options")
+require("config.plugins")
 
-function _G.ReloadConfig()
-  if pcall(require, 'plenary') then
-    require('plenary.reload').reload_module('init')
-    require('init')
-  end
-  dofile(vim.env.MYVIMRC)
+if vim.fn.argc(-1) == 0 then
+  -- postpone autocmds and keymaps
+  vim.api.nvim_create_autocmd("User", {
+    group = vim.api.nvim_create_augroup("init", { clear = true }),
+    callback = function()
+      require("config.autocmds")
+      require("config.keymaps")
+    end,
+  })
+else
+  -- unless we ran with files
+  require("config.autocmds")
+  require("config.keymaps")
 end
 
-vim.cmd([[
-  augroup init
-    au!
-    au BufWritePost *nvim/init.lua,*nvim/lua/init/*.lua lua ReloadConfig()
-  augroup end
-]])
+vim.cmd.colorscheme("github_dark")

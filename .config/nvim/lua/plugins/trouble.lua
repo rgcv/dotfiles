@@ -1,6 +1,10 @@
-local map = vim.api.nvim_set_keymap
-
-require('trouble').setup()
-
-local options = { silent = true, noremap = true }
-map('n', '<Leader>xx', '<Cmd>TroubleToggle<CR>', options)
+return {
+  "folke/trouble.nvim",
+  dependencies = { "kyazdani42/nvim-web-devicons" },
+  keys = {
+    { "<Leader>xx", "<Cmd>TrobleToggle<CR>" },
+  },
+  config = function()
+    require("trouble").setup()
+  end
+}

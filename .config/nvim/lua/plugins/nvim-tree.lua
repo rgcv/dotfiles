@@ -1,13 +1,12 @@
-local map = vim.keymap.set
-
-require('nvim-tree').setup({
-  actions = {
-    open_file = {
-      resize_window = true
-    }
-  }
-})
-
-map('n', '<C-n>',     '<Cmd>NvimTreeToggle<CR>')
-map('n', '<Leader>r', '<Cmd>NvimTreeRefresh<CR>')
-map('n', '<Leader>n', '<Cmd>NvimTreeFindFile<CR>')
+return {
+  "kyazdani42/nvim-tree.lua",
+  dependencies = { "kyazdani42/nvim-web-devicons", lazy = true },
+  keys = {
+    { "<C-n>", "<Cmd>NvimTreeToggle<CR>" },
+    { "<Leader>r", "<Cmd>NvimTreeRefresh<CR>" },
+    { "<Leader>n", "<Cmd>NvimTreeFindFile<CR>" },
+  },
+  config = function()
+    require("nvim-tree").setup()
+  end
+}
