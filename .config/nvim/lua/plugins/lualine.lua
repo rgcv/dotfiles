@@ -23,8 +23,8 @@ return {
             "filename",
             path = 1,
             symbols = {
-              modified = "*",
-              readonly = "readonly",
+              modified = "●",
+              readonly = "",
               unnamed = "[no name]",
             }
           },

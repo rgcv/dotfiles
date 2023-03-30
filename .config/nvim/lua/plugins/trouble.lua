@@ -4,7 +4,4 @@ return {
   keys = {
     { "<Leader>xx", "<Cmd>TroubleToggle<CR>" },
   },
-  config = function()
-    require("trouble").setup()
-  end
 }

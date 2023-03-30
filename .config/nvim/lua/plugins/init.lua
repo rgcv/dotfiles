@@ -1,8 +1,8 @@
 return {
-  "andreshazard/vim-freemarker", -- freemarker syntax
+  "andreshazard/vim-freemarker",  -- freemarker syntax
   "kyazdani42/nvim-web-devicons", -- patched devicons font
-  "lbrayner/vim-rzip", -- recursive zip handling
-  "mattn/emmet-vim", -- emmet support
+  "lbrayner/vim-rzip",            -- recursive zip handling
+  "mattn/emmet-vim",              -- emmet support
 
   -- css inline colors
   {
@@ -28,8 +28,14 @@ return {
   {
     "windwp/nvim-autopairs",
     event = "VeryLazy",
-    config = function()
-      require("nvim-autopairs").setup()
-    end,
+    config = true,
+  },
+
+  -- surround
+  {
+    "kylechui/nvim-surround",
+    version = "*",
+    event = "VeryLazy",
+    config = true,
   },
 }

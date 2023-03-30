@@ -16,6 +16,4 @@ return {
   "tpope/vim-repeat",
   -- Heuristically set buffer options
   "tpope/vim-sleuth",
-  -- Delete/change/add parentheses/quotes/XML-tags/much more with ease
-  "tpope/vim-surround",
 }

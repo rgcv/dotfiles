@@ -61,7 +61,7 @@ map("n", "<Leader>cd", function ()
     return
   end
   vim.cmd.lcd("%:p:h")
-end)
+end, { desc = "Set cwd for current window" })
 
 -- run current file
-map("n", "<Leader>x", function() vim.cmd("!%:h/%:t") end)
+map("n", "<Leader>x", function() vim.cmd("!%:h/%:t") end, { desc = "Exec file" })
