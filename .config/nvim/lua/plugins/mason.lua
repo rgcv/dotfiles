@@ -40,7 +40,7 @@ return {
             map("n", "gd", "<Cmd>lua vim.lsp.buf.definition()<CR>")
             map("n", "K", "<Cmd>lua vim.lsp.buf.hover()<CR>")
             map("n", "gi", "<Cmd>lua vim.lsp.buf.implementation()<CR>")
-            map("n", "<C-k>", "<Cmd>lua vim.lsp.buf.signature_help()<CR>")
+            map("n", "K", "<Cmd>lua vim.lsp.buf.signature_help()<CR>")
             map("n", "<Leader>rn", "<Cmd>lua vim.lsp.buf.rename()<CR>")
             map("n", "gr", "<Cmd>lua vim.lsp.buf.references()<CR>")
             map("n", "[d", "<Cmd>lua vim.diagnostic.goto_prev()<CR>")
