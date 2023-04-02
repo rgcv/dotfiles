@@ -36,7 +36,7 @@ autocmd("FileType", {
   },
   callback = function(event)
     vim.bo[event.buf].buflisted = false
-    vim.keymap.set("n", "q", "<Cmd>close<Cr>", { buffer = event.buf, silent = true })
+    vim.keymap.set("n", "q", "<Cmd>close<CR>", { buffer = event.buf, silent = true })
   end,
 })
 
