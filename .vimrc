@@ -11,7 +11,7 @@ scriptencoding utf-8
 
 "" plugins
 let s:install_plugins=0
-if empty(glob("~/.vim/plugged"))
+if empty(glob('~/.vim/plugged'))
   silent !curl
         \ --create-dirs
         \ --fail
@@ -21,7 +21,7 @@ if empty(glob("~/.vim/plugged"))
   let s:install_plugins=1
 endif
 
-call plug#begin("~/.vim/plugged")
+call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter'
 Plug 'andreshazard/vim-freemarker'
 Plug 'ararslan/license-to-vim'
@@ -57,8 +57,8 @@ if s:install_plugins == 1
 endif
 
 " options
-let mapleader=","
-let mapleaderlocal=","
+let mapleader=','
+let mapleaderlocal=','
 
 set autoindent " Copy indent from current line when starting new one
 set autoread " Read file if changes outside vim were detected
@@ -76,14 +76,14 @@ set cursorline " Highlight the current line
 set display=lastline
 set expandtab " Use spaces instead of tabs
 set formatoptions=tcroqnlj " default: tcqj
-if exists("+fsync")
+if exists('+fsync')
   set nofsync
 endif
 set history=1000 " History size
 set hlsearch " For a previous search pattern, highlight all matches
 set ignorecase " Ignore case in search patterns
 set incsearch " Show search pattern match as one types
-if exists("+langremap")
+if exists('+langremap')
   set nolangremap
 endif
 set laststatus=2 " only show a status line if >1 window is open
@@ -102,7 +102,7 @@ set shiftwidth=2 " Size of an indent
 set showcmd " Show (partial) command in the last line of the screen
 set sidescroll=1 " Minimal number of cols to scroll horizontally
 set sidescrolloff=8 " Columns of context
-if exists("+signcolumn")
+if exists('+signcolumn')
   set signcolumn=number " Display signs in the 'number' column, otherwise auto
 endif
 set smartcase " Overrides 'ignorecase' with uppercase
@@ -112,10 +112,10 @@ set splitbelow " Split new windows below current
 set splitright " Split new windows right of current
 set tabpagemax=50
 set tags="./tags;,tags" " Filenames for :tag
-if has("termguicolors")
+if has('termguicolors')
   set termguicolors
-  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
-  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
 endif
 set timeout timeoutlen=1000 " Time in ms for a mapped sequence to complete
 set ttimeout ttimeoutlen=50 " Separate timeout for key codes
@@ -127,18 +127,18 @@ set viminfo+="!"
 set wildmenu " Enhanced command-line completion
 set wildoptions=tagfile
 
-if !has("gui_running")
+if !has('gui_running')
   set t_Co=256
 endif
 
-let s:colorscheme="hybrid"
+let s:colorscheme='hybrid'
 
 " mappings
-let &t_TI = "\<Esc>[>4;2m"
-let &t_TE = "\<Esc>[>4;m"
+let &t_TI="\<Esc>[>4;2m"
+let &t_TE="\<Esc>[>4;m"
 " better up/down
-nnoremap <silent> <expr> j v:count == 0 ? "gj" : "j"
-nnoremap <silent> <expr> k v:count == 0 ? "gk" : "k"
+nnoremap <silent> <expr> j v:count == 0 ? 'gj' : 'j'
+nnoremap <silent> <expr> k v:count == 0 ? 'gk' : 'k'
 
 " Move to window bypassing <C-w>
 nnoremap <C-h> <C-w><C-h>
@@ -155,12 +155,12 @@ vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
 
 " https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
-nnoremap <expr> n "Nn"[v:searchforward]
-xnoremap <expr> n "Nn"[v:searchforward]
-onoremap <expr> n "Nn"[v:searchforward]
-nnoremap <expr> N "nN"[v:searchforward]
-xnoremap <expr> N "nN"[v:searchforward]
-onoremap <expr> N "nN"[v:searchforward]
+nnoremap <expr> n 'Nn'[v:searchforward]
+xnoremap <expr> n 'Nn'[v:searchforward]
+onoremap <expr> n 'Nn'[v:searchforward]
+nnoremap <expr> N 'nN'[v:searchforward]
+xnoremap <expr> N 'nN'[v:searchforward]
+onoremap <expr> N 'nN'[v:searchforward]
 
 " better indenting
 vnoremap < <gv
@@ -169,7 +169,7 @@ vnoremap > >gv
 " auto cd to current file's working dir
 nnoremap <Leader>cd :silent call AutoCD()<CR>
 function! AutoCD()
-  if expand("%:p:h") !~# "^/tmp"
+  if expand('%:p:h') !~# '^/tmp'
     return
   endif
   lcd %:p:h
@@ -179,13 +179,13 @@ nnoremap <Leader>x :!%:h/%:t<CR>
 
 " plugins
 " ctrlp
-let g:ctrlp_cmd = "CtrlP"
-let g:ctrlp_map = "<c-p>"
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_map = '<c-p>'
 let g:ctrlp_status_func = {
-      \ "main": "CtrlPStatusFuncMain",
-      \ "prog": "CtrlPStatusFuncProg",
+      \ 'main': 'CtrlPStatusFuncMain',
+      \ 'prog': 'CtrlPStatusFuncProg',
       \ }
-let g:ctrlp_working_path_mode = "ra"
+let g:ctrlp_working_path_mode = 'ra'
 
 function! CtrlPStatusFuncMain(focus, byfname, regex, prev, item, next, marked)
   let g:lightline.ctrlp_regex = a:regex
@@ -199,75 +199,75 @@ function! CtrlPStatusFuncProg(str)
   return lightline#statusline(0)
 endfunction
 " ftplugin
-let g:tex_flavor = "latex"
+let g:tex_flavor = 'latex'
 " julia-vim
 let g:latex_to_unicode_auto = 1
 " lightline.vim
 let g:lightline = {
-      \ "colorscheme": s:colorscheme,
-      \ "active": {
-      \   "left": [
-      \     ["mode", "paste", "spell"],
-      \     ["fugitive", "filename", "readonly"],
-      \     ["ctrlpmark"],
+      \ 'colorscheme': s:colorscheme,
+      \ 'active': {
+      \   'left': [
+      \     ['mode', 'paste', 'spell'],
+      \     ['fugitive', 'filename', 'readonly'],
+      \     ['ctrlpmark'],
       \   ],
-      \   "right": [
-      \     ["percent", "lineinfo"],
-      \     ["fileformat", "fileencoding", "filetype"],
+      \   'right': [
+      \     ['percent', 'lineinfo'],
+      \     ['fileformat', 'fileencoding', 'filetype'],
       \   ],
       \ },
-      \ "component": {
-      \   "fileformat":    '%{winwidth(0) > 70 ? &fileformat : ""}',
-      \   "fileencoding":  '%{winwidth(0) > 70 ? &fileencoding : ""}',
-      \   "readonly":      '%{&readonly && &filetype !=# "help" ? "RO" : ""}',
+      \ 'component': {
+      \   'fileformat':    "%{winwidth(0) > 70 ? &fileformat : ''}",
+      \   'fileencoding':  "%{winwidth(0) > 70 ? &fileencoding : ''}",
+      \   'readonly':      "%{&readonly && &filetype !=# 'help' ? 'RO' : ''}",
       \ },
-      \ "component_function": {
-      \   "ctrlpmark":    "CtrlPMark",
-      \   "filename":     "LightlineFilename",
-      \   "filetype":     "LightlineFiletype",
-      \   "fugitive":     "LightlineFugitive",
-      \   "mode":         "LightlineMode",
+      \ 'component_function': {
+      \   'ctrlpmark':    'CtrlPMark',
+      \   'filename':     'LightlineFilename',
+      \   'filetype':     'LightlineFiletype',
+      \   'fugitive':     'LightlineFugitive',
+      \   'mode':         'LightlineMode',
       \ },
-      \ "subseparator": { "left": "", "right": "" },
+      \ 'subseparator': { 'left': '', 'right': '' },
       \}
 
 function! CtrlPMark()
-  if &filetype ==# "ctrlp" && has_key(g:lightline, "ctrlp_item")
-    call lightline#link("iR"[g:lightline.ctrlp_regex])
+  if &filetype ==# 'ctrlp' && has_key(g:lightline, 'ctrlp_item')
+    call lightline#link('iR'[g:lightline.ctrlp_regex])
     return lightline#concatenate([g:lightline.ctrlp_prev
           \ , g:lightline.ctrlp_item, g:lightline.ctrlp_next], 0)
   else
-    return ""
+    return ''
   endif
 endfunction
 
 function! LightlineFilename()
-  if &filetype ==# "help" | return expand("%:t") | endif
-  let filename = substitute(expand("%:.:p"), expand("$HOME"), "~", "")
+  if &filetype ==# 'help' | return expand('%:t') | endif
+  let filename = substitute(expand('%:.:p'), expand('$HOME'), '~', '')
   return
-        \ &filetype ==# "ctrlp" && has_key(g:lightline, "ctrlp_item") ?
+        \ &filetype ==# 'ctrlp' && has_key(g:lightline, 'ctrlp_item') ?
           \ g:lightline.ctrlp_item :
-        \ &filetype ==# "vim-plug" ? "" :
+        \ &filetype ==# 'vim-plug' ? '' :
         \ ''
-          \ . (&modified ? "*" : "")
-          \ . (filename !=# "" ? filename : "[no name]")
+          \ . (&modified ? '*' : '')
+          \ . (filename !=# '' ? filename : '[no name]')
 endfunction
 
 function! LightlineFiletype()
-  return winwidth(0) <= 70 ? "" :
-        \ &filetype =~# "ctrlp\|vim-plug" ? "" :
-        \ &filetype !=# "" ? &filetype :
-        \ "no ft"
+  return winwidth(0) <= 70 ? '' :
+        \ &filetype =~# 'ctrlp\|vim-plug' ? '' :
+        \ &filetype !=# '' ? &filetype :
+        \ 'no ft'
 endfunction
 
 function! LightlineFugitive()
-  return exists("*fugitive#head") ? fugitive#head() : ""
+  return exists('*fugitive#head') ? fugitive#head() : ''
 endfunction
 
 function! LightlineMode()
-  return &filetype =~# "ctrlp\|help\|vim-plug" ? toupper(&filetype) :
+  return &filetype =~# 'ctrlp\|help\|vim-plug' ? toupper(&filetype) :
        \ winwidth(0) > 60 ? lightline#mode() :
-       \ ""
+       \ ''
 endfunction
 " vim-javascript
 let g:javascript_plugin_jsdoc = 1
@@ -302,5 +302,5 @@ augroup init#configs
   autocmd BufWritePost $MYVIMRC nested source %
 augroup END
 
-execute "colorscheme" s:colorscheme
+execute 'colorscheme' s:colorscheme
 highlight Normal guibg=NONE ctermbg=NONE
