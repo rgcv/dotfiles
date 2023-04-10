@@ -137,8 +137,10 @@ let s:colorscheme='hybrid'
 let &t_TI="\<Esc>[>4;2m"
 let &t_TE="\<Esc>[>4;m"
 " better up/down
-nnoremap <silent> <expr> j v:count == 0 ? 'gj' : 'j'
-nnoremap <silent> <expr> k v:count == 0 ? 'gk' : 'k'
+if !has('ide')
+  nnoremap <silent> <expr> j v:count == 0 ? 'gj' : 'j'
+  nnoremap <silent> <expr> k v:count == 0 ? 'gk' : 'k'
+endif
 
 " Move to window bypassing <C-w>
 nnoremap <C-h> <C-w><C-h>
@@ -155,12 +157,14 @@ vnoremap <A-j> :m '>+1<CR>gv=gv
 vnoremap <A-k> :m '<-2<CR>gv=gv
 
 " https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
-nnoremap <expr> n 'Nn'[v:searchforward]
-xnoremap <expr> n 'Nn'[v:searchforward]
-onoremap <expr> n 'Nn'[v:searchforward]
-nnoremap <expr> N 'nN'[v:searchforward]
-xnoremap <expr> N 'nN'[v:searchforward]
-onoremap <expr> N 'nN'[v:searchforward]
+if !has('ide')
+  nnoremap <expr> n 'Nn'[v:searchforward]
+  xnoremap <expr> n 'Nn'[v:searchforward]
+  onoremap <expr> n 'Nn'[v:searchforward]
+  nnoremap <expr> N 'nN'[v:searchforward]
+  xnoremap <expr> N 'nN'[v:searchforward]
+  onoremap <expr> N 'nN'[v:searchforward]
+endif
 
 " better indenting
 vnoremap < <gv
