@@ -9,6 +9,7 @@ usage() {
 ${0##*/} [OPTIONS...]
 
 Options:
+  -h,--help            Shows this message and exists.
   --blank <timeout>    Timeout interval after which the screen should turn off
                        while locked.  (default: $BLANK)
   --lock <timeout>     The time in seconds while idle after which the screen
@@ -39,6 +40,7 @@ while [ $# -gt 0 ]; do
          shift
          set_timeout "$TIMEOUT" "$1"
          ;;
+      -h|--help) usage; exit ;;
       *) die "Unknown argument: $1" ;;
    esac
    shift
