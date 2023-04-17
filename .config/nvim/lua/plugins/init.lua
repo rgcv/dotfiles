@@ -19,7 +19,9 @@ return {
     lazy = true,
     config = function()
       require("github-theme").setup({
-        transparent = true,
+        options = {
+          transparent = true,
+        },
       })
     end,
   },
