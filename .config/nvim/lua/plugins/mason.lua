@@ -1,16 +1,14 @@
 return {
   {
-    "williamboman/mason.nvim",
+    "neovim/nvim-lspconfig",
     event = "VeryLazy",
-    build = ":MasonUpdate",
-    config = function()
-      require("mason").setup()
-    end,
     dependencies = {
-      "neovim/nvim-lspconfig",
+      "williamboman/mason-lspconfig.nvim",
       {
-        "williamboman/mason-lspconfig.nvim",
+        "williamboman/mason.nvim",
+        build = ":MasonUpdate",
         config = function()
+          require("mason").setup()
           local mlsp = require("mason-lspconfig")
           mlsp.setup()
 
