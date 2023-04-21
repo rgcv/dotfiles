@@ -98,7 +98,11 @@ pkgs=$({
     exit
   fi
   case $PACMAN in
-    yay) $PACMAN -Qua ;;
+    yay)
+      set +e
+      $PACMAN -Qua
+      set -e
+      ;;
   esac
 })
 
