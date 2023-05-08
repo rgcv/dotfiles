@@ -17,7 +17,7 @@ return {
         "c",
         "lua",
         "vim",
-        "help",
+        "vimdoc",
         "query",
 
         -- additional
