@@ -85,10 +85,10 @@ return {
           end
 
           for type, icon in pairs({
-            Error = " ",
-            Warn = " ",
-            Hint = " ",
-            Info = " "
+            Error = "󰅚 ",
+            Warn = "󰀪 ",
+            Hint = "󰗖 ",
+            Info = "󰋽 "
           }) do
             local hl = "DiagnosticSign" .. type
             vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
