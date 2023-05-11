@@ -21,10 +21,10 @@ TogglePreedit=
 0=Control+Shift_R
 
 [Hotkey/EnumerateGroupForwardKeys]
-0=Super+space
+0=Alt+Shift+Shift_L
 
 [Hotkey/EnumerateGroupBackwardKeys]
-0=Shift+Super+space
+0=Alt+Shift+Shift_R
 
 [Hotkey/ActivateKeys]
 0=Hangul_Hanja
@@ -61,6 +61,10 @@ CompactInputMethodInformation=True
 ShowFirstInputMethodInformation=True
 # Default page size
 DefaultPageSize=5
+# Override Xkb Option
+OverrideXkbOption=False
+# Custom Xkb Option
+CustomXkbOption=
 # Force Enabled Addons
 EnabledAddons=
 # Force Disabled Addons
