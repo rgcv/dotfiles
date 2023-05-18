@@ -53,6 +53,15 @@ return {
       require("lspconfig").lua_ls.setup(lsp.nvim_lua_ls())
 
       lsp.setup()
+      for type, icon in pairs({
+        Error = "󰅚 ",
+        Warn = "󰀪 ",
+        Hint = "󰗖 ",
+        Info = "󰋽 "
+      }) do
+        local hl = "DiagnosticSign" .. type
+        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+      end
 
       local nls = require("null-ls")
       nls.setup({
