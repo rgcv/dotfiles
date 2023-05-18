@@ -6,12 +6,8 @@ return {
   "tpope/vim-commentary",
   -- Wisely add
   "tpope/vim-endwise",
-  {
-    -- GitHub extension for fugitive.vim
-    "tpope/vim-rhubarb",
-    -- A Git wrapper so awesome, it should be illegal
-    dependencies = { "tpope/vim-fugitive" },
-  },
+  -- A Git wrapper so awesome, it should be illegal
+  "tpope/vim-fugitive",
   -- enable repeating supported plugin maps with
   "tpope/vim-repeat",
   -- Heuristically set buffer options
