@@ -44,6 +44,7 @@ return {
         "markdown_inline",
         "python",
         "regex",
+        "rust",
         "scheme",
         "scss",
         "sql",
