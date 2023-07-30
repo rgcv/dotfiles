@@ -6,8 +6,10 @@ return {
     dependencies = {
       "nvim-treesitter/nvim-treesitter-context",
       "nvim-treesitter/nvim-treesitter-textobjects",
+      "windwp/nvim-ts-autotag",
     },
     opts = {
+      autotag = { enable = true },
       highlight = { enable = true },
       indent = { enable = true },
       ensure_installed = {
