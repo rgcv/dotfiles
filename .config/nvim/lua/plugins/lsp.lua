@@ -45,8 +45,8 @@ return {
       lsp.on_attach(function(_, bufnr)
         vim.keymap.set("n", "ga", vim.lsp.buf.code_action)
         vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename)
-        vim.keymap.set("n", "<Leader>f", vim.lsp.buf.format)
-        vim.keymap.set("v", "<Leader>f", vim.lsp.buf.format)
+        vim.keymap.set({"n", "v"}, "<Leader>f", vim.lsp.buf.format)
+
         lsp.default_keymaps({ buffer = bufnr })
       end)
 
@@ -62,6 +62,15 @@ return {
         local hl = "DiagnosticSign" .. type
         vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
       end
+
+      local cmp = require("cmp")
+
+      cmp.setup({
+        mapping = {
+          ['<TAB>'] = cmp.mapping.confirm({ select = true }),
+          ['<C-Space>'] = cmp.mapping.complete(),
+        },
+      })
 
       local nls = require("null-ls")
       nls.setup({
