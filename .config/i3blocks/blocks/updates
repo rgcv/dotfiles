@@ -13,8 +13,7 @@ BLOCK_BUTTON=${BLOCK_BUTTON--1}
 BUTTON_CHECK=${BUTTON_CHECK-1}
 PACMAN=${PACMAN-pacman}
 
-app_name=${0##*/}
-nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.i3b.nid
+app_name=i3b.$(basename "$0")
 [ "${markup-}" = pango ] && pango=true || pango=false
 pkgs_max=${NOTIFICATION_PKGS_MAX-20}
 
@@ -49,11 +48,10 @@ EOF
 }
 
 notify() {
-  notify-send.sh \
+  notify-send \
     --app-name "$app_name" \
     --icon update-manager \
     --expire-time 10000 \
-    --replace-file "$nid_file" \
     "$@"
 }
 
