@@ -3,7 +3,7 @@
 #   brightnessctl (brightnessctl, screen brightness control)
 set -e
 
-app_name=${0##*/}
+app_name=bin.$(basename "$0")
 lock_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.lock
 nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
 should_notify=false

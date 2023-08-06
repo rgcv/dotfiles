@@ -6,9 +6,8 @@
 #                      libcanberra-pulse, pulseaudio backend may be required)
 set -e
 
-app_name=${0##*/}
+app_name=bin.$(basename "$0")
 lock_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.lock
-nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
 should_notify=false
 is_output=true
 
@@ -34,17 +33,18 @@ EOF
   exit "$err"
 }
 notify() {
-  _notify_icon=notification
-  $is_output && \
-    _notify_icon=$_notify_icon-audio-volume || \
-    _notify_icon=$_notify_icon-microphone-sensitivity
+  if $is_output; then
+    _notify_icon=notification-audio-volume
+  else
+    _notify_icon=notification-microphone-sensitivity
+  fi
+
   _notify_icon=$_notify_icon-high
-  notify-send.sh \
+  notify-send \
     --urgency normal \
     --expire-time 3000 \
     --app-name "$app_name" \
     --icon $_notify_icon \
-    --replace-file "$nid_file" \
     "$@"
   unset _notify_icon
 }

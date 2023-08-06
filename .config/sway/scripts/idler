@@ -6,7 +6,7 @@ SUSPEND=900
 
 usage() {
    cat<<USAGE
-${0##*/} [OPTIONS...]
+$(basename "$0") [OPTIONS...]
 
 Options:
   -h,--help            Shows this message and exists.
@@ -20,40 +20,40 @@ USAGE
 }
 
 die() {
-   echo "$@" >&2
-   exit 1
+  echo "$@" >&2
+  exit 1
 }
 
 set_timeout() {
-   case $2 in
-      *[![:digit:]]*) die "Invalid timeout, not a number: $2" ;;
-      -*|0) die "Invalid timeout, not positive: $2" ;;
-      *) ;;
-   esac
-   eval "$1=$2"
+  case $2 in
+    *[![:digit:]]*) die "Invalid timeout, not a number: $2" ;;
+    -*|0) die "Invalid timeout, not positive: $2" ;;
+    *) ;;
+  esac
+  eval "$1=$2"
 }
 
 while [ $# -gt 0 ]; do
-   case $1 in
-      --lock|--blank|--suspend)
-         TIMEOUT=$(echo "${1#--}" | awk '{ print(toupper($0)) }')
-         shift
-         set_timeout "$TIMEOUT" "$1"
-         ;;
-      -h|--help) usage; exit ;;
-      *) die "Unknown argument: $1" ;;
-   esac
-   shift
+  case $1 in
+    --lock|--blank|--suspend)
+      TIMEOUT=$(echo "${1#--}" | awk '{ print(toupper($0)) }')
+      shift
+      set_timeout "$TIMEOUT" "$1"
+      ;;
+    -h|--help) usage; exit ;;
+    *) die "Unknown argument: $1" ;;
+  esac
+  shift
 done
 
 pkill swayidle # override current if re-running
 swayidle -w \
-   timeout $LOCK             'swaylock -f' \
-   timeout $((LOCK + BLANK)) 'swaymsg "output * power off"' \
-    resume                   'swaymsg "output * power on"' \
-   \
-   timeout $BLANK 'pgrep swaylock && swaymsg "output * power off"' \
-    resume        'pgrep swaylock && swaymsg "output * power on"' \
-   \
-   timeout $SUSPEND 'systemctl suspend' \
+  timeout $LOCK             'swaylock -f' \
+  timeout $((LOCK + BLANK)) 'swaymsg "output * power off"' \
+   resume                   'swaymsg "output * power on"' \
+  \
+  timeout $BLANK 'pgrep swaylock && swaymsg "output * power off"' \
+  resume         'pgrep swaylock && swaymsg "output * power on"' \
+  \
+  timeout $SUSPEND 'systemctl suspend' \
   before-sleep 'swaylock -f'

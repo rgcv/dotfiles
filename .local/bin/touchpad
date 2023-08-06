@@ -7,9 +7,8 @@
 #     jq (jq, parse json)
 set -e
 
-app_name=${0##*/}
+app_name=bin.$(basename "$0")
 state_file="${XDG_STATE_HOME-$HOME/.local/state}/touchpad/status"
-nid_file="${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid"
 should_notify=false
 toggle=false
 restore=false
@@ -32,12 +31,11 @@ USAGE
   exit "$err"
 }
 notify() {
-  notify-send.sh \
+  notify-send \
     --urgency normal \
     --expire-time 3000 \
     --app-name "$app_name" \
     --icon input-touchpad \
-    --replace-file "$nid_file" \
     "$@"
 }
 check_avail() {

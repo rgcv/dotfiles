@@ -1,1 +1,47 @@
-notify-send.sh
+#!/bin/sh
+# A wrapper around `notify-send` that
+
+CMD=notify-send
+NOTIFY=$(command -v -p $CMD)
+if [ -z "$NOTIFY" ]; then
+  # let the shell handle the missing binary
+  exec $CMD
+fi
+
+process_args() {
+  while [ $# -gt 0 ]; do
+    case $1 in
+      --app-name|--app-name=*)
+        APP_NAME=${1#*=}
+        [ "$APP_NAME" = "$1" ] && APP_NAME=$2
+        ;;
+      -[!-]a) APP_NAME=$2 ;;
+      --help|-*\?*) exec $NOTIFY --help ;;
+    esac
+    shift
+  done
+}
+process_args "$@"
+
+if [ -n "$APP_NAME" ]; then
+  NID_FILE=${XDG_RUNTIME_DIR-/tmp}/.$APP_NAME.nid
+  OLD_NID=$(cat "$NID_FILE")
+fi
+
+NID=$($NOTIFY \
+  --replace-id "${OLD_NID:-0}" \
+  --print-id \
+  "$@")
+
+case $NID in
+  *[![:digit:]]*)
+    echo "Invalid notification id: $NID"
+    exit 254
+    ;;
+esac
+
+[ -n "$NID" ] || exit 0
+
+mkdir -p "$(dirname "$NID_FILE")"
+touch -a "$NID_FILE"
+printf '%s' "$NID" > "$NID_FILE"

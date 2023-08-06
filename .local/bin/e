@@ -1,2 +1,2 @@
 #!/bin/sh
-exec "$EDITOR" "$@"
+exec "${EDITOR-vi}" "$@"
