@@ -2,7 +2,7 @@
 # requires:
 # - jq
 # uses:
-# - notify-send.sh
+# - notify-send
 
 app_name=${0##*/}
 should_notify=false
