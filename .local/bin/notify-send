@@ -1,5 +1,6 @@
 #!/bin/sh
-# A wrapper around `notify-send` that
+# A wrapper around `notify-send` that manages notification IDs
+# based on the provided app name.
 
 CMD=notify-send
 NOTIFY=$(command -v -p $CMD)
@@ -11,37 +12,47 @@ fi
 process_args() {
   while [ $# -gt 0 ]; do
     case $1 in
-      --app-name|--app-name=*)
+      -p|--print-id) PRINT_ID=yes ;;
+      -r|--replace-id|--replace-id=*) REPLACE_ID=yes ;;
+      -a|-[:alpha:]*a|--app-name|--app-name=*)
         APP_NAME=${1#*=}
-        [ "$APP_NAME" = "$1" ] && APP_NAME=$2
+        [ "$APP_NAME" != "$1" ] || APP_NAME=$2
         ;;
-      -[!-]a) APP_NAME=$2 ;;
-      --help|-*\?*) exec $NOTIFY --help ;;
     esac
     shift
   done
 }
 process_args "$@"
 
-if [ -n "$APP_NAME" ]; then
+if [ -n "$REPLACE_ID" ]; then
+  # assume it is managed externally, nothing else to do
+  exec $NOTIFY "$@"
+elif [ -n "$APP_NAME" ]; then
   NID_FILE=${XDG_RUNTIME_DIR-/tmp}/.$APP_NAME.nid
-  OLD_NID=$(cat "$NID_FILE")
+  [ ! -r "$NID_FILE" ] || OLD_NID=$(cat "$NID_FILE")
 fi
 
-NID=$($NOTIFY \
-  --replace-id "${OLD_NID:-0}" \
-  --print-id \
-  "$@")
+OUT=$(
+  $NOTIFY \
+    "$@" \
+    --print-id \
+    --replace-id "${OLD_NID:-0}"
+)
+ERROR=$?
+[ $ERROR -eq 0 ] || exit $ERROR
 
-case $NID in
+case $OUT in
   *[![:digit:]]*)
-    echo "Invalid notification id: $NID"
-    exit 254
+    # output and exit however notify-send did
+    echo "$OUT"
+    exit
     ;;
 esac
+# respect --print-id
+[ -z "$PRINT_ID" ] || echo "$OUT"
 
-[ -n "$NID" ] || exit 0
-
-mkdir -p "$(dirname "$NID_FILE")"
-touch -a "$NID_FILE"
-printf '%s' "$NID" > "$NID_FILE"
+if [ -n "$NID_FILE" ]; then
+  mkdir -p "$(dirname "$NID_FILE")"
+  touch -a "$NID_FILE"
+  echo "$OUT" > "$NID_FILE"
+fi
