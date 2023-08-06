@@ -12,9 +12,9 @@ fi
 process_args() {
   while [ $# -gt 0 ]; do
     case $1 in
-      -p|--print-id) PRINT_ID=yes ;;
-      -r|--replace-id|--replace-id=*) REPLACE_ID=yes ;;
-      -a|-[:alpha:]*a|--app-name|--app-name=*)
+      -p*|-[[:alpha:]]*p*|--print-id) PRINT_ID=yes ;;
+      -r|-[[:alpha:]]*r|--replace-id|--replace-id=*) REPLACE_ID=yes ;;
+      -a|-[[:alpha:]]*a|--app-name|--app-name=*)
         APP_NAME=${1#*=}
         [ "$APP_NAME" != "$1" ] || APP_NAME=$2
         ;;
