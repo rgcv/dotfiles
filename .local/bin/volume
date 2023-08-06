@@ -84,7 +84,11 @@ done
 
 check_avail pactl || exit 1
 
-$is_output && target=sink || target=source
+if $is_output; then
+  target=sink
+else
+  target=source
+fi
 TARGET=$(echo $target | tr '[:lower:]' '[:upper:]')
 
 if [ $# -gt 0 ]; then
