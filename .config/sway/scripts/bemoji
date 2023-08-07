@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if ! command -v bemoji >/dev/null 2>&1; then
+  swaynag -m "Error: bemoji not installed"
+  exit 1
+fi
+
+if command -v wl-copy >/dev/null 2>&1; then
+  export BEMOJI_CLIP_CMD="wl-copy -n"
+fi
+
+if ! command -v wtype >/dev/null 2>&1; then
+  swaynag -t warning -m "Warning: missing wtype, won't automatically type emoji"
+fi
+
+exec bemoji -t "$@"
