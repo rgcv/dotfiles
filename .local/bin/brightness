@@ -5,7 +5,6 @@ set -e
 
 app_name=bin.$(basename "$0")
 lock_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.lock
-nid_file=${XDG_RUNTIME_DIR-/tmp}/.$app_name.bin.nid
 should_notify=false
 
 true()  { return 0; }
@@ -16,12 +15,11 @@ usage() {
   exit "${1-0}"
 }
 notify() {
-  notify-send.sh \
+  notify-send \
     --urgency normal \
     --expire-time 3000 \
     --app-name "$app_name" \
     --icon notification-display-brightness \
-    --replace-file "$nid_file" \
     "$@"
 }
 check_avail() {
