@@ -6,8 +6,8 @@ config="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-4.0/settings.ini"
 value_for() { grep "$1" "$config" | sed 's/.*\s*=\s*//'; }
 import() { gsettings set org.gnome.desktop.interface "$1" "$(value_for "$2")"; }
 
-import gtk-theme    gtk-theme-name
 import color-scheme gtk-color-scheme
-import icon-theme   gtk-icon-theme-name
 import cursor-theme gtk-cursor-theme-name
 import font-name    gtk-font-name
+import gtk-theme    gtk-theme-name
+import icon-theme   gtk-icon-theme-name
