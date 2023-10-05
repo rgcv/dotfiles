@@ -4,8 +4,6 @@ return {
   "tpope/vim-dadbod",
   -- comment stuff out
   "tpope/vim-commentary",
-  -- Wisely add
-  "tpope/vim-endwise",
   -- A Git wrapper so awesome, it should be illegal
   "tpope/vim-fugitive",
   -- enable repeating supported plugin maps with

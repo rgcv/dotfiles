@@ -29,8 +29,8 @@ return {
   -- auto pairing
   {
     "windwp/nvim-autopairs",
-    event = "VeryLazy",
-    config = true,
+    event = "InsertEnter",
+    opts = {},
   },
 
   -- surround
