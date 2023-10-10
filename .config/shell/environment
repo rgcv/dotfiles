@@ -113,6 +113,7 @@ export GRADLE_USER_HOME="$XDG_DATA_HOME/gradle"
 
 export GTK_RC_FILES="$XDG_CONFIG_HOME/gtk-1.0/gtkrc"
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
+export GTK_THEME=Adwaita:dark
 
 export INPUTRC="$XDG_CONFIG_HOME/readline/inputrc"
 
