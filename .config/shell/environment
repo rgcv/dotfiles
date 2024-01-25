@@ -121,6 +121,9 @@ export IPYTHONDIR="$XDG_CONFIG_HOME/jupyter"
 export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
 export JUPYTERLAB_DIR="$XDG_DATA_HOME/jupyter/lab"
 
+export JBANG_DIR="$XDG_DATA_HOME/jbang"
+pathappend "$JBANG_DIR/bin"
+
 export JULIA_NUM_THREADS=$(( NPROC - 1 ))
 
 export MAKEFLAGS=-j$(( NPROC - 1 ))
