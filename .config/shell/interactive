@@ -23,11 +23,6 @@ for hl in lesspipe.sh lesspipe; do
   fi
 done; unset cmd hl
 
-# nvm
-# shellcheck disable=SC1091
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-
-
 ## aliases
 # config accessibility
 config_alias() {
