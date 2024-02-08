@@ -36,7 +36,7 @@ set_timeout() {
 while [ $# -gt 0 ]; do
   case $1 in
     --lock|--blank|--suspend)
-      TIMEOUT=$(echo "${1#--}" | tr '[:upper:]' '[:lower:]')
+      TIMEOUT=$(echo "${1#--}" | tr '[:lower:]' '[:upper:]')
       shift
       set_timeout "$TIMEOUT" "$1"
       ;;
