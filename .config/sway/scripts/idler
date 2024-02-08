@@ -36,7 +36,7 @@ set_timeout() {
 while [ $# -gt 0 ]; do
   case $1 in
     --lock|--blank|--suspend)
-      TIMEOUT=$(echo "${1#--}" | awk '{ print(toupper($0)) }')
+      TIMEOUT=$(echo "${1#--}" | tr '[:upper:]' '[:lower:]')
       shift
       set_timeout "$TIMEOUT" "$1"
       ;;
@@ -47,7 +47,7 @@ while [ $# -gt 0 ]; do
 done
 
 pkill swayidle # override current if re-running
-swayidle -w \
+exec swayidle -w \
   timeout $LOCK             'swaylock -f' \
   timeout $((LOCK + BLANK)) 'swaymsg "output * power off"' \
    resume                   'swaymsg "output * power on"' \
