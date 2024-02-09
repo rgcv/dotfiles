@@ -18,7 +18,7 @@
   last = log -1 HEAD
   lg = log --decorate=short \
     --pretty=format:'%C(bold cyan)%h %C(bold green)%cr:%Creset %s \
-%C(bold black)~%aN %C(auto)%d'
+%C(cyan)~%aN %C(auto)%d'
   lgg = !git lg --graph --topo-order
   summary = !git lg --stat
 
