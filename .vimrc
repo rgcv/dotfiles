@@ -25,6 +25,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'airblade/vim-gitgutter'
 Plug 'andreshazard/vim-freemarker'
 Plug 'ararslan/license-to-vim'
+Plug 'catppuccin/vim', { 'as': 'catppuccin' }
 Plug 'chr4/nginx.vim'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'cocopon/lightline-hybrid.vim'
@@ -131,7 +132,7 @@ if !has('gui_running')
   set t_Co=256
 endif
 
-let s:colorscheme='hybrid'
+let s:colorscheme='catppuccin_mocha'
 
 " mappings
 let &t_TI="\<Esc>[>4;2m"
