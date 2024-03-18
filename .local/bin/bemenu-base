@@ -5,9 +5,10 @@ BEMENU=${1-bemenu}
 command -p "$BEMENU" \
   --line-height 20 \
   --fn="monospace 9" \
-  --tf=#212121 --tb=#82AAFF \
-  --ff=#B2CCD6 --fb=#212121 \
-  --nf=#B2CCD6 --nb=#212121 \
-  --hf=#212121 --hb=#82AAFF \
-  --sf=#212121 --sb=#82AAFF \
+  `# catppuccin mocha` \
+  --fb=#1e1e2e --ff=#cdd6f4 \
+  --nb=#1e1e2e --nf=#cdd6f4 \
+  --tb=#1e1e2e --tf=#f38ba8 \
+  --hb=#1e1e2e --hf=#f9e2af \
+  --ab=#1e1e2e --af=#cdd6f4 \
   "$@"

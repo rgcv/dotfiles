@@ -5,26 +5,26 @@ signal=10
 interval=5
 separator_block_width=21
 
-color0=#212121
-color1=#F07178
-color2=#C3E88D
-color3=#FFCB6B
-color4=#82AAFF
-color5=#C792EA
-color6=#89DDFF
-color7=#EEFFFF
+color0=#45475a
+color1=#f38ba8
+color2=#a6e3a1
+color3=#f9e2af
+color4=#89b4fa
+color5=#f5c2e7
+color6=#94e2d5
+color7=#bac2de
 
-color8=#4A4A4A
-color9=#F07178
-color10=#C3E88D
-color11=#FFCB6B
-color12=#82AAFF
-color13=#C792EA
-color14=#89DDFF
-color15=#FFFFFF
+color8=#585b70
+color9=#f38ba8
+color10=#a6e3a1
+color11=#f9e2af
+color12=#89b4fa
+color13=#f5c2e7
+color14=#94e2d5
+color15=#a6adc8
 
-foreground=#FFFFFF
-background=#212121
+foreground=#cdd8f4
+background=#1e1e2e
 
 [updates]
 interval=3600

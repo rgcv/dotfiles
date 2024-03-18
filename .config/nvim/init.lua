@@ -22,4 +22,4 @@ else
   require("config.keymaps")
 end
 
-vim.cmd.colorscheme("github_dark")
+vim.cmd.colorscheme("catppuccin")

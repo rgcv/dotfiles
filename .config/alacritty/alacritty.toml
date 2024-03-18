@@ -1,26 +1,6 @@
-[colors.bright]
-black = "#4a4a4a"
-blue = "#82aaff"
-cyan = "#89ddff"
-green = "#c3e88d"
-magenta = "#c792ea"
-red = "#f07178"
-white = "#ffffff"
-yellow = "#ffcb6b"
-
-[colors.normal]
-black = "#212121"
-blue = "#82aaff"
-cyan = "#89ddff"
-green = "#c3e88d"
-magenta = "#c792ea"
-red = "#f07178"
-white = "#eeffff"
-yellow = "#ffcb6b"
-
-[colors.primary]
-background = "#212121"
-foreground = "#eeffff"
+import = [
+  "~/.config/alacritty/catppuccin-mocha.toml"
+]
 
 [window]
 opacity = 0.9

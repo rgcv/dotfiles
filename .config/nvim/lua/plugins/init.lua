@@ -4,25 +4,24 @@ return {
   "lbrayner/vim-rzip",            -- recursive zip handling
   "mattn/emmet-vim",              -- emmet support
 
+  -- color theme
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    priority = 1000,
+    config = function()
+      require("catppuccin").setup({
+        transparent_background = true,
+      })
+    end
+  },
+
   -- css inline colors
   {
     "norcalli/nvim-colorizer.lua",
     event = { "BufReadPre", "BufNewFile" },
     config = function()
       require("colorizer").setup()
-    end,
-  },
-
-  -- github theme colorscheme
-  {
-    "projekt0n/github-nvim-theme",
-    lazy = true,
-    config = function()
-      require("github-theme").setup({
-        options = {
-          transparent = true,
-        },
-      })
     end,
   },
 

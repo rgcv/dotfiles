@@ -6,15 +6,15 @@
 # |_| |_| |_|\__,_|_|\_\___/
 
 layer=overlay
-background-color=#5F7DBFE8
-text-color=#EEFFFFEE
 width=400
 height=400
 outer-margin=12
 padding=8
 border-size=2
-border-color=#EEFFFFC0
-progress-color=#82AAFFA0
+border-color=#b4befec0
+progress-color=over #45475aa0
+background-color=#1e1e2ee8
+text-color=#cdd6f4ee
 max-icon-size=48
 icon-path=/usr/share/icons/Papirus-Dark
 default-timeout=5000
@@ -22,14 +22,13 @@ default-timeout=5000
 on-button-middle=exec makoctl menu -n "$id" bemenu -p 'Select action: '
 
 [urgency=low]
-background-color=#212121E8
-progress-color=#353535A0
-border-color=#7F7F7FC0
+progress-color=over #313244a0
+border-color=#45475ac0
 
 [urgency=high]
-background-color=#DC5D64D8
-progress-color=#F07178A0
-border-color=#F0C1C8C0
+progress-color=over #f38ba8a0
+border-color=#eba0acc0
+text-color=#1e1e2eee
 default-timeout=0
 
 [mode=afk]
@@ -39,4 +38,4 @@ ignore-timeout=1
 [mode=dnd]
 invisible=1
 
-# vim:ft=dosini
+# vim:ft=dosini cms=#\ %s
