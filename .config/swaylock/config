@@ -35,6 +35,7 @@ text-wrong-color=eba0ac
 
 # swaylock-effects
 clock
+datestr=%a, %b %m, %Y
 screenshots
 fade-in=0.2
 effect-scale=0.25
