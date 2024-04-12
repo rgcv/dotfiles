@@ -59,8 +59,9 @@ export QT_IM_MODULE=$INPUT_METHOD
 export XMODIFIERS=@im=$INPUT_METHOD
 
 # num. threads
-NPROC=$(grep -c '^processor' /proc/cpuinfo)
-export NPROC="${NPROC:-7}"
+NPROC=$(grep -c '^processor' /proc/cpuinfo 2>/dev/null)
+NPROC=${NPROC:-$(sysctl -n hw.ncpu 2>/dev/null)}
+export NPROC="${NPROC:-4}"
 
 export LESS=
 LESS="$LESS -g"   # highlight search result
