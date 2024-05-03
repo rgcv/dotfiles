@@ -8,26 +8,6 @@ export TERM="${TERM-xterm-256color}"
 ## history
 HISTSIZE=10000
 
-# gnupg
-if command -v gpg-connect-agent >/dev/null; then
-  GPG_TTY=$(tty)
-  export GPG_TTY
-  gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
-fi
-
-# less
-for hl in lesspipe.sh lesspipe; do
-  if cmd=$(command -v $hl); then
-    export LESSOPEN="| $cmd %s 2>&-"
-    break
-  fi
-done; unset cmd hl
-
-# nvm
-export NVM_DIR="$XDG_DATA_HOME/nvm"
-# shellcheck disable=SC1091
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-
 
 ## aliases
 # config accessibility
@@ -140,18 +120,11 @@ alias netbeans='netbeans --userdir ${XDG_CONFIG_HOME-$HOME/.config}/netbeans --c
 alias n=nnn
 alias nnn="nnn -d -e"
 alias nv=nvim
-alias o=open
-alias open=xdg-open
 alias rsync="rsync -azvhP" # archive compressed verbose human readable
 alias sudo='sudo ' # alias expansion
 
 alias tree="tree -C"
-
-if command -v vim >/dev/null; then
-  alias vi=vim
-fi
-alias  v=vi
-
+alias v=vi
 alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'
 
 alias xload='xrdb -load "$XDG_CONFIG_HOME/x11/xresources"'
@@ -167,6 +140,68 @@ alias    yay="yay --color auto"
 ## functions
 # shell
 reload() { exec "${SHELL-sh}" "$@"; }
+
+# where were we?
+CWD="$XDG_STATE_HOME/misc/cwd"
+mkdir -p "${CWD%/*}"
+__cd() {
+  \cd "$@" || return
+  pwd > "$CWD"
+}
+if [ -f "$CWD" ]; then
+  cd "$(cat "$CWD")" 2>/dev/null || :
+fi
+alias cd=__cd
+
+## other hooks
+# shellcheck source=./rc.d/.keep
+for file in "$XDG_CONFIG_HOME/shell/rc.d"/*.sh; do
+  [ -r "$file" ] && . "$file"
+done
+
+## path config
+pathprepend "$HOME/.local/bin"
+pathprepend "$HOME/.local/include" CPATH
+pathprepend "$HOME/.local/lib"     LD_LIBRARY_PATH
+
+## others
+# open
+if ! command -v open >/dev/null; then
+  if command -v xdg-open >/dev/null; then
+    alias open=xdg-open
+  fi
+fi
+alias o=open
+
+# editor
+for ed in nvim vim emacs vi nano; do
+  command -v $ed >/dev/null && export EDITOR=$ed && break
+done; unset ed
+export VISUAL="$EDITOR"
+
+# vim
+if command -v vim >/dev/null; then
+  alias vi=vim
+fi
+# gnupg
+if command -v gpg-connect-agent >/dev/null; then
+  GPG_TTY=$(tty)
+  export GPG_TTY
+  gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
+fi
+
+# less
+for hl in lesspipe.sh lesspipe; do
+  if cmd=$(command -v $hl); then
+    export LESSOPEN="| $cmd %s 2>&-"
+    break
+  fi
+done; unset cmd hl
+
+# nvm
+export NVM_DIR="$XDG_DATA_HOME/nvm"
+# shellcheck disable=SC1091
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
 # xclip
 if command -v xclip >/dev/null; then
@@ -192,31 +227,3 @@ if command -v xclip >/dev/null; then
   }
   xpaste() { xclip -selection clipboard -o "$1" ; }
 fi
-
-# where were we?
-CWD="$XDG_STATE_HOME/misc/cwd"
-mkdir -p "${CWD%/*}"
-__cd() {
-  \cd "$@" || return
-  pwd > "$CWD"
-}
-if [ -f "$CWD" ]; then
-  cd "$(cat "$CWD")" 2>/dev/null || :
-fi
-alias cd=__cd
-
-# shellcheck source=./rc.d/.keep
-for file in "$XDG_CONFIG_HOME/shell/rc.d"/*.sh; do
-  [ -r "$file" ] && . "$file"
-done
-
-## path config
-pathprepend "$HOME/.local/bin"
-pathprepend "$HOME/.local/include" CPATH
-pathprepend "$HOME/.local/lib"     LD_LIBRARY_PATH
-
-## editor
-for ed in nvim vim emacs vi nano; do
-  command -v $ed >/dev/null && export EDITOR=$ed && break
-done; unset ed
-export VISUAL="$EDITOR"
