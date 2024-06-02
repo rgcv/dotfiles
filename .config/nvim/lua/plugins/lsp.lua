@@ -24,7 +24,7 @@ return {
   {
     "neovim/nvim-lspconfig",
     cmd = { "LspInfo", "Mason" },
-    event = {"BufReadPre", "BufNewFile"},
+    event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       { "hrsh7th/cmp-nvim-lsp" },
       { "williamboman/mason-lspconfig.nvim" },
@@ -43,9 +43,9 @@ return {
     config = function()
       local lsp = require("lsp-zero")
       lsp.on_attach(function(_, bufnr)
-        vim.keymap.set("n", "ga", vim.lsp.buf.code_action)
-        vim.keymap.set("n", "<Leader>rn", vim.lsp.buf.rename)
-        vim.keymap.set({"n", "v"}, "<Leader>f", vim.lsp.buf.format)
+        vim.keymap.set("n", "ga", "<Cmd>lua vim.lsp.buf.code_action()<CR>")
+        vim.keymap.set("n", "<Leader>rn", "<Cmd>lua vim.lsp.buf.rename<CR>")
+        vim.keymap.set({"n", "v"}, "<Leader>f", "<Cmd>lua vim.lsp.buf.format({ async = true })<CR>")
 
         lsp.default_keymaps({ buffer = bufnr })
       end)
