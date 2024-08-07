@@ -1,5 +1,6 @@
 import = [
-  "~/.config/alacritty/catppuccin-mocha.toml"
+  "~/.config/alacritty/catppuccin-mocha.toml",
+  "~/.config/alacritty/local.toml"
 ]
 
 [window]
