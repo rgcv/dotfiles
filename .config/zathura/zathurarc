@@ -1,3 +1,3 @@
-include conf.d/base16-material-darker.conf
+include conf.d/catppuccin-mocha.conf
 set recolor true
 set recolor-keephue true
