@@ -58,7 +58,8 @@ color index red black "~N|~O"
 # color body brightwhite black '_+[^_]+_+'
 
 source $my_config/gpg.rc
-source $my_config/accounts/config
+set my_accounts_config = $my_config/accounts/config
+source `[ -r "$my_accounts_config" ] && echo "$my_accounts_config" || echo /dev/null`
 
 # sample account config
 # set my_custom_account = $my_config/accounts/custom/config
