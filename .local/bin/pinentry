@@ -2,6 +2,11 @@
 
 [ -n "$WSL_DISTRO_NAME" ] &&
   exec "$(cd "$(dirname "$0")" && pwd -P)/pinentry-wsl-ps1.sh" "$@"
-for p in mac gnome3 gtk-2 curses; do
+for p in mac gnome3 gtk qt gtk-2 curses tty; do
   command -v pinentry-$p > /dev/null && exec pinentry-$p "$@"
 done
+
+pinentry=$(command -v -p pinentry 2>/dev/null)
+if [ -n "$pinentry" ]; then
+  exec $pinentry "$@"
+fi
