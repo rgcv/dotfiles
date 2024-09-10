@@ -1,4 +1,7 @@
 return {
+  -- Case-insensitive abbreviation and replacement
+  "tpope/vim-abolish",
+  -- Tweak 'path' entries for a couple file types
   "tpope/vim-apathy",
   -- Modern database inferface for Vim
   "tpope/vim-dadbod",
