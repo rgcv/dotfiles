@@ -21,5 +21,3 @@ else
   require("config.autocmds")
   require("config.keymaps")
 end
-
-vim.cmd.colorscheme("catppuccin")
