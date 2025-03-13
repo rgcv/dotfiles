@@ -134,6 +134,10 @@ if !has('gui_running')
   set t_Co=256
 endif
 
+if has('ide')
+  set ideajoin
+endif
+
 let s:colorscheme='catppuccin_mocha'
 
 " mappings
