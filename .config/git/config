@@ -32,6 +32,12 @@
   ;}; retag"
   sync = !git pull && git push
   yolo = !git commit -am "$(curl -s http://whatthecommit.com/index.txt)"
+  cleanup = !"cleanup() {\
+    git pull --prune \
+    && git branch --format '%(refname:short) %(upstream:track)' \
+      | awk '$2 == \"[gone]\" { print $1 }' \
+      | xargs -r git branch -D \
+    ;}; cleanup"
 
 [core]
   autocrlf = input
