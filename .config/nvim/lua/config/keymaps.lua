@@ -12,8 +12,8 @@ local function map(mode, lhs, rhs, opts)
 end
 
 -- better up/down
-map('n', 'j', 'v:count == 0 ? 'gj' : 'j'', { expr = true, silent = true })
-map('n', 'k', 'v:count == 0 ? 'gk' : 'k'', { expr = true, silent = true })
+map('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+map('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 
 -- Move to window bypassing <C-w>
 map('n', '<C-h>', '<C-w><C-h>', { desc = 'Go to left window' })
@@ -26,8 +26,8 @@ map('n', '<A-j>', '<Cmd>m .+1<CR>==', { desc = 'Move down' })
 map('n', '<A-k>', '<Cmd>m .-2<CR>==', { desc = 'Move up' })
 map('i', '<A-j>', '<Esc><Cmd>m .+1<CR>==gi', { desc = 'Move down' })
 map('i', '<A-k>', '<Esc><Cmd>m .-2<CR>==gi', { desc = 'Move up' })
-map('v', '<A-j>', ':m '>+1<CR>gv=gv', { desc = 'Move down' })
-map('v', '<A-k>', ':m '<-2<CR>gv=gv', { desc = 'Move up' })
+map('v', '<A-j>', ":m '>+1<CR>gv=gv", { desc = 'Move down' })
+map('v', '<A-k>', ":m '<-2<CR>gv=gv", { desc = 'Move up' })
 
 -- clear search with escape
 map(
@@ -40,13 +40,13 @@ map(
 map(
   { 'n', 'x', 'o' },
   'n',
-  ''Nn'[v:searchforward]',
+  "'Nn'[v:searchforward]",
   { expr = true, desc = 'Next search result' }
 )
 map(
   { 'n', 'x', 'o' },
   'N',
-  ''nN'[v:searchforward]',
+  "'nN'[v:searchforward]",
   { expr = true, desc = 'Prev search result' }
 )
 
