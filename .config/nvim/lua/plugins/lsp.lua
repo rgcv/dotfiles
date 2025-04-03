@@ -1,19 +1,10 @@
 return {
-  {
-    "VonHeikemen/lsp-zero.nvim",
-    branch = "v3.x",
-    lazy = true,
-    config = function()
-      require("lsp-zero.settings").preset({})
-    end
-  },
-
   -- Autocompletion
   {
-    "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
+    'hrsh7th/nvim-cmp',
+    event = 'InsertEnter',
     config = function()
-      local cmp = require("cmp")
+      local cmp = require('cmp')
 
       cmp.setup({
         sources = { name = 'nvim_lsp' },
@@ -33,28 +24,28 @@ return {
   },
 
   {
-    "williamboman/mason.nvim",
+    'williamboman/mason.nvim',
     lazy = false,
     opts = {}
   },
 
   {
-    "nvimtools/none-ls.nvim",
-    event = "BufReadPre",
+    'nvimtools/none-ls.nvim',
+    event = 'BufReadPre',
     dependencies = {
-      "gbprod/none-ls-shellcheck.nvim",
+      'gbprod/none-ls-shellcheck.nvim',
     },
     config = function()
-      local nls = require("null-ls")
+      local nls = require('null-ls')
       nls.setup({
         sources = {
-          require("none-ls-shellcheck.code_actions"),
-          require("none-ls-shellcheck.diagnostics").with({
-            diagnostics_format = "[SC#{c}] #{m}",
+          require('none-ls-shellcheck.code_actions'),
+          require('none-ls-shellcheck.diagnostics').with({
+            diagnostics_format = '[SC#{c}] #{m}',
           }),
           nls.builtins.diagnostics.vint,
           nls.builtins.formatting.prettier.with({
-            prefer_local = "node_modules/.bin"
+            prefer_local = 'node_modules/.bin'
           }),
         }
       })
@@ -63,24 +54,26 @@ return {
 
   -- LSP
   {
-    "neovim/nvim-lspconfig",
-    cmd = { "LspInfo", "LspInstall", "LspStart" },
-    event = { "BufReadPre", "BufNewFile" },
+    'neovim/nvim-lspconfig',
+    cmd = { 'LspInfo', 'LspInstall', 'LspStart' },
+    event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
-      { "hrsh7th/cmp-nvim-lsp" },
-      { "williamboman/mason.nvim" },
-      { "williamboman/mason-lspconfig.nvim" },
+      { 'hrsh7th/cmp-nvim-lsp' },
+      { 'williamboman/mason.nvim' },
+      { 'williamboman/mason-lspconfig.nvim' },
     },
+    init = function()
+      vim.opt.signcolumn = 'yes'
+    end,
     config = function()
-      local lspconfig = require("lspconfig")
-      local lspconfig_defaults = lspconfig.util.default_config
-      lspconfig_defaults.capabilities = vim.tbl_deep_extend(
-        "force",
-        lspconfig_defaults.capabilities,
-        require("cmp_nvim_lsp").default_capabilities()
+      local lsp_defaults = require('lspconfig').util.default_config
+      lsp_defaults.capabilities = vim.tbl_deep_extend(
+        'force',
+        lsp_defaults.capabilities,
+        require('cmp_nvim_lsp').default_capabilities()
       )
 
-      vim.api.nvim_create_autocmd("LspAttach", {
+      vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(event)
           local opts = { buffer = event.buf }
           vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
@@ -91,25 +84,25 @@ return {
           vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
           vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
           vim.keymap.set('n', 'gl', '<cmd>lua vim.diagnostic.open_float()<cr>', opts)
-          vim.keymap.set("n", "<Leader>rn", "<Cmd>lua vim.lsp.buf.rename()<CR>", opts)
-          vim.keymap.set({"n", "x"}, "<Leader>f", "<Cmd>lua vim.lsp.buf.format({ async = true })<CR>", opts)
-          vim.keymap.set("n", "ga", "<Cmd>lua vim.lsp.buf.code_action()<CR>", opts)
+          vim.keymap.set('n', '<Leader>rn', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
+          vim.keymap.set({'n', 'x'}, '<Leader>f', '<Cmd>lua vim.lsp.buf.format({ async = true })<CR>', opts)
+          vim.keymap.set('n', 'ga', '<Cmd>lua vim.lsp.buf.code_action()<CR>', opts)
         end
       })
 
-      require("mason-lspconfig").setup({
+      require('mason-lspconfig').setup({
         ensure_installed = {
-          "lua_ls"
+          'lua_ls'
         },
         handlers = {
           function(server_name)
-            require("lspconfig")[server_name].setup({})
+            require('lspconfig')[server_name].setup({})
           end,
 
           lua_ls = function()
-            require("lspconfig").lua_ls.setup({
+            require('lspconfig').lua_ls.setup({
               diagnostics = {
-                globals = { "vim" },
+                globals = { 'vim' },
               },
               workspace = {
                 library = {
@@ -124,10 +117,10 @@ return {
       vim.diagnostic.config({
         signs = {
           text = {
-            [vim.diagnostic.severity.ERROR] = "󰅚",
-            [vim.diagnostic.severity.WARN] = "󰀪",
-            [vim.diagnostic.severity.HINT] = "󰗖",
-            [vim.diagnostic.severity.INFO] = "󰋽",
+            [vim.diagnostic.severity.ERROR] = '󰅚',
+            [vim.diagnostic.severity.WARN] = '󰀪',
+            [vim.diagnostic.severity.HINT] = '󰗖',
+            [vim.diagnostic.severity.INFO] = '󰋽',
           }
         }
       })

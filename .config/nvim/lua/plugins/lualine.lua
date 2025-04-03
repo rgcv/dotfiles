@@ -1,47 +1,47 @@
 return {
-  "nvim-lualine/lualine.nvim",
-  event = "VeryLazy",
-  dependencies = { "kyazdani42/nvim-web-devicons", lazy = true },
+  'nvim-lualine/lualine.nvim',
+  event = 'VeryLazy',
+  dependencies = { 'kyazdani42/nvim-web-devicons', lazy = true },
   config = function()
     require('lualine').setup({
       options = {
-        theme = "auto",
+        theme = 'auto',
         globalstatus = true,
       },
       sections = {
-        lualine_a = { "mode" },
-        lualine_b = { "branch" },
+        lualine_a = { 'mode' },
+        lualine_b = { 'branch' },
         lualine_c = {
-          { "diagnostics" },
+          { 'diagnostics' },
           {
-            "filetype",
+            'filetype',
             icon_only = true,
-            separator = "",
+            separator = '',
             padding = { left = 1, right = 0 },
           },
           {
-            "filename",
+            'filename',
             path = 1,
             symbols = {
-              modified = "●",
-              readonly = "",
-              unnamed = "[no name]",
+              modified = '●',
+              readonly = '',
+              unnamed = '[no name]',
             }
           },
         },
         lualine_x = {
-          { "encoding" },
-          { "fileformat" },
-          { "diff" },
+          { 'encoding' },
+          { 'fileformat' },
+          { 'diff' },
         },
         lualine_y = {
-          { "progress" },
+          { 'progress' },
         },
         lualine_z = {
-          { "location"},
+          { 'location'},
         },
       },
-      extensions = { "fugitive" }
+      extensions = { 'fugitive' }
     })
   end
 }

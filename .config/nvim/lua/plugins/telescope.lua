@@ -1,22 +1,22 @@
 return {
-  "nvim-telescope/telescope.nvim",
-  cmd = "Telescope",
-  dependencies = { "nvim-lua/plenary.nvim" },
+  'nvim-telescope/telescope.nvim',
+  cmd = 'Telescope',
+  dependencies = { 'nvim-lua/plenary.nvim' },
   keys = {
     {
-      "<Leader>tf",
+      '<Leader>tf',
       function()
         local builtin
         local opts = {}
-        if vim.loop.fs_stat(vim.loop.cwd() .. "/.git") then
+        if vim.loop.fs_stat(vim.loop.cwd() .. '/.git') then
           opts.show_untracked = true
-          builtin = "git_files"
+          builtin = 'git_files'
         else
-          builtin = "find_files"
+          builtin = 'find_files'
         end
-        require("telescope.builtin")[builtin](opts)
+        require('telescope.builtin')[builtin](opts)
       end
     },
-    { "<Leader>tg", function() require("telescope.builtin").live_grep() end },
+    { '<Leader>tg', function() require('telescope.builtin').live_grep() end },
   },
 }
