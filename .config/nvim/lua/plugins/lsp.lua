@@ -6,14 +6,16 @@ return {
     config = function()
       local cmp = require('cmp')
 
-      cmp.setup({
-        sources = { name = 'nvim_lsp' },
-        mapping = cmp.mapping.preset.insert({
+      cmp.setup.cmdline({
+        mapping = cmp.mapping.preset.cmdline({
           ['<TAB>'] = cmp.mapping.confirm({ select = true }),
           ['<C-Space>'] = cmp.mapping.complete(),
           ['<C-u>'] = cmp.mapping.scroll_docs(-4),
           ['<C-d>'] = cmp.mapping.scroll_docs(4),
         }),
+      })
+      cmp.setup({
+        sources = { name = 'nvim_lsp' },
         snippet = {
           expand = function(args)
             vim.snippet.expand(args.body)
