@@ -26,7 +26,7 @@ return {
   },
 
   {
-    'williamboman/mason.nvim',
+    'mason-org/mason.nvim',
     lazy = false,
     opts = {}
   },
@@ -61,8 +61,8 @@ return {
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = {
       { 'hrsh7th/cmp-nvim-lsp' },
-      { 'williamboman/mason.nvim' },
-      { 'williamboman/mason-lspconfig.nvim' },
+      { 'mason-org/mason.nvim' },
+      { 'mason-org/mason-lspconfig.nvim' },
     },
     init = function()
       vim.opt.signcolumn = 'yes'
@@ -87,65 +87,66 @@ return {
           vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
           vim.keymap.set('n', 'gl', '<cmd>lua vim.diagnostic.open_float()<cr>', opts)
           vim.keymap.set('n', '<Leader>rn', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
-          vim.keymap.set({'n', 'x'}, '<Leader>f', '<Cmd>lua vim.lsp.buf.format({ async = true })<CR>', opts)
+          vim.keymap.set({ 'n', 'x' }, '<Leader>f', '<Cmd>lua vim.lsp.buf.format({ async = true })<CR>', opts)
           vim.keymap.set('n', 'ga', '<Cmd>lua vim.lsp.buf.code_action()<CR>', opts)
         end
       })
 
-      require('mason-lspconfig').setup({
-        ensure_installed = {
-          'lua_ls'
-        },
-        handlers = {
-          function(server_name)
-            require('lspconfig')[server_name].setup({})
-          end,
-
-          lua_ls = function()
-            require('lspconfig').lua_ls.setup({
-              settings = {
-                Lua = {
-                  telemetry = {
-                    enable = false
-                  }
-                }
+      vim.lsp.config('lua_ls', {
+        settings = {
+          Lua = {
+            runtime = {
+              version = 'LuaJIT',
+            },
+            diagnostics = {
+              globals = {
+                'vim',
+                'require',
               },
-              on_init = function(client)
-                local join = vim.fs.joinpath
-                local path = client.workspace_folders[1].name
+            },
+          },
+        },
+        on_init = function(client)
+          local join = vim.fs.joinpath
+          local folders = client.workspace_folders
+          if not folders then
+              return
+          end
 
-                if vim.uv.fs_stat(join(path, '.luarc.json'))
-                  or vim.uv.fs_stat(join(path, '.luarc.jsonc'))
-                then
-                  return
-                end
+          local path = folders[1].name
+          if vim.uv.fs_stat(join(path, '.luarc.json'))
+              or vim.uv.fs_stat(join(path, '.luarc.jsonc'))
+          then
+            return
+          end
 
-                local nvim_settings = {
-                  runtime = {
-                    version = 'LuaJIT'
-                  },
-                  diagnostics = {
-                    globals = {'vim'}
-                  },
-                  workspace = {
-                    checkThirdParty = false,
-                    library = {
-                      vim.env.RUNTIME,
-                      vim.fn.stdpath('config')
-                    }
-                  },
-                }
+          local nvim_settings = {
+            runtime = {
+              version = 'LuaJIT'
+            },
+            diagnostics = {
+              globals = { 'vim' }
+            },
+            workspace = {
+              checkThirdParty = false,
+              library = {
+                vim.env.RUNTIME,
+                vim.fn.stdpath('config')
+              }
+            },
+          }
 
-                client.config.settings.Lua = vim.tbl_deep_extend(
-                  'force',
-                  client.config.settings.Lua,
-                  nvim_settings
-                )
-              end,
-            })
-          end,
-        }
+          client.config.settings.Lua = vim.tbl_deep_extend(
+            'force',
+            client.config.settings.Lua,
+            nvim_settings
+          )
+        end
       })
+
+      require('mason-lspconfig').setup {
+        ensure_installed = { 'lua_ls' }
+      }
 
       vim.diagnostic.config({
         signs = {
