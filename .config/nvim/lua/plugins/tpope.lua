@@ -1,4 +1,5 @@
 return {
+
   -- Case-insensitive abbreviation and replacement
   'tpope/vim-abolish',
   -- Tweak 'path' entries for a couple file types
@@ -13,4 +14,5 @@ return {
   'tpope/vim-repeat',
   -- Heuristically set buffer options
   'tpope/vim-sleuth',
+
 }

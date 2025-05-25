@@ -1,35 +1,4 @@
 return {
-  -- Autocompletion
-  {
-    'hrsh7th/nvim-cmp',
-    event = 'InsertEnter',
-    config = function()
-      local cmp = require('cmp')
-
-      cmp.setup.cmdline({
-        mapping = cmp.mapping.preset.cmdline({
-          ['<TAB>'] = cmp.mapping.confirm({ select = true }),
-          ['<C-Space>'] = cmp.mapping.complete(),
-          ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-d>'] = cmp.mapping.scroll_docs(4),
-        }),
-      })
-      cmp.setup({
-        sources = { name = 'nvim_lsp' },
-        snippet = {
-          expand = function(args)
-            vim.snippet.expand(args.body)
-          end
-        },
-      })
-    end
-  },
-
-  {
-    'mason-org/mason.nvim',
-    lazy = false,
-    opts = {}
-  },
 
   {
     'nvimtools/none-ls.nvim',
@@ -54,20 +23,20 @@ return {
     end
   },
 
-  -- LSP
   {
-    'neovim/nvim-lspconfig',
-    cmd = { 'LspInfo', 'LspInstall', 'LspStart' },
-    event = { 'BufReadPre', 'BufNewFile' },
+    'mason-org/mason-lspconfig.nvim',
     dependencies = {
-      { 'hrsh7th/cmp-nvim-lsp' },
-      { 'mason-org/mason.nvim' },
-      { 'mason-org/mason-lspconfig.nvim' },
+      { 'mason-org/mason.nvim', opts = {} },
+      'neovim/nvim-lspconfig',
+      'hrsh7th/cmp-nvim-lsp',
+    },
+    opts = {
+      ensure_installed = { 'lua_ls' },
     },
     init = function()
       vim.opt.signcolumn = 'yes'
     end,
-    config = function()
+    config = function(_, opts)
       local lsp_defaults = require('lspconfig').util.default_config
       lsp_defaults.capabilities = vim.tbl_deep_extend(
         'force',
@@ -77,18 +46,24 @@ return {
 
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(event)
-          local opts = { buffer = event.buf }
-          vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
-          vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
-          vim.keymap.set('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<cr>', opts)
-          vim.keymap.set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<cr>', opts)
-          vim.keymap.set('n', 'go', '<cmd>lua vim.lsp.buf.type_definition()<cr>', opts)
-          vim.keymap.set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<cr>', opts)
-          vim.keymap.set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<cr>', opts)
-          vim.keymap.set('n', 'gl', '<cmd>lua vim.diagnostic.open_float()<cr>', opts)
-          vim.keymap.set('n', '<Leader>rn', '<Cmd>lua vim.lsp.buf.rename()<CR>', opts)
-          vim.keymap.set({ 'n', 'x' }, '<Leader>f', '<Cmd>lua vim.lsp.buf.format({ async = true })<CR>', opts)
-          vim.keymap.set('n', 'ga', '<Cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+          local function map(mode, l, r)
+            vim.keymap.set(mode, l, r, { buffer = event.buf })
+          end
+          map('n', 'K', vim.lsp.buf.hover)
+          map('n', 'gd', vim.lsp.buf.definition)
+          map('n', 'gD', vim.lsp.buf.declaration)
+          map('n', 'gi', vim.lsp.buf.implementation)
+          map('n', 'go', vim.lsp.buf.type_definition)
+          map('n', 'gr', vim.lsp.buf.references)
+          map('n', 'gs', vim.lsp.buf.signature_help)
+          map('n', 'gl', vim.diagnostic.open_float)
+          map('n', '<Leader>rn', vim.lsp.buf.rename)
+          map({ 'n', 'x' }, '<Leader>f', function() vim.lsp.buf.format({ async = true }) end)
+          map('n', 'ga', vim.lsp.buf.code_action)
+
+          vim.bo[event.buf].formatexpr = 'v:lua.vim.lsp.formatexpr()'
+          vim.bo[event.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+          vim.bo[event.buf].tagfunc = 'v:lua.vim.lsp.tagfunc'
         end
       })
 
@@ -110,7 +85,7 @@ return {
           local join = vim.fs.joinpath
           local folders = client.workspace_folders
           if not folders then
-              return
+            return
           end
 
           local path = folders[1].name
@@ -144,9 +119,7 @@ return {
         end
       })
 
-      require('mason-lspconfig').setup {
-        ensure_installed = { 'lua_ls' }
-      }
+      require('mason-lspconfig').setup(opts)
 
       vim.diagnostic.config({
         signs = {

@@ -1,19 +1,12 @@
 return {
+
   {
     'nvim-treesitter/nvim-treesitter',
+    lazy = false,
+    branch = 'main',
     build = ':TSUpdate',
-    event = { 'BufReadPost', 'BufNewFile' },
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
-      'RRethy/nvim-treesitter-endwise',
-      'windwp/nvim-ts-autotag',
-    },
-    opts = {
-      autotag = { enable = true },
-      endwise = { enable = true },
-      highlight = { enable = true },
-      indent = { enable = true },
-      ensure_installed = {
+    config = function()
+      require('nvim-treesitter').install({
         -- always
         'c',
         'lua',
@@ -55,10 +48,21 @@ return {
         'tsx',
         'typescript',
         'yaml',
-      },
-    },
-    config = function(_, opts)
-      require('nvim-treesitter.configs').setup(opts)
+      })
+
+      vim.api.nvim_create_autocmd('FileType', {
+        callback = function()
+          vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+          vim.bo.indentexpr = "v:lua.require('nvim-treesitter').indentexpr()"
+          pcall(vim.treesitter.start)
+        end
+      })
     end,
   },
+
+  {
+    'windwp/nvim-ts-autotag',
+    config = function() require('nvim-ts-autotag').setup() end
+  }
+
 }

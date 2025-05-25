@@ -1,4 +1,5 @@
 return {
+
   'nvim-telescope/telescope.nvim',
   cmd = 'Telescope',
   dependencies = { 'nvim-lua/plenary.nvim' },
@@ -19,4 +20,5 @@ return {
     },
     { '<Leader>tg', function() require('telescope.builtin').live_grep() end },
   },
+
 }
