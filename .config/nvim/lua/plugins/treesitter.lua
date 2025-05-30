@@ -1,10 +1,11 @@
 local function on_filetype(args)
   local function load(lang)
-    if not vim.treesitter.language.add(lang) then
-      local ts = require('nvim-treesitter')
-      if vim.tbl_contains(ts.get_available(), lang) then
-        ts.install(lang):await(function() load(lang) end)
-      end
+    local ts = require('nvim-treesitter')
+    if vim.tbl_contains(ts.get_available(), lang)
+        and not vim.tbl_contains(ts.get_installed(), lang) then
+      ts.install(lang):await(function() load(lang) end)
+      return
+    elseif not vim.treesitter.language.add(lang) then
       return
     end
 
