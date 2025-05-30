@@ -1,74 +1,33 @@
+local function on_filetype(args)
+  local function load(lang)
+    if not vim.treesitter.language.add(lang) then
+      local ts = require('nvim-treesitter')
+      if vim.tbl_contains(ts.get_available(), lang) then
+        ts.install(lang):await(function() load(lang) end)
+      end
+      return
+    end
+
+    vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+    vim.bo.indentexpr = "v:lua.require('nvim-treesitter').indentexpr()"
+    vim.treesitter.start()
+  end
+
+  load(vim.treesitter.language.get_lang(args.match))
+end
+
 return {
 
   {
     'nvim-treesitter/nvim-treesitter',
     lazy = false,
     branch = 'main',
-    build = function()
-      local treesitter = require('nvim-treesitter')
-      treesitter.install({
-        -- always
-        'c',
-        'lua',
-        'vim',
-        'vimdoc',
-        'query',
-
-        -- additional
-        'bash',
-        'bibtex',
-        'cmake',
-        'cpp',
-        'css',
-        'dockerfile',
-        'git_config',
-        'git_rebase',
-        'gitattributes',
-        'gitcommit',
-        'gitignore',
-        'go',
-        'html',
-        'java',
-        'javascript',
-        'jsdoc',
-        'json',
-        'julia',
-        'kotlin',
-        'latex',
-        'luadoc',
-        'markdown',
-        'markdown_inline',
-        'python',
-        'regex',
-        'rust',
-        'scheme',
-        'scss',
-        'sql',
-        'toml',
-        'tsx',
-        'typescript',
-        'yaml',
-      })
-      treesitter.update()
-    end,
-    config = function()
-      vim.api.nvim_create_autocmd('FileType', {
-        callback = function(args)
-          local filetype = args.match
-          local lang = vim.treesitter.language.get_lang(filetype)
-          if vim.treesitter.language.add(lang) then
-            vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-            vim.bo.indentexpr = "v:lua.require('nvim-treesitter').indentexpr()"
-            vim.treesitter.start()
-          end
-        end
-      })
+    build = ':TSUpdate',
+    init = function()
+      vim.api.nvim_create_autocmd('FileType', { callback = on_filetype })
     end,
   },
 
-  {
-    'windwp/nvim-ts-autotag',
-    config = function() require('nvim-ts-autotag').setup() end
-  }
+  { 'windwp/nvim-ts-autotag', opts = {} },
 
 }
