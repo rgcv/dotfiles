@@ -13,6 +13,9 @@ return {
     init = function() vim.cmd.colorscheme('catppuccin') end,
     opts = {
       transparent_background = true,
+      integrations = {
+        octo = true,
+      },
     },
   },
 
