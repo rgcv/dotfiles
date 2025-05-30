@@ -4,9 +4,9 @@ return {
     'nvim-treesitter/nvim-treesitter',
     lazy = false,
     branch = 'main',
-    build = ':TSUpdate',
-    config = function()
-      require('nvim-treesitter').install({
+    build = function()
+      local treesitter = require('nvim-treesitter')
+      treesitter.install({
         -- always
         'c',
         'lua',
@@ -49,7 +49,9 @@ return {
         'typescript',
         'yaml',
       })
-
+      treesitter.update()
+    end,
+    config = function()
       vim.api.nvim_create_autocmd('FileType', {
         callback = function(args)
           local filetype = args.match
