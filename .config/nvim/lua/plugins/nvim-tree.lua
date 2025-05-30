@@ -1,7 +1,7 @@
 return {
-  'kyazdani42/nvim-tree.lua',
+  'nvim-tree/nvim-tree.lua',
   event = 'VeryLazy',
-  dependencies = { 'kyazdani42/nvim-web-devicons', lazy = true },
+  dependencies = { 'nvim-tree/nvim-web-devicons' },
   keys = {
     { '<C-n>', '<Cmd>NvimTreeToggle<CR>' },
     { '<Leader>r', '<Cmd>NvimTreeRefresh<CR>' },
