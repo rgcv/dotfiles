@@ -86,8 +86,8 @@ URxvt.font: xft:Cascadia Code:size=10 \
             xft:STIX Two Math:size=10 \
             xft:Symbola:size=10 \
             xft:Source Han Sans:size=10 \
-            xft:Font Awesome 6 Free:size=10 \
-            xft:Font Awesome 6 Brands
+            xft:Font Awesome 7 Free:size=10 \
+            xft:Font Awesome 7 Brands
 URxvt.letterSpace: 0
 URxvt.lineSpace: 0
 
