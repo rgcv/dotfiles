@@ -25,7 +25,6 @@
   # misc
   ignore = !"gi() { \
     curl -sL \"https://www.toptal.com/developers/gitignore/api/$*\" \
-    | tail -n +5 | head -n -2 \
   ;}; gi"
   retag = !"retag() { \
     git tag -d \"$1\" && git tag \"$1\" && git push -f --tags \
