@@ -77,9 +77,8 @@
   renames = true
 
 [fetch]
-  prune = true
-  pruneTags = true
   all = true
+  prune = true
 
 [github]
   user = rgcv
