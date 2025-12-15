@@ -54,6 +54,7 @@
   ui = auto
 
 [core]
+  pager = delta
   autocrlf = input
   eol = lf
 
@@ -63,6 +64,11 @@
 
 [credential]
   helper = cache --timeout=5400
+
+[delta]
+  hyperlinks = true
+  line-numbers = true
+  side-by-side = true
 
 [diff]
   algorithm = histogram
@@ -80,6 +86,12 @@
 
 [init]
   defaultBranch = main
+
+[interactive]
+  diffFilter = delta --color-only
+
+[merge]
+  conflictStyle = zdiff3
 
 [pull]
   rebase = false
