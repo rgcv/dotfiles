@@ -1,0 +1,6 @@
+#!/bin/sh
+
+command -v walker && exec walker
+command -v wofi && exec wofi
+command -v rofi && exec rofi
+command -v bemenu && exec bemenu

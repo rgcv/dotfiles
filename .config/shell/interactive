@@ -40,6 +40,8 @@ xdg_config_alias   i3bcf       i3blocks/config
 home_config_alias  i3bcf       .i3blocks.conf
 xdg_config_alias   i3cf        i3/config
 home_config_alias  i3cf        .i3/config
+xdg_config_alias   hyprcf      hypr/hyprland.conf
+xdg_config_alias   hyprlockcf  hypr/hyprlock.conf
 xdg_config_alias   inputrc     readline/inputrc
 home_config_alias  inputrc     .inputrc
 home_config_alias  juliarc     .julia/config/startup.jl

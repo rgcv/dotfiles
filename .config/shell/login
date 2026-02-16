@@ -29,19 +29,23 @@ if [ -z "$DISPLAY" ]; then
       export XDG_SESSION_TYPE=wayland
       case $TTY in
         1)
+          command -v start-hyprland >/dev/null || return
+          exec start-hyprland
+          ;;
+        2)
           export XDG_CURRENT_DESKTOP=sway
           export _JAVA_AWT_WM_NONREPARENTING=1
           command -v sway >/dev/null || return
           exec sway >/dev/null 2>&1
           ;;
-        2)
+        3)
           export XDG_CURRENT_DESKTOP=gnome
           command -v gnome-shell >/dev/null || return
           exec gnome-shell --wayland
           ;;
       esac
       ;;
-    3)
+    6)
       command -v startx >/dev/null || return
       exec startx "$XINITRC" -- ":$TTY"
       ;;
