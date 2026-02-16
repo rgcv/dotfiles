@@ -1,9 +1,8 @@
 return {
 
-  'andreshazard/vim-freemarker',                  -- freemarker syntax
+  'andreshazard/vim-freemarker', -- freemarker syntax
   { 'nvim-tree/nvim-web-devicons', lazy = true }, -- nerd font icons
-  'lbrayner/vim-rzip',                            -- recursive zip handling
-  'mattn/emmet-vim',                              -- emmet support
+  'lbrayner/vim-rzip', -- recursive zip handling
 
   -- color theme
   {
