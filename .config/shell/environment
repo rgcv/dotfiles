@@ -54,7 +54,6 @@ unset LC_ALL lang
 
 # input method
 export INPUT_METHOD=fcitx
-export GTK_IM_MODULE=$INPUT_METHOD
 export QT_IM_MODULE=$INPUT_METHOD
 export XMODIFIERS=@im=$INPUT_METHOD
 
