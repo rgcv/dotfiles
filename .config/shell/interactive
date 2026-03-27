@@ -57,10 +57,10 @@ home_config_alias  newsboatrc  .newsboat/config
 xdg_config_alias   npmcf       npm/config
 xdg_config_alias   nvimrc      nvim/init.lua
 xdg_config_alias   nvimrc      nvim/init.vim
-home_config_alias  ocrc        .opencode/opencode.json
-home_config_alias  ocrc        .opencode/opencode.jsonc
-xdg_config_alias   ocrc        opencode/opencode.json
-xdg_config_alias   ocrc        opencode/opencode.jsonc
+home_config_alias  occf        .opencode/opencode.json
+home_config_alias  occf        .opencode/opencode.jsonc
+xdg_config_alias   occf        opencode/opencode.json
+xdg_config_alias   occf        opencode/opencode.jsonc
 xdg_config_alias   psqlrc      postgresql/psqlrc
 xdg_config_alias   roficf      rofi/config
 home_config_alias  sshcf       .ssh/config
