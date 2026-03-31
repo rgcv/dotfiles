@@ -24,6 +24,12 @@ return {
     config = true,
   },
 
+  -- markdown
+  {
+    'OXY2DEV/markview.nvim',
+    lazy = false,
+  },
+
   -- surround
   {
     'kylechui/nvim-surround',
