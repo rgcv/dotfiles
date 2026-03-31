@@ -4,20 +4,6 @@ return {
   { 'nvim-tree/nvim-web-devicons', lazy = true }, -- nerd font icons
   'lbrayner/vim-rzip', -- recursive zip handling
 
-  -- color theme
-  {
-    'catppuccin/nvim',
-    name = 'catppuccin',
-    priority = 1000,
-    init = function() vim.cmd.colorscheme('catppuccin') end,
-    opts = {
-      transparent_background = true,
-      integrations = {
-        octo = true,
-      },
-    },
-  },
-
   -- css inline colors
   {
     'catgoose/nvim-colorizer.lua',
