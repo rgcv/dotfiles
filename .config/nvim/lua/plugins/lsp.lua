@@ -28,7 +28,6 @@ return {
     dependencies = {
       { 'mason-org/mason.nvim', opts = {} },
       'neovim/nvim-lspconfig',
-      'hrsh7th/cmp-nvim-lsp',
     },
     opts = {
       ensure_installed = { 'lua_ls' },
@@ -37,13 +36,6 @@ return {
       vim.opt.signcolumn = 'yes'
     end,
     config = function(_, opts)
-      local lsp_defaults = require('lspconfig').util.default_config
-      lsp_defaults.capabilities = vim.tbl_deep_extend(
-        'force',
-        lsp_defaults.capabilities,
-        require('cmp_nvim_lsp').default_capabilities()
-      )
-
       vim.api.nvim_create_autocmd('LspAttach', {
         callback = function(event)
           local function map(mode, l, r)
