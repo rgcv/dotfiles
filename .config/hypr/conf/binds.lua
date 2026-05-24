@@ -130,10 +130,17 @@ hl.bind(mod .. " + SHIFT + CTRL + P", hl.dsp.exec_cmd(_G.scripts .. "/grimblast 
 -- Submap
 -- system
 hl.bind(mod .. " + SHIFT + X", hl.dsp.submap("system"))
-hl.define_submap("system", function ()
-    hl.bind("U", hl.dsp.exec_cmd("systemctl poweroff"))
-    hl.bind("S", hl.dsp.exec_cmd("systemctl suspend"))
-    hl.bind("L", hl.dsp.exec_cmd("systemctl terminate-user $USER"))
-    hl.bind("R", hl.dsp.exec_cmd("systemctl reboot"))
-    hl.bind("escape", hl.dsp.submap("reset"))
+hl.define_submap("system", function()
+    ---@param dispatch function|HL.Dispatcher|nil
+    local function reset(dispatch)
+        return function()
+            if dispatch ~= nil then hl.dispatch(dispatch) end
+            hl.dispatch(hl.dsp.submap("reset"))
+        end
+    end
+    hl.bind("U", reset(hl.dsp.exec_cmd("systemctl poweroff")))
+    hl.bind("S", reset(hl.dsp.exec_cmd("systemctl suspend")))
+    hl.bind("L", reset(hl.dsp.exec_cmd("systemctl terminate-user $USER")))
+    hl.bind("R", reset(hl.dsp.exec_cmd("systemctl reboot")))
+    hl.bind("escape", reset())
 end)
