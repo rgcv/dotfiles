@@ -129,6 +129,7 @@ alias n=nnn
 alias nnn="nnn -d -e"
 alias nv=nvim
 alias oc=opencode
+alias oca="oc --auto"
 alias rsync="rsync -azvhP" # archive compressed verbose human readable
 alias sudo='sudo ' # alias expansion
 
